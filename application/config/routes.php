@@ -1,0 +1,94 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+/*
+| -------------------------------------------------------------------------
+| URI ROUTING
+| -------------------------------------------------------------------------
+| This file lets you re-map URI requests to specific controller functions.
+|
+| Typically there is a one-to-one relationship between a URL string
+| and its corresponding controller class/method. The segments in a
+| URL normally follow this pattern:
+|
+|	example.com/class/method/id/
+|
+| In some instances, however, you may want to remap this relationship
+| so that a different class/function is called than the one
+| corresponding to the URL.
+|
+| Please see the user guide for complete details:
+|
+|	https://codeigniter.com/userguide3/general/routing.html
+|
+| -------------------------------------------------------------------------
+| RESERVED ROUTES
+| -------------------------------------------------------------------------
+|
+| There are three reserved routes:
+|
+|	$route['default_controller'] = 'welcome';
+|
+| This route indicates which controller class should be loaded if the
+| URI contains no data. In the above example, the "welcome" class
+| would be loaded.
+|
+|	$route['404_override'] = 'errors/page_missing';
+|
+| This route will tell the Router which controller/method to use if those
+| provided in the URL cannot be matched to a valid route.
+|
+|	$route['translate_uri_dashes'] = FALSE;
+|
+| This is not exactly a route, but allows you to automatically route
+| controller and method names that contain dashes. '-' isn't a valid
+| class or method name character, so it requires translation.
+| When you set this option to TRUE, it will replace ALL dashes in the
+| controller and method URI segments.
+|
+| Examples:	my-controller/index	-> my_controller/index
+|		my-controller/my-method	-> my_controller/my_method
+*/
+
+// ## RUTE UTAMA ##
+$route['default_controller'] = 'home'; // Halaman utama frontend
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = TRUE; // Wajib TRUE agar URL dengan '-' bisa dibaca
+
+// ## RUTE AUTENTIKASI (LOGIN & LOGOUT) ##
+$route['auth/login'] = 'login/index';
+$route['auth/process'] = 'login/aksi_login';
+$route['auth/logout'] = 'login/logout';
+$route['login'] = 'login/index'; // Alias untuk /auth/login
+
+// ## RUTE HALAMAN DEPAN (FRONTEND) ##
+
+// Rute untuk Fitur Berita
+$route['berita'] = 'berita/index';
+$route['berita/detail/(:any)'] = 'berita/detail/$1';
+
+// Rute untuk Fitur Informasi
+$route['informasi'] = 'informasi/index';
+$route['informasi/detail/(:num)'] = 'informasi/detail/$1';
+
+// Rute untuk Fitur Pelayanan
+$route['pelayanan'] = 'pelayanan/index';
+$route['pelayanan/sukses'] = 'pelayanan/sukses';
+
+// Rute untuk menampilkan form layanan
+$route['pelayanan/izin-usaha'] = 'pelayanan/izin_usaha';
+$route['pelayanan/pengantar-nikah'] = 'pelayanan/pengantar_nikah';
+$route['pelayanan/tidak-mampu'] = 'pelayanan/tidak_mampu';
+
+// Rute untuk memproses form submission
+$route['pelayanan/submit-usaha'] = 'pelayanan/submit_usaha';
+$route['pelayanan/submit-nikah'] = 'pelayanan/submit_nikah';
+$route['pelayanan/submit-sktm'] = 'pelayanan/submit_sktm';
+
+/*
+| -------------------------------------------------------------------------
+| Rute untuk Halaman Admin akan ditangani secara otomatis oleh CodeIgniter
+| karena mengikuti pola /controller/method (misal: admin/dashboard/index).
+| Tidak perlu ditambahkan di sini kecuali ada kebutuhan khusus.
+| -------------------------------------------------------------------------
+*/
