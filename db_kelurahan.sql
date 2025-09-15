@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2025 at 09:34 AM
+-- Generation Time: Sep 15, 2025 at 03:22 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -86,7 +86,29 @@ CREATE TABLE `informasi` (
 --
 
 INSERT INTO `informasi` (`id_informasi`, `judul_informasi`, `isi_informasi`, `kategori`, `tgl_publish`, `id_user`) VALUES
-(1, 'Test pengumuman', 'testing', 'Pengumuman', '2025-09-12 11:11:25', 1);
+(1, 'Test pengumuman', 'testing', 'Pengumuman', '2025-09-12 11:11:25', 1),
+(2, 'Surat Izin Usaha', 'harus bawa gerobaknya', 'Peraturan', '2025-09-15 15:09:05', 1),
+(3, 'Surat Izin Usaha', 'download dulu', 'Unduhan', '2025-09-15 15:09:23', 1),
+(4, 'libur', 'mantap', 'Pengumuman', '2025-09-15 15:10:17', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `konfigurasi`
+--
+
+CREATE TABLE `konfigurasi` (
+  `id_konfigurasi` int(11) NOT NULL,
+  `nama_konfigurasi` varchar(100) NOT NULL,
+  `nilai_konfigurasi` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `konfigurasi`
+--
+
+INSERT INTO `konfigurasi` (`id_konfigurasi`, `nama_konfigurasi`, `nilai_konfigurasi`) VALUES
+(1, 'youtube_link', 'https://www.youtube.com/watch?v=hzUG58aJ124');
 
 -- --------------------------------------------------------
 
@@ -125,13 +147,6 @@ CREATE TABLE `surat_izin_usaha` (
   `id_user` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `surat_izin_usaha`
---
-
-INSERT INTO `surat_izin_usaha` (`id`, `nama_pemohon`, `nik_pemohon`, `email_pemohon`, `alamat_domisili`, `nama_usaha`, `alamat_usaha`, `tgl_dibuat`, `id_user`) VALUES
-(1, 'Andrian fakih', '3171070901010006', 'Adrianfaqih47@gmail.com', 'Tangerang Selatan', 'GamingShop', 'Ciledug', '2025-09-12 14:03:38', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -159,14 +174,26 @@ CREATE TABLE `surat_pengantar_nikah` (
 CREATE TABLE `surat_sktm` (
   `id` int(11) NOT NULL,
   `nama_pemohon` varchar(100) NOT NULL,
+  `jenis_kelamin_pemohon` enum('Laki-laki','Perempuan') NOT NULL,
+  `tempat_lahir_pemohon` varchar(100) NOT NULL,
+  `tgl_lahir_pemohon` date NOT NULL,
   `nik_pemohon` varchar(20) NOT NULL,
-  `email_pemohon` varchar(100) NOT NULL,
-  `alamat_domisili` text NOT NULL,
-  `penghasilan_bulanan` int(11) NOT NULL,
-  `alasan_permohonan` text NOT NULL,
+  `agama_pemohon` varchar(50) NOT NULL,
+  `pekerjaan_pemohon` varchar(100) NOT NULL,
+  `alamat_pemohon` text NOT NULL,
+  `penghasilan_bulanan` varchar(100) NOT NULL,
+  `keperluan` text NOT NULL,
+  `atas_nama` varchar(100) DEFAULT NULL,
   `tgl_dibuat` datetime NOT NULL DEFAULT current_timestamp(),
   `id_user` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `surat_sktm`
+--
+
+INSERT INTO `surat_sktm` (`id`, `nama_pemohon`, `jenis_kelamin_pemohon`, `tempat_lahir_pemohon`, `tgl_lahir_pemohon`, `nik_pemohon`, `agama_pemohon`, `pekerjaan_pemohon`, `alamat_pemohon`, `penghasilan_bulanan`, `keperluan`, `atas_nama`, `tgl_dibuat`, `id_user`) VALUES
+(3, 'Andrian fakih', 'Laki-laki', 'Tangerang Selatan', '2001-01-09', '3171070901010006', 'Islam', 'Mahasiswa', 'Perumahan Pondok Maharta Blok A10 NO.19', '< Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Andrian Fakih', '2025-09-15 09:49:31', NULL);
 
 -- --------------------------------------------------------
 
@@ -179,6 +206,7 @@ CREATE TABLE `user` (
   `nama_lengkap` varchar(100) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `foto` varchar(100) NOT NULL DEFAULT 'default.jpg',
   `id_level` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -186,8 +214,8 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id_user`, `nama_lengkap`, `username`, `password`, `id_level`) VALUES
-(1, 'Super Administrator', 'superadmin', '$2y$10$rJ3kkPFOdVPyKv8UX8SYMer75wf769CXvxoGvB9HoBrP4oG4Em2H6', 1);
+INSERT INTO `user` (`id_user`, `nama_lengkap`, `username`, `password`, `foto`, `id_level`) VALUES
+(1, 'Super Administrator', 'superadmin', '$2y$10$rJ3kkPFOdVPyKv8UX8SYMer75wf769CXvxoGvB9HoBrP4oG4Em2H6', '0b91ff0d41926dafe50999bf7c72a317.png', 1);
 
 --
 -- Indexes for dumped tables
@@ -210,6 +238,12 @@ ALTER TABLE `galeri`
 --
 ALTER TABLE `informasi`
   ADD PRIMARY KEY (`id_informasi`);
+
+--
+-- Indexes for table `konfigurasi`
+--
+ALTER TABLE `konfigurasi`
+  ADD PRIMARY KEY (`id_konfigurasi`);
 
 --
 -- Indexes for table `level`
@@ -262,7 +296,13 @@ ALTER TABLE `galeri`
 -- AUTO_INCREMENT for table `informasi`
 --
 ALTER TABLE `informasi`
-  MODIFY `id_informasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_informasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `konfigurasi`
+--
+ALTER TABLE `konfigurasi`
+  MODIFY `id_konfigurasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `level`
@@ -286,7 +326,7 @@ ALTER TABLE `surat_pengantar_nikah`
 -- AUTO_INCREMENT for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
