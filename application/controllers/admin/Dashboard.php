@@ -32,11 +32,6 @@ class Dashboard extends CI_Controller
         $data['jumlah_galeri'] = $this->M_dashboard->count_all('galeri');
         $data['jumlah_informasi'] = $this->M_dashboard->count_all('informasi');
 
-        // Mengambil jumlah data untuk setiap jenis surat
-        $data['jumlah_usaha'] = $this->M_dashboard->count_all('surat_izin_usaha');
-        $data['jumlah_nikah'] = $this->M_dashboard->count_all('surat_pengantar_nikah');
-        $data['jumlah_sktm'] = $this->M_dashboard->count_all('surat_sktm');
-
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/v_dashboard', $data);

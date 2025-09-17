@@ -23,7 +23,7 @@
         }
 
         #content {
-            padding-top: 2in;
+            padding-top: 2.2in;
             padding-left: 0.8in;
             padding-right: 0.8in;
             padding-bottom: 0.5in;
@@ -156,7 +156,7 @@
             float: right;
             text-align: center;
             margin-top: 10px;
-            line-height: 1.1;
+            line-height: 1.3;
         }
 
         .ttd p {
@@ -173,7 +173,7 @@
 </head>
 
 <body>
-    <div class="watermark">SKTM</div>
+    <div class="watermark">SKBB</div>
     <div id="header">
         <div class="kop-surat-wrapper">
             <table class="kop-table">
@@ -201,10 +201,10 @@
 
 
     <div id="content">
-        <p class="judul-surat">SURAT KETERANGAN TIDAK MAMPU</p>
-        <p class="nomor-surat">Nomor: 401 / <?= str_repeat("&nbsp;", 10); ?> -Kel.KDM/<?= date('Y'); ?> </p>
+        <p class="judul-surat">SURAT KETERANGAN</p>
+        <p class="nomor-surat">Nomor: 145 / <?= str_repeat("&nbsp;", 10); ?> -Kel.KDM/<?= date('Y'); ?></p>
 
-        <p class="isi-surat pembuka">Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan, dengan ini menerangkan bahwa:</p>
+        <p class="isi-surat pembuka">Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan dengan ini menerangkan bahwa:</p>
 
         <table class="data-pemohon">
             <tr>
@@ -213,19 +213,19 @@
                 <td><b><?= html_escape(strtoupper($surat->nama_pemohon)); ?></b></td>
             </tr>
             <tr>
-                <td>Tempat/tanggal lahir</td>
+                <td>Tempat, tanggal lahir</td>
                 <td>:</td>
                 <td><?= html_escape($surat->tempat_lahir . ', ' . date('d-m-Y', strtotime($surat->tanggal_lahir))); ?></td>
-            </tr>
-            <tr>
-                <td>NIK</td>
-                <td>:</td>
-                <td><?= html_escape($surat->nik); ?></td>
             </tr>
             <tr>
                 <td>Jenis kelamin</td>
                 <td>:</td>
                 <td><?= html_escape($surat->jenis_kelamin); ?></td>
+            </tr>
+            <tr>
+                <td>NIK</td>
+                <td>:</td>
+                <td><?= html_escape($surat->nik); ?></td>
             </tr>
             <tr>
                 <td>Warganegara</td>
@@ -243,38 +243,28 @@
                 <td><?= html_escape($surat->pekerjaan); ?></td>
             </tr>
             <tr>
-                <td>Nama Orang Tua</td>
-                <td>:</td>
-                <td><?= html_escape($surat->nama_orang_tua); ?></td>
-            </tr>
-            <tr>
-                <td>Alamat Asal</td>
+                <td>Alamat Domisili</td>
                 <td>:</td>
                 <td><?= html_escape($surat->alamat); ?></td>
             </tr>
-            <tr>
-                <td>ID DTKS</td>
-                <td>:</td>
-                <td><?= !empty($surat->id_dtks) ? html_escape($surat->id_dtks) : '-'; ?></td>
-            </tr>
-            <tr>
-                <td>Penghasilan Bulanan</td>
-                <td>:</td>
-                <td><?= html_escape($surat->penghasilan_bulanan); ?></td>
-            </tr>
         </table>
 
-        <p class="isi-surat pembuka">Telah datang menghadap memohon surat keterangan tidak mampu, berdasarkan informasi dari surat pengantar RT/RW. Nomor: <?= html_escape($surat->nomor_surat_rt); ?> tanggal <?= date('d F Y', strtotime($surat->tanggal_surat_rt)); ?> serta surat pernyataan pemohon bahwa sesuai kemampuan dan keterbatasan harta benda, ekonomi dan lain sebagainya yang dimiliki pada kondisi saat ini, bahwa nama tersebut tergolong <b>tidak mampu (Pra Sejahtera)</b>.</p>
-        <p class="isi-surat pembuka">Surat Keterangan ini diperlukan untuk: <b><?= html_escape($surat->keperluan); ?></b></p>
-        <p class="isi-surat pembuka">Apabila di kemudian hari surat penyataan Pemohon tidak benar, atau melanggar peraturan dan ketentuan hukum yang berlaku, sepenuhnya menjadi tanggung jawab pemohon, membebaskan para saksi, dan pejabat lurah, yang ikut menandatangani surat keterangan ini dari segala tuntutan hukum.</p>
-        <p class="isi-surat pembuka">Demikian Surat Keterangan ini dibuat dan agar kepada pihak-pihak berkepentingan dapat membantu sesuai dengan ketentuan yang berlaku.</p>
+        <p class="isi-surat pembuka">
+            Nama tersebut diatas adalah benar bertempat tinggal di Kelurahan kami dan berdasarkan surat pengantar RT/RW Nomor : <?= html_escape($surat->nomor_surat_rt); ?> serta surat pernyataan yang bersangkutan bahwa nama tersebut diatas <b>BELUM BEKERJA</b>.
+        </p>
+        <p class="isi-surat pembuka">
+            Surat keterangan ini dibuat diperuntukan : <b><?= html_escape($surat->keperluan); ?></b>
+        </p>
+        <p class="isi-surat pembuka">
+            Demikian surat keterangan ini dibuat agar yang berkepentingan mengetahui dan dapat digunakan sebagaimana mestinya.
+        </p>
 
         <div class="closing-section">
             <div class="ttd">
                 <p>Kademangan, <?= date('d F Y'); ?>
                     <br>a.n. Lurah Kademangan<br>Sekretaris Kelurahan
                 </p>
-                <br><br><br>
+                <br><br><br><br>
                 <p style="text-decoration: underline; font-weight: bold;">NAMA SEKRETARIS LURAH</p>
                 <p>NIP. NIP SEKRETARIS LURAH</p>
             </div>

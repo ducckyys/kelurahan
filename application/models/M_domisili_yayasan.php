@@ -1,15 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
-class M_pengantar_nikah extends CI_Model
+class M_domisili_yayasan extends CI_Model
 {
-    private $table = 'surat_pengantar_nikah';
-
+    private $table = 'surat_domisili_yayasan';
     public function get_all()
     {
         return $this->db->order_by('tgl_dibuat', 'DESC')->get($this->table)->result();
     }
-
     public function get_by_id($id)
     {
         return $this->db->get_where($this->table, ['id' => $id])->row();

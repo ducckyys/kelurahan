@@ -16,40 +16,31 @@
                                 <div class="form-group"><label>Nama Pemohon</label><input type="text" name="nama_pemohon" class="form-control" value="<?= html_escape($surat->nama_pemohon); ?>" required></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>NIK Pemohon</label><input type="text" name="nik_pemohon" class="form-control" value="<?= html_escape($surat->nik_pemohon); ?>" required></div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group"><label>Tempat Lahir</label><input type="text" name="tempat_lahir_pemohon" class="form-control" value="<?= html_escape($surat->tempat_lahir_pemohon); ?>" required></div>
+                                <div class="form-group"><label>NIK</label><input type="text" name="nik" class="form-control" value="<?= html_escape($surat->nik); ?>" required></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Tanggal Lahir</label><input type="date" name="tgl_lahir_pemohon" class="form-control" value="<?= $surat->tgl_lahir_pemohon; ?>" required></div>
+                                <div class="form-group"><label>Tempat Lahir</label><input type="text" name="tempat_lahir" class="form-control" value="<?= html_escape($surat->tempat_lahir); ?>" required></div>
                             </div>
-
                             <div class="col-md-6">
-                                <div class="form-group"><label>Jenis Kelamin</label><select name="jenis_kelamin_pemohon" class="form-control" required>
-                                        <option value="Laki-laki" <?= ($surat->jenis_kelamin_pemohon == 'Laki-laki') ? 'selected' : ''; ?>>Laki-laki</option>
-                                        <option value="Perempuan" <?= ($surat->jenis_kelamin_pemohon == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
+                                <div class="form-group"><label>Tanggal Lahir</label><input type="date" name="tanggal_lahir" class="form-control" value="<?= $surat->tanggal_lahir; ?>" required></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group"><label>Jenis Kelamin</label><select name="jenis_kelamin" class="form-control" required>
+                                        <option value="Laki-laki" <?= ($surat->jenis_kelamin == 'Laki-laki') ? 'selected' : ''; ?>>Laki-laki</option>
+                                        <option value="Perempuan" <?= ($surat->jenis_kelamin == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
                                     </select></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Agama</label><input type="text" name="agama_pemohon" class="form-control" value="<?= html_escape($surat->agama_pemohon); ?>" required></div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group"><label>Pekerjaan</label><input type="text" name="pekerjaan_pemohon" class="form-control" value="<?= html_escape($surat->pekerjaan_pemohon); ?>" required></div>
+                                <div class="form-group"><label>Warganegara</label><input type="text" name="warganegara" class="form-control" value="<?= html_escape($surat->warganegara); ?>" required></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Penghasilan Bulanan</label><select name="penghasilan_bulanan" class="form-control" required>
-                                        <option value="< Rp 1.000.000" <?= ($surat->penghasilan_bulanan == '< Rp 1.000.000') ? 'selected' : ''; ?>>Kurang dari Rp 1.000.000</option>
-                                        <option value="Rp 1.000.000 - Rp 2.500.000" <?= ($surat->penghasilan_bulanan == 'Rp 1.000.000 - Rp 2.500.000') ? 'selected' : ''; ?>>Rp 1.000.000 - Rp 2.500.000</option>
-                                        <option value="Rp 2.500.001 - Rp 5.000.000" <?= ($surat->penghasilan_bulanan == 'Rp 2.500.001 - Rp 5.000.000') ? 'selected' : ''; ?>>Rp 2.500.001 - Rp 5.000.000</option>
-                                        <option value="> Rp 5.000.000" <?= ($surat->penghasilan_bulanan == '> Rp 5.000.000') ? 'selected' : ''; ?>>Lebih dari Rp 5.000.000</option>
-                                    </select></div>
+                                <div class="form-group"><label>Agama</label><input type="text" name="agama" class="form-control" value="<?= html_escape($surat->agama); ?>" required></div>
                             </div>
-
+                            <div class="col-md-6">
+                                <div class="form-group"><label>Pekerjaan</label><input type="text" name="pekerjaan" class="form-control" value="<?= html_escape($surat->pekerjaan); ?>" required></div>
+                            </div>
                             <div class="col-md-12">
-                                <div class="form-group"><label>Alamat</label><textarea name="alamat_pemohon" class="form-control" required><?= html_escape($surat->alamat_pemohon); ?></textarea></div>
+                                <div class="form-group"><label>Alamat</label><textarea name="alamat" class="form-control" required><?= html_escape($surat->alamat); ?></textarea></div>
                             </div>
                         </div>
 
@@ -57,10 +48,21 @@
                         <h5 class="mb-3">Data Keterangan</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group"><label>Keperluan</label><input type="text" name="keperluan" class="form-control" value="<?= html_escape($surat->keperluan); ?>" required></div>
+                                <div class="form-group"><label>Nama Orang Tua</label><input type="text" name="nama_orang_tua" class="form-control" value="<?= html_escape($surat->nama_orang_tua); ?>" required></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Atas Nama</label><input type="text" name="atas_nama" class="form-control" value="<?= html_escape($surat->atas_nama); ?>"></div>
+                                <div class="form-group"><label>ID DTKS (Opsional)</label><input type="text" name="id_dtks" class="form-control" value="<?= html_escape($surat->id_dtks); ?>"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group"><label>Penghasilan Bulanan</label><select name="penghasilan_bulanan" class="form-control" required>
+                                        <option value="< Rp 1.000.000" <?= ($surat->penghasilan_bulanan == '< Rp 1.000.000') ? 'selected' : ''; ?>>Kurang dari Rp 1.000.000</option>
+                                        <option value="Rp 1.000.000 - Rp 2.500.000" <?= ($surat->penghasilan_bulanan == 'Rp 1.000.000 - Rp 2.500.000') ? 'selected' : ''; ?>>Rp 1.000.000 - Rp 2.500.000</option>
+                                        <option value="Rp 2.500.001 - Rp 4.000.000" <?= ($surat->penghasilan_bulanan == 'Rp 2.500.001 - Rp 4.000.000') ? 'selected' : ''; ?>>Rp 2.500.001 - Rp 4.000.000</option>
+                                        <option value="> Rp 4.000.000" <?= ($surat->penghasilan_bulanan == '> Rp 4.000.000') ? 'selected' : ''; ?>>Lebih dari Rp 4.000.000</option>
+                                    </select></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group"><label>Keperluan</label><input type="text" name="keperluan" class="form-control" value="<?= html_escape($surat->keperluan); ?>" required></div>
                             </div>
                         </div>
                     </div>

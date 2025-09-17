@@ -52,22 +52,22 @@
                     </span>
                     <h4 class="text-section">LAYANAN</h4>
                 </li>
-                <li class="nav-item <?= ($this->uri->segment(2) == 'surat_usaha') ? 'active' : ''; ?>">
-                    <a href="<?= base_url('admin/surat_usaha'); ?>">
-                        <i class="fas fa-briefcase"></i>
-                        <p>Izin Usaha</p>
-                    </a>
-                </li>
-                <li class="nav-item <?= ($this->uri->segment(2) == 'surat_nikah') ? 'active' : ''; ?>">
-                    <a href="<?= base_url('admin/surat_nikah'); ?>">
-                        <i class="fas fa-heart"></i>
-                        <p>Pengantar Nikah</p>
-                    </a>
-                </li>
                 <li class="nav-item <?= ($this->uri->segment(2) == 'surat_sktm') ? 'active' : ''; ?>">
                     <a href="<?= base_url('admin/surat_sktm'); ?>">
                         <i class="fas fa-shield-alt"></i>
                         <p>SKTM</p>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($this->uri->segment(2) == 'surat_belum_bekerja') ? 'active' : ''; ?>">
+                    <a href="<?= base_url('admin/surat_belum_bekerja'); ?>">
+                        <i class="fas fa-user-check"></i>
+                        <p>Ket. Belum Bekerja</p>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($this->uri->segment(2) == 'surat_domisili_yayasan') ? 'active' : ''; ?>">
+                    <a href="<?= base_url('admin/surat_domisili_yayasan'); ?>">
+                        <i class="fas fa-building"></i>
+                        <p>Domisili Yayasan</p>
                     </a>
                 </li>
 

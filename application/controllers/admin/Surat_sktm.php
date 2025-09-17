@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Input $input
  * @property CI_Session $session
  * @property CI_pdf $pdf
+ * @property CI_DB_query_builder $db
  */
 
 class Surat_sktm extends CI_Controller
@@ -29,6 +30,20 @@ class Surat_sktm extends CI_Controller
         $this->load->view('layouts/footer');
     }
 
+    public function detail($id)
+    {
+        $data['surat'] = $this->M_sktm->get_by_id($id);
+        if (!$data['surat']) {
+            redirect('admin/surat_sktm');
+        }
+
+        $data['title'] = "Detail Pengajuan SKTM";
+        $this->load->view('layouts/header', $data);
+        $this->load->view('layouts/sidebar', $data);
+        $this->load->view('admin/pelayanan/v_sktm_detail', $data); // View baru
+        $this->load->view('layouts/footer');
+    }
+
     public function edit($id)
     {
         $data['surat'] = $this->M_sktm->get_by_id($id);
@@ -45,20 +60,22 @@ class Surat_sktm extends CI_Controller
     public function update($id)
     {
         $post = $this->input->post();
-        // SUDAH DIPERBAIKI
+        // Sesuaikan dengan nama input dan kolom tabel baru
         $data = [
-            'nama_pemohon'          => $post['nama_pemohon'],
-            'jenis_kelamin_pemohon' => $post['jenis_kelamin_pemohon'],
-            'tempat_lahir_pemohon'  => $post['tempat_lahir_pemohon'],
-            'tgl_lahir_pemohon'     => $post['tgl_lahir_pemohon'],
-            'nik_pemohon'           => $post['nik_pemohon'],
-            'agama_pemohon'         => $post['agama_pemohon'],
-            'pekerjaan_pemohon'     => $post['pekerjaan_pemohon'],
-            'alamat_pemohon'        => $post['alamat_pemohon'],
-            'penghasilan_bulanan'   => $post['penghasilan_bulanan'],
-            'keperluan'             => $post['keperluan'],
-            'atas_nama'             => $post['atas_nama'],
-            'id_user'               => $this->session->userdata('id_user')
+            'nama_pemohon'        => $post['nama_pemohon'],
+            'nik'                 => $post['nik'],
+            'tempat_lahir'        => $post['tempat_lahir'],
+            'tanggal_lahir'       => $post['tanggal_lahir'],
+            'jenis_kelamin'       => $post['jenis_kelamin'],
+            'warganegara'         => $post['warganegara'],
+            'agama'               => $post['agama'],
+            'pekerjaan'           => $post['pekerjaan'],
+            'alamat'              => $post['alamat'],
+            'nama_orang_tua'      => $post['nama_orang_tua'],
+            'id_dtks'             => $post['id_dtks'],
+            'penghasilan_bulanan' => $post['penghasilan_bulanan'],
+            'keperluan'           => $post['keperluan'],
+            'id_user'             => $this->session->userdata('id_user')
         ];
         $this->M_sktm->update($id, $data);
         $this->session->set_flashdata('success', 'Data SKTM berhasil diperbarui.');
@@ -83,7 +100,7 @@ class Surat_sktm extends CI_Controller
 
         // 4. Generate PDF
         $filename = 'SKTM-' . preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama_pemohon);
-        $this->pdf->generate($html, $filename, 'A4', 'portrait');
+        $this->pdf->generate($html, $filename, 'F4', 'portrait');
     }
 
     public function delete($id)

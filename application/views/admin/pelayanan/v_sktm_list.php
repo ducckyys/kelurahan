@@ -27,10 +27,13 @@
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td><?= html_escape($item->nama_pemohon); ?></td>
-                                        <td><?= html_escape($item->nik_pemohon); ?></td>
+                                        <td><?= html_escape($item->nik); ?></td>
                                         <td><?= html_escape($item->penghasilan_bulanan); ?></td>
                                         <td>
                                             <div class="form-button-action">
+                                                <a href="<?= base_url('admin/surat_sktm/detail/' . $item->id); ?>" title="Lihat Detail" class="btn btn-link btn-info">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
                                                 <a href="<?= base_url('admin/surat_sktm/cetak/' . $item->id); ?>" target="_blank" title="Cetak Surat" class="btn btn-link btn-success">
                                                     <i class="fa fa-print"></i>
                                                 </a>

@@ -12,14 +12,21 @@ class M_berita extends CI_Model
         return $this->db->count_all('berita');
     }
 
-    // Fungsi get_all diubah untuk menerima limit dan offset
-    public function get_all($limit, $start)
+    public function get_all()
     {
         $this->db->select('berita.*, user.nama_lengkap');
         $this->db->from('berita');
         $this->db->join('user', 'user.id_user = berita.id_user', 'left');
         $this->db->order_by('tgl_publish', 'DESC');
-        $this->db->limit($limit, $start);
+        return $this->db->get()->result();
+    }
+
+    public function get_all_for_admin()
+    {
+        $this->db->select('berita.*, user.nama_lengkap');
+        $this->db->from('berita');
+        $this->db->join('user', 'user.id_user = berita.id_user', 'left');
+        $this->db->order_by('tgl_publish', 'DESC');
         return $this->db->get()->result();
     }
 

@@ -21,6 +21,43 @@
     </div>
 </section>
 
+<section id="galeri" class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="section-title">Galeri Kademangan</h2>
+                <p class="text-muted">Area Kademangan.</p>
+            </div>
+        </div>
+        <?php if (!empty($galeri_list)) : ?>
+            <div id="carouselGaleri" class="carousel slide shadow-sm rounded-4 overflow-hidden" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <?php foreach ($galeri_list as $key => $item) : ?>
+                        <div class="carousel-item <?= ($key == 0) ? 'active' : ''; ?>">
+                            <img src="<?= base_url('uploads/galeri/' . $item->foto); ?>" class="d-block w-100" alt="<?= html_escape($item->judul_foto); ?>" style="min-height: 400px; object-fit: cover;">
+                            <div class="carousel-caption d-none d-md-block text-start">
+                                <h5><?= html_escape($item->judul_foto); ?></h5>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleri" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleri" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        <?php else : ?>
+            <div class="col-12 text-center">
+                <p>Belum ada foto di galeri.</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+
 <section id="berita" class="py-5 bg-light">
     <div class="container">
         <div class="row mb-4">
@@ -68,7 +105,7 @@ if (!empty($youtube_link)) {
             <div class="container">
                 <div class="row mb-4">
                     <div class="col-12 text-center">
-                        <h2 class="section-title">Video Profil</h2>
+                        <h2 class="section-title">Video</h2>
                         <p class="text-muted">Kenali lebih dekat Kelurahan Kademangan.</p>
                     </div>
                 </div>
@@ -90,7 +127,7 @@ if (!empty($youtube_link)) {
     <div class="container">
         <div class="row mb-4">
             <div class="col-12 text-center">
-                <h2 class="section-title">Informasi Penting</h2>
+                <h2 class="section-title">Informasi Kademangan</h2>
                 <p class="text-muted">Pengumuman penting dari kelurahan untuk warga.</p>
             </div>
         </div>
@@ -118,39 +155,5 @@ if (!empty($youtube_link)) {
                 </div>
             <?php endif; ?>
         </div>
-    </div>
-</section>
-
-<section id="galeri" class="py-5">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-12 text-center">
-                <h2 class="section-title">Galeri</h2>
-                <p class="text-muted">Dokumentasi kegiatan yang telah dilaksanakan di kelurahan.</p>
-            </div>
-        </div>
-        <?php if (!empty($galeri_list)) : ?>
-            <div id="carouselGaleri" class="carousel slide shadow-sm rounded-4 overflow-hidden" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <?php foreach ($galeri_list as $key => $item) : ?>
-                        <div class="carousel-item <?= ($key == 0) ? 'active' : ''; ?>">
-                            <img src="<?= base_url('uploads/galeri/' . $item->foto); ?>" class="d-block w-100" alt="<?= html_escape($item->judul_foto); ?>">
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleri" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleri" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        <?php else : ?>
-            <div class="col-12 text-center">
-                <p>Belum ada foto di galeri.</p>
-            </div>
-        <?php endif; ?>
     </div>
 </section>

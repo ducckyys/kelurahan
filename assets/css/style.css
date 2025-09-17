@@ -74,3 +74,31 @@ informasi */
   object-position: center;      /* fokus tengah gambar */
   border-radius: 0.75rem;
 }
+
+.carousel-item .carousel-caption {
+        /* Styling dasar untuk overlay */
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+        /* Gradien dari bawah ke atas */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 40px 20px 20px 20px;
+        /* Padding atas lebih besar untuk gradien */
+
+        /* Logika untuk efek hover */
+        opacity: 0;
+        /* Sembunyikan secara default */
+        transition: opacity 0.4s ease-in-out;
+        /* Animasi fade yang halus */
+    }
+
+    /* Saat carousel di-hover, tampilkan caption */
+    #carouselGaleri:hover .carousel-item.active .carousel-caption {
+        opacity: 1;
+    }
+
+    .carousel-caption h5 {
+        font-weight: bold;
+        font-size: 2.5rem;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }

@@ -63,7 +63,7 @@
         }
 
         .kop-logo img {
-            width: 150px;
+            width: 140px;
             margin-left: 20px;
             height: auto;
         }
@@ -129,11 +129,13 @@
 
         .isi-surat.pembuka {
             text-indent: 0.5in;
+            line-height: 1;
             margin-bottom: 1em;
         }
 
         .data-pemohon {
             padding-left: 0.5in;
+            line-height: 1;
             margin: 15px 0;
         }
 
@@ -156,7 +158,7 @@
             float: right;
             text-align: center;
             margin-top: 10px;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .ttd p {
@@ -173,7 +175,7 @@
 </head>
 
 <body>
-    <div class="watermark">SKTM</div>
+    <div class="watermark">SDY</div>
     <div id="header">
         <div class="kop-surat-wrapper">
             <table class="kop-table">
@@ -199,26 +201,25 @@
         </div>
     </div>
 
-
     <div id="content">
-        <p class="judul-surat">SURAT KETERANGAN TIDAK MAMPU</p>
-        <p class="nomor-surat">Nomor: 401 / <?= str_repeat("&nbsp;", 10); ?> -Kel.KDM/<?= date('Y'); ?> </p>
+        <p class="judul-surat">SURAT KETERANGAN</p>
+        <p class="nomor-surat">Nomor : 145 / <?= str_repeat("&nbsp;", 10); ?> / Kel.Kdm/ <?= date('Y'); ?></p>
 
-        <p class="isi-surat pembuka">Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan, dengan ini menerangkan bahwa:</p>
+        <p class="isi-surat pembuka">Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan dengan ini menerangkan bahwa :</p>
 
-        <table class="data-pemohon">
+        <table class="data-blok">
             <tr>
                 <td>Nama</td>
                 <td>:</td>
-                <td><b><?= html_escape(strtoupper($surat->nama_pemohon)); ?></b></td>
+                <td><b><?= html_escape(strtoupper($surat->nama_penanggung_jawab)); ?></b></td>
             </tr>
             <tr>
-                <td>Tempat/tanggal lahir</td>
+                <td>Tempat, tanggal lahir</td>
                 <td>:</td>
                 <td><?= html_escape($surat->tempat_lahir . ', ' . date('d-m-Y', strtotime($surat->tanggal_lahir))); ?></td>
             </tr>
             <tr>
-                <td>NIK</td>
+                <td>Nomor KTP</td>
                 <td>:</td>
                 <td><?= html_escape($surat->nik); ?></td>
             </tr>
@@ -228,9 +229,9 @@
                 <td><?= html_escape($surat->jenis_kelamin); ?></td>
             </tr>
             <tr>
-                <td>Warganegara</td>
+                <td>Kewarganegaraan</td>
                 <td>:</td>
-                <td><?= html_escape($surat->warganegara); ?></td>
+                <td><?= html_escape($surat->kewarganegaraan); ?></td>
             </tr>
             <tr>
                 <td>Agama</td>
@@ -238,45 +239,79 @@
                 <td><?= html_escape($surat->agama); ?></td>
             </tr>
             <tr>
-                <td>Pekerjaan</td>
+                <td>Alamat</td>
                 <td>:</td>
-                <td><?= html_escape($surat->pekerjaan); ?></td>
-            </tr>
-            <tr>
-                <td>Nama Orang Tua</td>
-                <td>:</td>
-                <td><?= html_escape($surat->nama_orang_tua); ?></td>
-            </tr>
-            <tr>
-                <td>Alamat Asal</td>
-                <td>:</td>
-                <td><?= html_escape($surat->alamat); ?></td>
-            </tr>
-            <tr>
-                <td>ID DTKS</td>
-                <td>:</td>
-                <td><?= !empty($surat->id_dtks) ? html_escape($surat->id_dtks) : '-'; ?></td>
-            </tr>
-            <tr>
-                <td>Penghasilan Bulanan</td>
-                <td>:</td>
-                <td><?= html_escape($surat->penghasilan_bulanan); ?></td>
+                <td><?= html_escape($surat->alamat_pemohon); ?></td>
             </tr>
         </table>
 
-        <p class="isi-surat pembuka">Telah datang menghadap memohon surat keterangan tidak mampu, berdasarkan informasi dari surat pengantar RT/RW. Nomor: <?= html_escape($surat->nomor_surat_rt); ?> tanggal <?= date('d F Y', strtotime($surat->tanggal_surat_rt)); ?> serta surat pernyataan pemohon bahwa sesuai kemampuan dan keterbatasan harta benda, ekonomi dan lain sebagainya yang dimiliki pada kondisi saat ini, bahwa nama tersebut tergolong <b>tidak mampu (Pra Sejahtera)</b>.</p>
-        <p class="isi-surat pembuka">Surat Keterangan ini diperlukan untuk: <b><?= html_escape($surat->keperluan); ?></b></p>
-        <p class="isi-surat pembuka">Apabila di kemudian hari surat penyataan Pemohon tidak benar, atau melanggar peraturan dan ketentuan hukum yang berlaku, sepenuhnya menjadi tanggung jawab pemohon, membebaskan para saksi, dan pejabat lurah, yang ikut menandatangani surat keterangan ini dari segala tuntutan hukum.</p>
-        <p class="isi-surat pembuka">Demikian Surat Keterangan ini dibuat dan agar kepada pihak-pihak berkepentingan dapat membantu sesuai dengan ketentuan yang berlaku.</p>
+        <p class="isi-surat pembuka">Telah datang menghadap, melapor dan memohon surat keterangan, berdasarkan pernyataan dan dokumen pemohon, yang bersangkutan memiliki Yayasan dengan data Sebagai berikut:</p>
+
+        <table class="data-blok">
+            <tr>
+                <td>Nama Organisasi</td>
+                <td>:</td>
+                <td><b><?= html_escape(strtoupper($surat->nama_organisasi)); ?></b></td>
+            </tr>
+            <tr>
+                <td>Penanggung Jawab</td>
+                <td>:</td>
+                <td><?= html_escape($surat->nama_penanggung_jawab); ?></td>
+            </tr>
+            <tr>
+                <td>Jenis Kegiatan</td>
+                <td>:</td>
+                <td><?= html_escape($surat->jenis_kegiatan); ?></td>
+            </tr>
+            <tr>
+                <td>Alamat Kantor</td>
+                <td>:</td>
+                <td><?= html_escape($surat->alamat_kantor); ?></td>
+            </tr>
+            <tr>
+                <td>Jumlah Pengurus</td>
+                <td>:</td>
+                <td><?= html_escape($surat->jumlah_pengurus); ?> (Orang)</td>
+            </tr>
+            <tr>
+                <td>Akta Pendirian</td>
+                <td>:</td>
+                <td>Notaris: <?= html_escape($surat->nama_notaris_pendirian); ?></td>
+            </tr>
+            <tr>
+                <td>Nomor</td>
+                <td>:</td>
+                <td><?= html_escape($surat->nomor_akta_pendirian); ?>,- Tanggal: <?= date('d F Y', strtotime($surat->tanggal_akta_pendirian)); ?></td>
+            </tr>
+            <?php if (!empty($surat->nomor_akta_perubahan)): ?>
+                <tr>
+                    <td>Akta Perubahan</td>
+                    <td>:</td>
+                    <td>Notaris: <?= html_escape($surat->nama_notaris_perubahan); ?></td>
+                </tr>
+                <tr>
+                    <td>Nomor</td>
+                    <td>:</td>
+                    <td><?= html_escape($surat->nomor_akta_perubahan); ?>,- Tanggal: <?= date('d F Y', strtotime($surat->tanggal_akta_perubahan)); ?></td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <td>NPWP</td>
+                <td>:</td>
+                <td><?= html_escape($surat->npwp); ?></td>
+            </tr>
+        </table>
+
+        <p class="isi-surat pembuka">Demikian surat keterangan ini dibuat, sesuai dengan data pemohon, apabila di kemudian hari keterangan atau pengakuan pemohon tidak benar, atau melanggar ketentuan yang berlaku sepenuhnya menjadi tanggung jawab pemohon tidak melibatkan pihak RT/RW dan Pejabat yang menandatangani surat keterangan ini.</p>
 
         <div class="closing-section">
             <div class="ttd">
-                <p>Kademangan, <?= date('d F Y'); ?>
-                    <br>a.n. Lurah Kademangan<br>Sekretaris Kelurahan
+                <p>Tangerang Selatan, <?= date('d F Y'); ?>
+                    <br>Sesuai Permohonan Pemohon<br>Lurah
                 </p>
-                <br><br><br>
-                <p style="text-decoration: underline; font-weight: bold;">NAMA SEKRETARIS LURAH</p>
-                <p>NIP. NIP SEKRETARIS LURAH</p>
+                <br><br><br><br>
+                <p style="text-decoration: underline; font-weight: bold;">NAMA LURAH</p>
+                <p>NIP. NIP LURAH</p>
             </div>
         </div>
     </div>
