@@ -29,7 +29,7 @@ class Surat_domisili_yayasan extends CI_Controller
         $data['list'] = $this->M_domisili_yayasan->get_all();
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
-        $this->load->view('admin/pelayanan/v_domisili_yayasan_list', $data);
+        $this->load->view('admin/surat_domisili_yayasan/v_list', $data);
         $this->load->view('layouts/footer');
     }
     public function detail($id)
@@ -38,7 +38,7 @@ class Surat_domisili_yayasan extends CI_Controller
         $data['title'] = "Detail Surat Domisili Yayasan";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
-        $this->load->view('admin/pelayanan/v_domisili_yayasan_detail', $data);
+        $this->load->view('admin/surat_domisili_yayasan/v_detail', $data);
         $this->load->view('layouts/footer');
     }
     public function edit($id)
@@ -47,7 +47,7 @@ class Surat_domisili_yayasan extends CI_Controller
         $data['title'] = "Edit Surat Domisili Yayasan";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
-        $this->load->view('admin/pelayanan/v_domisili_yayasan_edit', $data);
+        $this->load->view('admin/surat_domisili_yayasan/v_edit', $data);
         $this->load->view('layouts/footer');
     }
     public function update($id)
@@ -92,7 +92,7 @@ class Surat_domisili_yayasan extends CI_Controller
         $data['surat'] = $this->M_domisili_yayasan->get_by_id($id);
         $data['title'] = "Cetak Surat Domisili Yayasan";
         $this->load->library('pdf');
-        $html = $this->load->view('admin/pelayanan/v_domisili_yayasan_cetak', $data, true);
+        $html = $this->load->view('admin/surat_domisili_yayasan/v_cetak', $data, true);
         $this->pdf->generate($html, 'surat-domisili-yayasan-' . $id, 'A4', 'portrait');
     }
 }

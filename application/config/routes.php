@@ -71,20 +71,6 @@ $route['berita/detail/(:any)'] = 'berita/detail/$1';
 $route['informasi'] = 'informasi/index';
 $route['informasi/detail/(:num)'] = 'informasi/detail/$1';
 
-// Rute untuk Fitur Pelayanan
-$route['pelayanan'] = 'pelayanan/index';
-$route['pelayanan/sukses'] = 'pelayanan/sukses';
-
-// Rute untuk menampilkan form layanan
-$route['pelayanan/izin-usaha'] = 'pelayanan/izin_usaha';
-$route['pelayanan/pengantar-nikah'] = 'pelayanan/pengantar_nikah';
-$route['pelayanan/tidak-mampu'] = 'pelayanan/tidak_mampu';
-
-// Rute untuk memproses form submission
-$route['pelayanan/submit-usaha'] = 'pelayanan/submit_usaha';
-$route['pelayanan/submit-nikah'] = 'pelayanan/submit_nikah';
-$route['pelayanan/submit-sktm'] = 'pelayanan/submit_sktm';
-
 /*
 | -------------------------------------------------------------------------
 | Rute untuk Halaman Admin akan ditangani secara otomatis oleh CodeIgniter

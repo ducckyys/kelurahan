@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 17, 2025 at 05:24 AM
+-- Generation Time: Sep 18, 2025 at 05:13 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -167,6 +167,31 @@ INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `surat_belum_memiliki_rumah`
+--
+
+CREATE TABLE `surat_belum_memiliki_rumah` (
+  `id` int(11) NOT NULL,
+  `nomor_surat` varchar(100) DEFAULT NULL,
+  `nama_pemohon` varchar(255) NOT NULL,
+  `nik` varchar(16) NOT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
+  `kewarganegaraan` varchar(100) NOT NULL DEFAULT 'Indonesia',
+  `agama` varchar(50) NOT NULL,
+  `pekerjaan` varchar(150) NOT NULL,
+  `alamat` text NOT NULL,
+  `keperluan` text NOT NULL,
+  `nomor_surat_rt` varchar(100) NOT NULL,
+  `tanggal_surat_rt` date NOT NULL,
+  `scan_surat_rt` varchar(255) NOT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `surat_domisili_yayasan`
 --
 
@@ -235,7 +260,8 @@ CREATE TABLE `surat_sktm` (
 --
 
 INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `tgl_dibuat`, `id_user`) VALUES
-(1, '089/SP/RT.003/IX/2025', '2025-09-11', '92c1f7dee71ca4a3a2ebb5de2c04accb.pdf', 'AUDYA MAUDY PUTRI', 'Tangerang Selatan', '2015-08-08', '3674074808151001', 'Perempuan', 'Indonesia', 'Islam', 'Pelajar/mahasiswa', 'MAYANG WIDARAPURI', 'Perum Villa Tekno Blok M 16 RT 003 RW 009 Kelurahan kademangan Kecamatan Setu Kota Tangerang Selatan.\r\n', 'Belum Terdaftar', '< Rp 1.000.000', ' Persyaratan PIP', '2025-09-16 09:27:02', NULL);
+(1, '089/SP/RT.003/IX/2025', '2025-09-11', '92c1f7dee71ca4a3a2ebb5de2c04accb.pdf', 'AUDYA MAUDY PUTRI', 'Tangerang Selatan', '2015-08-08', '3674074808151001', 'Perempuan', 'Indonesia', 'Islam', 'Pelajar/mahasiswa', 'MAYANG WIDARAPURI', 'Perum Villa Tekno Blok M 16 RT 003 RW 009 Kelurahan kademangan Kecamatan Setu Kota Tangerang Selatan.\r\n', 'Belum Terdaftar', '< Rp 1.000.000', ' Persyaratan PIP', '2025-09-16 09:27:02', NULL),
+(2, '089/SP/RT.003/IX/2025', '2025-09-18', '277990d963215990fe8c3651711e8d2c.pdf', 'Andrian fakih', 'Tangerang Selatan', '2025-09-18', '3171070901010006', 'Laki-laki', 'Indonesia', 'Islam', 'Pelajar/mahasiswa', 'MAYANG WIDARAPURI', 'Ciledug', 'Belum Terdaftar', 'Rp 1.000.000 - Rp 2.500.000', 'Pengajuan Beasiswa Kuliah', '2025-09-18 09:59:12', NULL);
 
 -- --------------------------------------------------------
 
@@ -301,6 +327,12 @@ ALTER TABLE `surat_belum_bekerja`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `surat_belum_memiliki_rumah`
+--
+ALTER TABLE `surat_belum_memiliki_rumah`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `surat_domisili_yayasan`
 --
 ALTER TABLE `surat_domisili_yayasan`
@@ -360,6 +392,12 @@ ALTER TABLE `surat_belum_bekerja`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `surat_belum_memiliki_rumah`
+--
+ALTER TABLE `surat_belum_memiliki_rumah`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `surat_domisili_yayasan`
 --
 ALTER TABLE `surat_domisili_yayasan`
@@ -369,7 +407,7 @@ ALTER TABLE `surat_domisili_yayasan`
 -- AUTO_INCREMENT for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`

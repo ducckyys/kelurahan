@@ -32,6 +32,7 @@
 
 <script src="<?= base_url('assets/admin/js/plugin/chart-circle/circles.min.js'); ?>"></script>
 
+<link rel="stylesheet" href="<?= base_url('assets/admin/js/plugin/datatables/datatables.min.css'); ?>">
 <script src="<?= base_url('assets/admin/js/plugin/datatables/datatables.min.js'); ?>"></script>
 
 <script src="<?= base_url('assets/admin/js/plugin/bootstrap-notify/bootstrap-notify.min.js'); ?>"></script>

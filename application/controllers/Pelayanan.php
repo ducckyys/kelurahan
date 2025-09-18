@@ -9,6 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property M_sktm $M_sktm
  * @property M_belum_bekerja $M_belum_bekerja
  * @property M_domisili_yayasan $M_domisili_yayasan
+ * @property M_belum_memiliki_rumah $M_belum_memiliki_rumah
  */
 class Pelayanan extends CI_Controller
 {
@@ -16,6 +17,7 @@ class Pelayanan extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->model(['M_sktm', 'M_belum_bekerja', 'M_domisili_yayasan', 'M_belum_memiliki_rumah']);
     }
 
     // Menampilkan halaman utama pilihan layanan
@@ -41,6 +43,12 @@ class Pelayanan extends CI_Controller
                 'title' => 'Surat Domisili Yayasan',
                 'desc'  => 'Ajukan surat keterangan domisili untuk organisasi, yayasan, atau lembaga.',
                 'slug'  => 'domisili-yayasan'
+            ],
+            [
+                'icon'  => 'bi-house',
+                'title' => 'Surat Belum Memiliki Rumah',
+                'desc'  => 'Ajukan surat keterangan bahwa pemohon belum memiliki rumah.',
+                'slug'  => 'belum-memiliki-rumah'
             ]
         ];
         $this->load->view('layouts_frontend/header', $data);
@@ -59,61 +67,96 @@ class Pelayanan extends CI_Controller
 
     public function submit_sktm()
     {
-        // Aturan validasi lengkap untuk SKTM
-        $this->form_validation->set_rules('nama_pemohon', 'Nama Pemohon', 'required|trim');
-        $this->form_validation->set_rules('jenis_kelamin_pemohon', 'Jenis Kelamin', 'required');
-        $this->form_validation->set_rules('tempat_lahir_pemohon', 'Tempat Lahir', 'required|trim');
-        $this->form_validation->set_rules('tgl_lahir_pemohon', 'Tanggal Lahir', 'required');
-        $this->form_validation->set_rules('nik_pemohon', 'NIK', 'required|trim|numeric|min_length[16]|max_length[16]', ['numeric' => '%s harus angka.', 'min_length' => '%s harus 16 digit.', 'max_length' => '%s harus 16 digit.']);
-        $this->form_validation->set_rules('agama_pemohon', 'Agama', 'required|trim');
-        $this->form_validation->set_rules('pekerjaan_pemohon', 'Pekerjaan', 'required|trim');
-        $this->form_validation->set_rules('alamat_pemohon', 'Alamat', 'required|trim');
-        $this->form_validation->set_rules('penghasilan_bulanan', 'Penghasilan', 'required');
-        $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
-        $this->form_validation->set_rules('atas_nama', 'Atas Nama', 'trim');
-        $this->form_validation->set_rules('agree', 'Persetujuan', 'required', ['required' => 'Anda harus menyetujui pernyataan.']);
+        $this->load->library('form_validation');
 
+        // error tanpa <p> wrapper (biar cocok dengan invalid-feedback)
+        $this->form_validation->set_error_delimiters('', '');
+
+        // ===== VALIDASI: gunakan nama field BARU (match DB) =====
+        $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT/RW', 'required|trim');
+        $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT/RW', 'required|trim');
+
+        $this->form_validation->set_rules('nama_pemohon', 'Nama Pemohon', 'required|trim');
+        $this->form_validation->set_rules('nik', 'NIK', 'required|trim|numeric|exact_length[16]', [
+            'numeric'       => '%s harus angka.',
+            'exact_length'  => '%s harus 16 digit.'
+        ]);
+        $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|in_list[Laki-laki,Perempuan]');
+        $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required|trim');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required|trim');
+
+        $this->form_validation->set_rules('agama', 'Agama', 'required|trim');
+        $this->form_validation->set_rules('pekerjaan', 'Pekerjaan', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+        $this->form_validation->set_rules('warganegara', 'Warganegara', 'required|trim');
+
+        $this->form_validation->set_rules('penghasilan_bulanan', 'Penghasilan', 'required');
+        $this->form_validation->set_rules('nama_orang_tua', 'Nama Orang Tua', 'required|trim');
+        $this->form_validation->set_rules('id_dtks', 'ID DTKS', 'trim'); // opsional
+        $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
+
+        $this->form_validation->set_rules('agree', 'Persetujuan', 'required', [
+            'required' => 'Anda harus menyetujui pernyataan.'
+        ]);
+
+        // ===== Jika validasi gagal: kembali ke form =====
+        if ($this->form_validation->run() === FALSE) {
+            return $this->tidak_mampu();
+        }
+
+        // ===== Proses upload (wajib ada file) =====
         $config['upload_path']   = './uploads/surat_rt/';
         $config['allowed_types'] = 'pdf|jpg|png|jpeg';
         $config['max_size']      = 2048;
         $config['encrypt_name']  = TRUE;
+
+        if (!is_dir($config['upload_path'])) {
+            @mkdir($config['upload_path'], 0755, TRUE);
+        }
+
         $this->load->library('upload', $config);
 
-        if ($this->form_validation->run() == FALSE || !$this->upload->do_upload('scan_surat_rt')) {
-            $data = ['title' => "Formulir SKTM"];
-            if (!$this->upload->do_upload('scan_surat_rt') && !empty($_FILES['scan_surat_rt']['name'])) {
-                $this->session->set_flashdata('upload_error', $this->upload->display_errors());
-            }
-            $this->load->view('layouts_frontend/header', $data);
-            $this->load->view('pages/v_form_sktm', $data);
-            $this->load->view('layouts_frontend/footer');
-        } else {
-            $post = $this->input->post();
-            $upload_data = $this->upload->data();
-            $data_to_save = [
-                'nomor_surat_rt'      => $post['nomor_surat_rt'],
-                'tanggal_surat_rt'    => $post['tanggal_surat_rt'],
-                'scan_surat_rt'       => $upload_data['file_name'],
-                'nama_pemohon'        => $post['nama_pemohon'],
-                'tempat_lahir'        => $post['tempat_lahir'],
-                'tanggal_lahir'       => $post['tanggal_lahir'],
-                'nik'                 => $post['nik'],
-                'jenis_kelamin'       => $post['jenis_kelamin'],
-                'warganegara'         => $post['warganegara'],
-                'agama'               => $post['agama'],
-                'pekerjaan'           => $post['pekerjaan'],
-                'nama_orang_tua'      => $post['nama_orang_tua'],
-                'alamat'              => $post['alamat'],
-                'id_dtks'             => $post['id_dtks'],
-                'penghasilan_bulanan' => $post['penghasilan_bulanan'],
-                'keperluan'           => $post['keperluan'],
-            ];
-
-            $this->load->model('M_sktm');
-            $this->M_sktm->save($data_to_save);
-            $this->session->set_flashdata('success', 'Pengajuan SKTM Anda telah berhasil dikirim.');
-            redirect('pelayanan/sukses');
+        if (empty($_FILES['scan_surat_rt']['name'])) {
+            $this->session->set_flashdata('upload_error', 'File surat RT/RW wajib diunggah.');
+            return $this->tidak_mampu();
         }
+
+        if (!$this->upload->do_upload('scan_surat_rt')) {
+            $this->session->set_flashdata('upload_error', $this->upload->display_errors('', ''));
+            return $this->tidak_mampu();
+        }
+
+        $upload_data = $this->upload->data();
+
+        // ===== Siapkan data untuk disimpan (match kolom tabel) =====
+        $post = $this->input->post(NULL, TRUE); // sanitasi XSS
+        $data_to_save = [
+            'nomor_surat_rt'      => $post['nomor_surat_rt'],
+            'tanggal_surat_rt'    => $post['tanggal_surat_rt'],
+            'scan_surat_rt'       => $upload_data['file_name'],
+
+            'nama_pemohon'        => $post['nama_pemohon'],
+            'tempat_lahir'        => $post['tempat_lahir'],
+            'tanggal_lahir'       => $post['tanggal_lahir'],
+            'nik'                 => $post['nik'],
+            'jenis_kelamin'       => $post['jenis_kelamin'],
+            'warganegara'         => !empty($post['warganegara']) ? $post['warganegara'] : 'Indonesia',
+            'agama'               => $post['agama'],
+            'pekerjaan'           => $post['pekerjaan'],
+            'nama_orang_tua'      => $post['nama_orang_tua'],
+            'alamat'              => $post['alamat'],
+
+            'id_dtks'             => $post['id_dtks'] ?: NULL,
+            'penghasilan_bulanan' => $post['penghasilan_bulanan'],
+            'keperluan'           => $post['keperluan'],
+            // 'id_user'           => (int) $this->session->userdata('user_id') ?: NULL, // kalau mau ikut simpan
+        ];
+
+        $this->load->model('M_sktm');
+        $this->M_sktm->save($data_to_save);
+
+        $this->session->set_flashdata('success', 'Pengajuan SKTM Anda telah berhasil dikirim.');
+        return redirect('pelayanan/sukses');
     }
 
     // --- FORM BELUM BEKERJA ---
@@ -140,6 +183,9 @@ class Pelayanan extends CI_Controller
         $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
         $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
         $this->form_validation->set_rules('pekerjaan', 'Pekerjaan', 'required|trim');
+        $this->form_validation->set_rules('agree', 'Persetujuan', 'required', [
+            'required' => 'Anda harus menyetujui pernyataan.'
+        ]);
 
         $config['upload_path']   = './uploads/surat_rt/';
         $config['allowed_types'] = 'pdf|jpg|png|jpeg';
@@ -213,6 +259,9 @@ class Pelayanan extends CI_Controller
         $this->form_validation->set_rules('nomor_akta_pendirian', 'Nomor Akta Pendirian', 'required|trim');
         $this->form_validation->set_rules('tanggal_akta_pendirian', 'Tanggal Akta Pendirian', 'required');
         $this->form_validation->set_rules('npwp', 'NPWP', 'required|trim');
+        $this->form_validation->set_rules('agree', 'Persetujuan', 'required', [
+            'required' => 'Anda harus menyetujui pernyataan.'
+        ]);
 
         // Field akta perubahan tidak wajib, jadi hanya divalidasi 'trim' jika diisi
         $this->form_validation->set_rules('nama_notaris_perubahan', 'Nama Notaris Perubahan', 'trim');
@@ -253,6 +302,84 @@ class Pelayanan extends CI_Controller
             redirect('pelayanan/sukses');
         }
     }
+
+    public function belum_memiliki_rumah()
+    {
+        $data['title'] = "Formulir Surat Belum Memiliki Rumah";
+        $this->load->view('layouts_frontend/header', $data);
+        $this->load->view('pages/v_form_belum_memiliki_rumah', $data);
+        $this->load->view('layouts_frontend/footer');
+    }
+
+    public function submit_belum_memiliki_rumah()
+    {
+        $this->form_validation->set_error_delimiters('', '');
+
+        $this->form_validation->set_rules('nama_pemohon', 'Nama Pemohon', 'required|trim');
+        $this->form_validation->set_rules('nik', 'NIK', 'required|trim|numeric|exact_length[16]');
+        $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|in_list[Laki-laki,Perempuan]');
+        $this->form_validation->set_rules('kewarganegaraan', 'Kewarganegaraan', 'required|trim');
+        $this->form_validation->set_rules('agama', 'Agama', 'required|trim');
+        $this->form_validation->set_rules('pekerjaan', 'Pekerjaan', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+        $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
+        $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT/RW', 'required|trim');
+        $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT/RW', 'required|trim');
+        $this->form_validation->set_rules('agree', 'Persetujuan', 'required', [
+            'required' => 'Anda harus menyetujui pernyataan.'
+        ]);
+        $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required|trim');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required');
+
+
+        if ($this->form_validation->run() === FALSE) {
+            return $this->belum_memiliki_rumah();
+        }
+
+        // Upload wajib
+        $config = [
+            'upload_path'   => './uploads/surat_rt/',
+            'allowed_types' => 'pdf|jpg|jpeg|png',
+            'max_size'      => 2048,
+            'encrypt_name'  => TRUE,
+        ];
+        if (!is_dir($config['upload_path'])) @mkdir($config['upload_path'], 0755, TRUE);
+        $this->load->library('upload', $config);
+
+        if (empty($_FILES['scan_surat_rt']['name'])) {
+            $this->session->set_flashdata('upload_error', 'File surat RT/RW wajib diunggah.');
+            return $this->belum_memiliki_rumah();
+        }
+        if (!$this->upload->do_upload('scan_surat_rt')) {
+            $this->session->set_flashdata('upload_error', $this->upload->display_errors('', ''));
+            return $this->belum_memiliki_rumah();
+        }
+        $up = $this->upload->data();
+
+        $post = $this->input->post(NULL, TRUE);
+        $data_to_save = [
+            'nama_pemohon'     => $post['nama_pemohon'],
+            'nik'              => $post['nik'],
+            'jenis_kelamin'    => $post['jenis_kelamin'],
+            'kewarganegaraan'  => $post['kewarganegaraan'] ?: 'Indonesia',
+            'agama'            => $post['agama'],
+            'pekerjaan'        => $post['pekerjaan'],
+            'alamat'           => $post['alamat'],
+            'keperluan'        => $post['keperluan'],
+            'nomor_surat_rt'   => $post['nomor_surat_rt'],
+            'tanggal_surat_rt' => $post['tanggal_surat_rt'],
+            'scan_surat_rt'    => $up['file_name'],
+            'tempat_lahir'     => $post['tempat_lahir'],
+            'tanggal_lahir'    => $post['tanggal_lahir']
+        ];
+
+        $this->load->model('M_belum_memiliki_rumah');
+        $this->M_belum_memiliki_rumah->save($data_to_save);
+
+        $this->session->set_flashdata('success', 'Pengajuan Anda telah berhasil dikirim.');
+        return redirect('pelayanan/sukses');
+    }
+
 
     // --- HALAMAN SUKSES ---
     public function sukses()

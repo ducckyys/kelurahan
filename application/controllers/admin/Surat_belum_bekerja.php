@@ -26,7 +26,7 @@ class Surat_belum_bekerja extends CI_Controller
         $data['list'] = $this->M_belum_bekerja->get_all();
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
-        $this->load->view('admin/pelayanan/v_belum_bekerja_list', $data);
+        $this->load->view('admin/surat_belum_bekerja/v_list', $data);
         $this->load->view('layouts/footer');
     }
 
@@ -40,7 +40,7 @@ class Surat_belum_bekerja extends CI_Controller
         $data['title'] = "Detail Surat Ket. Belum Bekerja";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
-        $this->load->view('admin/pelayanan/v_belum_bekerja_detail', $data); // View baru
+        $this->load->view('admin/surat_belum_bekerja/v_detail', $data);
         $this->load->view('layouts/footer');
     }
 
@@ -53,7 +53,7 @@ class Surat_belum_bekerja extends CI_Controller
         $data['title'] = "Edit Surat Ket. Belum Bekerja";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
-        $this->load->view('admin/pelayanan/v_belum_bekerja_edit', $data);
+        $this->load->view('admin/surat_belum_bekerja/v_edit', $data);
         $this->load->view('layouts/footer');
     }
 
@@ -104,7 +104,7 @@ class Surat_belum_bekerja extends CI_Controller
 
         $this->load->library('pdf');
         // Kita panggil view baru yang akan kita buat
-        $html = $this->load->view('admin/pelayanan/v_belum_bekerja_cetak', $data, true);
+        $html = $this->load->view('admin/surat_belum_bekerja/v_cetak', $data, true);
         $filename = 'surat-belum-bekerja-' . $data['surat']->nik;
 
         // Pilih ukuran kertas A4 atau F4
