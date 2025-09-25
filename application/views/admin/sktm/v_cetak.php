@@ -258,7 +258,7 @@
 
     <div id="content">
         <p class="judul-surat">SURAT KETERANGAN TIDAK MAMPU</p>
-        <p class="nomor-surat">Nomor: 401 / <?= str_repeat("&nbsp;", 10); ?>/ Kel.KDM/<?= date('Y'); ?></p>
+        <p class="nomor-surat">Nomor: <?= html_escape($surat->nomor_surat); ?></p>
 
         <p class="isi-surat pembuka">
             Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan, dengan ini menerangkan bahwa:

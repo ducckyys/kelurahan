@@ -23,36 +23,16 @@
                     </a>
                 </li>
 
-                <li class="nav-section">
-                    <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
-                    <h4 class="text-section">KONTEN</h4>
-                </li>
-                <li class="nav-item <?= ($this->uri->segment(2) == 'berita') ? 'active' : ''; ?>">
-                    <a href="<?= base_url('admin/berita'); ?>">
-                        <i class="fas fa-newspaper"></i>
-                        <p>Berita</p>
-                    </a>
-                </li>
-                <li class="nav-item <?= ($this->uri->segment(2) == 'informasi') ? 'active' : ''; ?>">
-                    <a href="<?= base_url('admin/informasi'); ?>">
-                        <i class="fas fa-bullhorn"></i>
-                        <p>Informasi</p>
-                    </a>
-                </li>
-                <li class="nav-item <?= ($this->uri->segment(2) == 'galeri') ? 'active' : ''; ?>">
-                    <a href="<?= base_url('admin/galeri'); ?>">
-                        <i class="far fa-images"></i>
-                        <p>Galeri</p>
-                    </a>
-                </li>
-
                 <?php
                 // daftar layanan
                 $services = [
-                    ['slug' => 'surat_sktm',                  'url' => 'admin/surat_sktm',                  'icon' => 'fa fa-shield-alt',     'label' => 'SKTM'],
-                    ['slug' => 'surat_belum_bekerja',         'url' => 'admin/surat_belum_bekerja',         'icon' => 'fa fa-user',       'label' => 'Ket. Belum Bekerja'],
-                    ['slug' => 'surat_domisili_yayasan',      'url' => 'admin/surat_domisili_yayasan',      'icon' => 'fa fa-university', 'label' => 'Domisili Yayasan'],
-                    ['slug' => 'surat_belum_memiliki_rumah',  'url' => 'admin/surat_belum_memiliki_rumah',  'icon' => 'fa fa-home',       'label' => 'Belum Memiliki Rumah'],
+                    ['slug' => 'surat_sktm',                  'url' => 'admin/surat_sktm',                  'icon' => 'fa fa-shield-alt',     'label' => 'Surat Keterangan Tidak Mampu'],
+                    ['slug' => 'surat_belum_bekerja',         'url' => 'admin/surat_belum_bekerja',         'icon' => 'fa fa-user',           'label' => 'Surat Keterangan Belum Bekerja'],
+                    ['slug' => 'surat_domisili_yayasan',      'url' => 'admin/surat_domisili_yayasan',      'icon' => 'fa fa-university',     'label' => 'Surat Domisili Yayasan'],
+                    ['slug' => 'surat_belum_memiliki_rumah',  'url' => 'admin/surat_belum_memiliki_rumah',  'icon' => 'fa fa-home',           'label' => 'Surat Belum Memiliki Rumah'],
+                    ['slug' => 'surat_kematian',              'url' => 'admin/surat_kematian',              'icon' => 'fa fa-crosshairs',     'label' => 'Surat Keterangan Kematian Dukcapil'],
+                    ['slug' => 'surat_kematian_nondukcapil',  'url' => 'admin/surat_kematian_nondukcapil',  'icon' => 'fa fa-user-times',     'label' => 'Surat Keterangan Kematian Non Dukcapil'],
+                    ['slug' => 'surat_suami_istri',           'url' => 'admin/surat_suami_istri',           'icon' => 'fa fa-users',          'label' => 'Surat Keterangan Suami Istri'],
                 ];
 
                 // tentukan apakah salah satu layanan sedang aktif (untuk auto-expand)
@@ -99,15 +79,32 @@
                             <p>Manajemen User</p>
                         </a>
                     </li>
-                    <li class="nav-item <?= ($this->uri->segment(2) == 'pengaturan') ? 'active' : ''; ?>">
-                        <a href="<?= base_url('admin/pengaturan'); ?>">
+                    <li class="nav-item <?= ($this->uri->segment(2) == 'uploadvideo') ? 'active' : ''; ?>">
+                        <a href="<?= base_url('admin/uploadvideo'); ?>">
                             <i class="fas fa-cog"></i>
                             <p>Upload Video</p>
                         </a>
                     </li>
+                    <li class="nav-item <?= ($this->uri->segment(2) == 'berita') ? 'active' : ''; ?>">
+                        <a href="<?= base_url('admin/berita'); ?>">
+                            <i class="fas fa-newspaper"></i>
+                            <p>Berita</p>
+                        </a>
+                    </li>
+                    <li class="nav-item <?= ($this->uri->segment(2) == 'informasi') ? 'active' : ''; ?>">
+                        <a href="<?= base_url('admin/informasi'); ?>">
+                            <i class="fas fa-bullhorn"></i>
+                            <p>Informasi</p>
+                        </a>
+                    </li>
+                    <li class="nav-item <?= ($this->uri->segment(2) == 'galeri') ? 'active' : ''; ?>">
+                        <a href="<?= base_url('admin/galeri'); ?>">
+                            <i class="far fa-images"></i>
+                            <p>Galeri</p>
+                        </a>
+                    </li>
                 <?php endif; ?>
             </ul>
-
         </div>
     </div>
 </div>

@@ -3,45 +3,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_belum_bekerja extends CI_Model
 {
-    private $table = 'surat_belum_bekerja';
 
-    /**
-     * Mengambil semua data untuk ditampilkan di tabel admin.
-     */
+    private $_table = "surat_belum_bekerja";
+
     public function get_all()
     {
-        return $this->db->order_by('tgl_dibuat', 'DESC')->get($this->table)->result();
+        // DIUBAH: Menggunakan 'created_at' yang sesuai dengan database baru
+        return $this->db->order_by('created_at', 'DESC')->get($this->_table)->result();
     }
 
-    /**
-     * Mengambil satu baris data berdasarkan ID.
-     */
     public function get_by_id($id)
     {
-        return $this->db->get_where($this->table, ['id' => $id])->row();
+        return $this->db->get_where($this->_table, ["id" => $id])->row();
     }
 
-    /**
-     * Menyimpan data baru.
-     */
     public function save($data)
     {
-        return $this->db->insert($this->table, $data);
+        return $this->db->insert($this->_table, $data);
     }
 
-    /**
-     * Memperbarui data berdasarkan ID.
-     */
     public function update($id, $data)
     {
-        return $this->db->update($this->table, $data, ['id' => $id]);
+        return $this->db->update($this->_table, $data, ['id' => $id]);
     }
 
-    /**
-     * Menghapus data berdasarkan ID.
-     */
     public function delete($id)
     {
-        return $this->db->delete($this->table, ['id' => $id]);
+        $data = $this->get_by_id($id);
+        if ($data && !empty($data->scan_surat_rt)) {
+            $file_path = './uploads/surat_rt/' . $data->scan_surat_rt;
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            }
+        }
+        return $this->db->delete($this->_table, ["id" => $id]);
     }
 }

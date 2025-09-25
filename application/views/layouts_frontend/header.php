@@ -34,8 +34,26 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="<?= site_url('home'); ?>">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= site_url('informasi'); ?>">Informasi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?= base_url('pelayanan'); ?>">Pelayanan</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Pelayanan
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/tidak-mampu'); ?>">Surat Keterangan Tidak Mampu</a></li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/belum-bekerja'); ?>">Surat Ket. Belum Bekerja</a></li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/domisili-yayasan'); ?>">Surat Domisili Yayasan</a></li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/belum-memiliki-rumah'); ?>">Surat Belum Memiliki Rumah</a></li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/kematian'); ?>">Surat Keterangan Kematian Dukcapil</a></li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/kematian-nondukcapil'); ?>">Surat Kematian (Non Dukcapil)</a></li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan/suami-istri'); ?>">Surat Keterangan Suami Istri</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="<?= site_url('pelayanan'); ?>">Layanan Lainnya</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="<?= site_url('berita'); ?>">Berita</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= site_url('lkk'); ?>">LKK</a></li>
                     <li class="nav-item ms-lg-3">
                         <a href="<?= base_url('auth/login'); ?>" class="btn btn-outline-primary px-3">Login</a>
                     </li>

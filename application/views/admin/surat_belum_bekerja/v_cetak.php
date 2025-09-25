@@ -34,22 +34,6 @@
             font-size: 12pt;
         }
 
-        /* ===== Watermark ===== */
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            z-index: -1;
-            /* cukup -1 agar aman di print engine */
-            font-size: 140pt;
-            /* dipadatkan agar konten muat */
-            font-weight: bold;
-            color: rgba(0, 0, 0, 0.08);
-            pointer-events: none;
-            user-select: none;
-        }
-
         /* ===== Header (kop) fixed ===== */
         #header {
             position: fixed;
@@ -229,7 +213,6 @@
 </head>
 
 <body>
-    <div class="watermark">SKBB</div>
 
     <div id="header">
         <div class="kop-surat-wrapper">
@@ -257,7 +240,7 @@
 
     <div id="content">
         <p class="judul-surat">SURAT KETERANGAN</p>
-        <p class="nomor-surat">Nomor: 145 / <?= str_repeat("&nbsp;", 10); ?>/ Kel.KDM/<?= date('Y'); ?></p>
+        <p class="nomor-surat">Nomor: <?= html_escape($surat->nomor_surat) ?: '.................................'; ?></p>
 
         <p class="isi-surat pembuka">
             Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan dengan ini menerangkan bahwa:

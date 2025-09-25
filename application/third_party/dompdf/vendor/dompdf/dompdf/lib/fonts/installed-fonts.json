@@ -13,5 +13,9 @@
     },
     "simple-line-icons": {
         "normal": "simple_line_icons_normal_d90fb918a55819a71814978e74a1dadc"
+    },
+    "font awesome 5 free": {
+        "normal": "C:\\xampp\\htdocs\\kelurahan\\application\\third_party\\dompdf\\vendor\\dompdf\\dompdf\/lib\/fonts\/font_awesome_5_free_normal_09a636486ad6e3e7e715ee5a0373f2ab",
+        "900": "font_awesome_5_free_900_f6c1d66ca0f6a9c230936770c324b606"
     }
 }

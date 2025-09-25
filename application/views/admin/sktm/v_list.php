@@ -1,10 +1,12 @@
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Data Surat Keterangan Tidak Mampu</h4>
+        <h4 class="page-title">Data SKTM</h4>
         <ul class="breadcrumbs">
             <li class="nav-home"><a href="<?= base_url('admin/dashboard') ?>"><i class="flaticon-home"></i></a></li>
             <li class="separator"><i class="flaticon-right-arrow"></i></li>
-            <li class="nav-item"><a>Surat Ket. Tidak Mampu</a></li>
+            <li class="nav-item"><a href="#">Surat Pelayanan</a></li>
+            <li class="separator"><i class="flaticon-right-arrow"></i></li>
+            <li class="nav-item"><a>Data SKTM</a></li>
         </ul>
     </div>
     <div class="row">
@@ -22,8 +24,8 @@
                                     <th>No</th>
                                     <th>Nama Pemohon</th>
                                     <th>NIK</th>
-                                    <th>Penghasilan</th>
                                     <th>Tanggal Pengajuan</th>
+                                    <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -34,17 +36,21 @@
                                         <td><?= $no++; ?></td>
                                         <td><?= html_escape($item->nama_pemohon); ?></td>
                                         <td><?= html_escape($item->nik); ?></td>
-                                        <td><?= html_escape($item->penghasilan_bulanan); ?></td>
-                                        <td><?= date('d M Y', strtotime($item->tgl_dibuat)); ?></td>
+                                        <td><?= date('d M Y', strtotime($item->created_at)); ?></td>
+                                        <td>
+                                            <?php
+                                            if ($item->status == 'Pending') $badge = 'badge-warning';
+                                            elseif ($item->status == 'Disetujui') $badge = 'badge-success';
+                                            else $badge = 'badge-danger';
+                                            ?>
+                                            <span class="badge <?= $badge; ?>"><?= $item->status; ?></span>
+                                        </td>
                                         <td>
                                             <div class="form-button-action">
                                                 <a href="<?= base_url('admin/surat_sktm/detail/' . $item->id); ?>" title="Lihat Detail" class="btn btn-link btn-info">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                                <a href="<?= base_url('admin/surat_sktm/cetak/' . $item->id); ?>" target="_blank" title="Cetak Surat" class="btn btn-link btn-success">
-                                                    <i class="fa fa-print"></i>
-                                                </a>
-                                                <a href="<?= base_url('admin/surat_sktm/edit/' . $item->id); ?>" title="Edit" class="btn btn-link btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                                                <a href="<?= base_url('admin/surat_sktm/edit/' . $item->id); ?>" title="Edit" class="btn btn-link btn-primary"><i class="fa fa-edit"></i></a>
                                                 <a href="<?= base_url('admin/surat_sktm/delete/' . $item->id); ?>" title="Hapus" onclick="return confirm('Yakin ingin menghapus data ini?')" class="btn btn-link btn-danger"><i class="fa fa-times"></i></a>
                                             </div>
                                         </td>

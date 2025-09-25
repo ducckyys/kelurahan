@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 18, 2025 at 02:18 PM
+-- Generation Time: Sep 25, 2025 at 04:58 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -97,25 +97,6 @@ INSERT INTO `informasi` (`id_informasi`, `judul_informasi`, `isi_informasi`, `ka
 -- --------------------------------------------------------
 
 --
--- Table structure for table `konfigurasi`
---
-
-CREATE TABLE `konfigurasi` (
-  `id_konfigurasi` int(11) NOT NULL,
-  `nama_konfigurasi` varchar(100) NOT NULL,
-  `nilai_konfigurasi` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `konfigurasi`
---
-
-INSERT INTO `konfigurasi` (`id_konfigurasi`, `nama_konfigurasi`, `nilai_konfigurasi`) VALUES
-(1, 'youtube_link', 'https://www.youtube.com/watch?v=Svzvf9_yQiY');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `level`
 --
 
@@ -142,18 +123,22 @@ CREATE TABLE `surat_belum_bekerja` (
   `id` int(11) NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(100) NOT NULL,
+  `scan_surat_rt` varchar(255) NOT NULL,
+  `nomor_surat` varchar(100) DEFAULT NULL,
   `nama_pemohon` varchar(100) NOT NULL,
   `tempat_lahir` varchar(100) NOT NULL,
   `tanggal_lahir` date NOT NULL,
   `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `nik` varchar(20) NOT NULL,
+  `nik` varchar(16) NOT NULL,
+  `telepon_pemohon` varchar(20) DEFAULT NULL,
   `warganegara` varchar(50) NOT NULL,
   `agama` varchar(50) NOT NULL,
   `pekerjaan` varchar(100) NOT NULL,
   `alamat` text NOT NULL,
   `keperluan` text NOT NULL,
-  `tgl_dibuat` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_user` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -161,8 +146,8 @@ CREATE TABLE `surat_belum_bekerja` (
 -- Dumping data for table `surat_belum_bekerja`
 --
 
-INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `nik`, `warganegara`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `tgl_dibuat`, `id_user`) VALUES
-(1, '014/RT.02/05/25', '2025-09-16', 'd90d01afb36e1056e36247627042e0f4.pdf', 'ASHIFA AYUNINGTIAS', 'Jakarta', '2025-09-16', 'Perempuan', '3674076710970001', 'Indonesia', 'Islam', 'Karyawan Swasta', 'Perum Amarapura Blok F-3/6 RT 002/005 Kel. Kademangan  Kecamatan Setu Kota Tangerang Selatan\r\n', 'Persyaratan Pengajuan KPR', '2025-09-16 13:37:02', 1);
+INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `nik`, `telepon_pemohon`, `warganegara`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(1, '089/SP/RT.003/IX/2025', '2025-09-24', '38ac22442f2fee9a0c5670d20e1682c6.pdf', NULL, 'Andrian fakih', 'Jakarta', '2025-09-24', 'Laki-laki', '3171070901010006', '089514353271', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'Ciledug', 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 12:42:15', '2025-09-24 16:46:04', 1);
 
 -- --------------------------------------------------------
 
@@ -174,6 +159,7 @@ CREATE TABLE `surat_belum_memiliki_rumah` (
   `id` int(11) NOT NULL,
   `nama_pemohon` varchar(255) NOT NULL,
   `nik` varchar(16) NOT NULL,
+  `telepon_pemohon` varchar(20) DEFAULT NULL,
   `tempat_lahir` varchar(100) NOT NULL,
   `tanggal_lahir` date NOT NULL,
   `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
@@ -185,15 +171,18 @@ CREATE TABLE `surat_belum_memiliki_rumah` (
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
   `scan_surat_rt` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `nomor_surat` varchar(100) DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `surat_belum_memiliki_rumah`
 --
 
-INSERT INTO `surat_belum_memiliki_rumah` (`id`, `nama_pemohon`, `nik`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `created_at`) VALUES
-(1, 'Andrian fakih', '3171070901010006', 'Jakarta', '2025-09-18', 'Laki-laki', 'Indonesia', 'Islam', 'Pelajar/mahasiswa', 'CIledug', 'Pengajuan Beasiswa Kuliah', '089/SP/RT.003/IX/2025', '2025-09-18', '7cc844d7e8fcd817b5e5d92b602c8f00.pdf', '2025-09-18 07:23:16');
+INSERT INTO `surat_belum_memiliki_rumah` (`id`, `nama_pemohon`, `nik`, `telepon_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Andrian fakih', '3171070901010006', '089514353271', 'Jakarta', '2025-09-24', 'Laki-laki', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'ciledug', 'Pengajuan Beasiswa Kuliah', '089/SP/RT.003/IX/2025', '2025-09-24', '775766a94b9f3f9d56b111701b2626f2.pdf', NULL, 'Pending', '2025-09-24 13:15:05', '2025-09-24 16:46:18');
 
 -- --------------------------------------------------------
 
@@ -206,7 +195,8 @@ CREATE TABLE `surat_domisili_yayasan` (
   `nama_penanggung_jawab` varchar(100) NOT NULL,
   `tempat_lahir` varchar(100) NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `nik` varchar(20) NOT NULL,
+  `nik` varchar(16) NOT NULL,
+  `telepon_pemohon` varchar(20) DEFAULT NULL,
   `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
   `kewarganegaraan` varchar(50) NOT NULL,
   `agama` varchar(50) NOT NULL,
@@ -222,7 +212,13 @@ CREATE TABLE `surat_domisili_yayasan` (
   `nomor_akta_perubahan` varchar(50) DEFAULT NULL,
   `tanggal_akta_perubahan` date DEFAULT NULL,
   `npwp` varchar(50) NOT NULL,
-  `tgl_dibuat` datetime NOT NULL DEFAULT current_timestamp(),
+  `nomor_surat_rt` varchar(100) NOT NULL,
+  `tanggal_surat_rt` date NOT NULL,
+  `scan_surat_rt` varchar(255) NOT NULL,
+  `nomor_surat` varchar(100) DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_user` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -230,8 +226,130 @@ CREATE TABLE `surat_domisili_yayasan` (
 -- Dumping data for table `surat_domisili_yayasan`
 --
 
-INSERT INTO `surat_domisili_yayasan` (`id`, `nama_penanggung_jawab`, `tempat_lahir`, `tanggal_lahir`, `nik`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `alamat_pemohon`, `nama_organisasi`, `jenis_kegiatan`, `alamat_kantor`, `jumlah_pengurus`, `nama_notaris_pendirian`, `nomor_akta_pendirian`, `tanggal_akta_pendirian`, `nama_notaris_perubahan`, `nomor_akta_perubahan`, `tanggal_akta_perubahan`, `npwp`, `tgl_dibuat`, `id_user`) VALUES
-(1, 'HERLINA MUSTIKASARI ROTI', 'Jakarta', '2025-09-16', '3674015505690006', 'Perempuan', 'Indonesia', 'Islam', 'BSD Anggrek Loka Blok E No. 3 RT 004/010 Kelurahan Rawa Buntu Kecamatan Serpong Kota Tangerang Selatan', 'YAYASAN MENATA RUMAH KITA BERSAMA', 'Bidang Sosial dan Pendidikan', 'Jl Masji Jami AL Latif No.1 RT 006/002 Kel Kademangan Kec Setu Kota Tangerang Selatan.', 14, 'Dr Udin Nasrudin', '106', '2025-09-16', 'Dr Udin Nasrudin', '09', '2025-09-16', '31.190.787.7-411.000', '2025-09-16 15:24:05', 1);
+INSERT INTO `surat_domisili_yayasan` (`id`, `nama_penanggung_jawab`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `alamat_pemohon`, `nama_organisasi`, `jenis_kegiatan`, `alamat_kantor`, `jumlah_pengurus`, `nama_notaris_pendirian`, `nomor_akta_pendirian`, `tanggal_akta_pendirian`, `nama_notaris_perubahan`, `nomor_akta_perubahan`, `tanggal_akta_perubahan`, `npwp`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(1, 'HERLINA MUSTIKASARI ROTI', 'Tangerang Selatan', '2025-09-24', '3674076710970001', '089514353271', 'Laki-laki', 'Indonesia', 'Islamm', 'Ciledug', 'YAYASAN MENATA RUMAH KITA BERSAMA', 'Bidang Sosial dan Pendidikan', 'Ciledug', 14, 'Not. Dr Udin Nasrudin', '106', '2025-09-24', 'Not. Dr Udin Nasrudin', '09', '2025-09-24', '31.190.787.7-411.000', '089/SP/RT.003/IX/2025', '2025-09-24', '7c8f4190754b4851554d27d2bb692436.pdf', NULL, 'Pending', '2025-09-24 12:45:48', '2025-09-24 16:46:11', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surat_kematian`
+--
+
+CREATE TABLE `surat_kematian` (
+  `id` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `nik` varchar(16) NOT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
+  `tempat_lahir` varchar(100) NOT NULL,
+  `tanggal_lahir` date NOT NULL,
+  `agama` varchar(50) NOT NULL,
+  `pekerjaan` varchar(150) NOT NULL,
+  `alamat` text NOT NULL,
+  `hari_meninggal` varchar(20) NOT NULL,
+  `tanggal_meninggal` date NOT NULL,
+  `jam_meninggal` time NOT NULL,
+  `tempat_meninggal` varchar(150) NOT NULL,
+  `sebab_meninggal` varchar(200) NOT NULL,
+  `tempat_pemakaman` varchar(200) NOT NULL,
+  `pelapor_nama` varchar(255) NOT NULL,
+  `pelapor_tempat_lahir` varchar(100) NOT NULL,
+  `pelapor_tanggal_lahir` date NOT NULL,
+  `pelapor_agama` varchar(50) NOT NULL,
+  `pelapor_pekerjaan` varchar(150) NOT NULL,
+  `pelapor_nik` varchar(16) NOT NULL,
+  `pelapor_no_telepon` varchar(30) NOT NULL,
+  `pelapor_alamat` text NOT NULL,
+  `pelapor_hubungan` varchar(50) NOT NULL,
+  `nomor_surat_rt` varchar(100) DEFAULT NULL,
+  `tanggal_surat_rt` date DEFAULT NULL,
+  `scan_surat_rt` varchar(255) DEFAULT NULL,
+  `nomor_surat` varchar(100) DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `surat_kematian`
+--
+
+INSERT INTO `surat_kematian` (`id`, `nama`, `nik`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `agama`, `pekerjaan`, `alamat`, `hari_meninggal`, `tanggal_meninggal`, `jam_meninggal`, `tempat_meninggal`, `sebab_meninggal`, `tempat_pemakaman`, `pelapor_nama`, `pelapor_tempat_lahir`, `pelapor_tanggal_lahir`, `pelapor_agama`, `pelapor_pekerjaan`, `pelapor_nik`, `pelapor_no_telepon`, `pelapor_alamat`, `pelapor_hubungan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
+(0, 'Andrian fakih', '3171070901010006', 'Laki-laki', 'Tangerang Selatan', '2025-09-24', 'Islamm', 'Karyawan Swasta', 'Ciledug', 'Jumat', '2025-09-24', '21:48:00', 'Rumah', 'Sakit', 'TPU Kademangan', 'Andrian fakih', 'Tangerang', '2025-09-24', 'Islam', 'Wirasuasta', '3674074808151001', '089514353271', 'Ciledug', 'Kerabat', '089/SP/RT.003/IX/2025', '2025-09-24', '5bfe61419b1f239023672289bd5ed7c5.pdf', NULL, 'Pending', '2025-09-24 13:49:21', '2025-09-24 16:47:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surat_kematian_nondukcapil`
+--
+
+CREATE TABLE `surat_kematian_nondukcapil` (
+  `id` int(11) NOT NULL,
+  `nama_ahli_waris` varchar(255) NOT NULL,
+  `nik_ahli_waris` varchar(16) NOT NULL,
+  `telepon_pemohon` varchar(20) DEFAULT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
+  `alamat_ahli_waris` text NOT NULL,
+  `hubungan_ahli_waris` varchar(100) NOT NULL,
+  `nama_almarhum` varchar(255) NOT NULL,
+  `nik_almarhum` varchar(16) NOT NULL,
+  `tempat_meninggal` varchar(255) NOT NULL,
+  `tanggal_meninggal` date NOT NULL,
+  `alamat_almarhum` text NOT NULL,
+  `keterangan_almarhum` varchar(255) DEFAULT NULL COMMENT 'Contoh: Ibu Kandung, Ayah Kandung, dll.',
+  `nomor_surat_rt` varchar(100) NOT NULL,
+  `tanggal_surat_rt` date NOT NULL,
+  `scan_surat_rt` varchar(255) NOT NULL,
+  `nomor_surat` varchar(100) DEFAULT NULL,
+  `keperluan` varchar(255) DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `surat_kematian_nondukcapil`
+--
+
+INSERT INTO `surat_kematian_nondukcapil` (`id`, `nama_ahli_waris`, `nik_ahli_waris`, `telepon_pemohon`, `jenis_kelamin`, `alamat_ahli_waris`, `hubungan_ahli_waris`, `nama_almarhum`, `nik_almarhum`, `tempat_meninggal`, `tanggal_meninggal`, `alamat_almarhum`, `keterangan_almarhum`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `keperluan`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Andrian fakih', '3171090101010006', '081328000052', 'Laki-laki', 'Ciledug', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-09-24', 'Ciledug', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-09-24', '133a5cc84ad4ed379dd492f3fa42b629.pdf', NULL, 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 13:59:16', '2025-09-24 16:56:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surat_keterangan_suami_istri`
+--
+
+CREATE TABLE `surat_keterangan_suami_istri` (
+  `id` int(11) NOT NULL,
+  `nama_pihak_satu` varchar(255) NOT NULL,
+  `nik_pihak_satu` varchar(16) NOT NULL,
+  `telepon_pemohon` varchar(20) DEFAULT NULL,
+  `tempat_lahir_pihak_satu` varchar(100) NOT NULL,
+  `tanggal_lahir_pihak_satu` date NOT NULL,
+  `jenis_kelamin_pihak_satu` enum('Laki-laki','Perempuan') NOT NULL,
+  `agama_pihak_satu` varchar(50) NOT NULL,
+  `pekerjaan_pihak_satu` varchar(100) NOT NULL,
+  `warganegara_pihak_satu` varchar(100) NOT NULL,
+  `alamat_pihak_satu` text NOT NULL,
+  `nama_pihak_dua` varchar(255) NOT NULL,
+  `nik_pihak_dua` varchar(16) NOT NULL,
+  `alamat_pihak_dua` text NOT NULL,
+  `keperluan` text NOT NULL,
+  `nomor_surat_rt` varchar(100) NOT NULL,
+  `tanggal_surat_rt` date NOT NULL,
+  `scan_surat_rt` varchar(255) NOT NULL COMMENT 'Nama file hasil upload',
+  `nomor_surat` varchar(100) DEFAULT NULL COMMENT 'Diisi oleh admin saat surat diterbitkan',
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `surat_keterangan_suami_istri`
+--
+
+INSERT INTO `surat_keterangan_suami_istri` (`id`, `nama_pihak_satu`, `nik_pihak_satu`, `telepon_pemohon`, `tempat_lahir_pihak_satu`, `tanggal_lahir_pihak_satu`, `jenis_kelamin_pihak_satu`, `agama_pihak_satu`, `pekerjaan_pihak_satu`, `warganegara_pihak_satu`, `alamat_pihak_satu`, `nama_pihak_dua`, `nik_pihak_dua`, `alamat_pihak_dua`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-09-24', 'Laki-laki', 'Islamm', 'Mahasiswa', 'Indonesia', 'Tangerang selatan', 'Nayla Rabiatul Hanifa', '3171070901010006', 'Depok', 'Persyaratan Pengajuan KPR', '089/SP/RT.003/IX/2025', '2025-09-24', '4c638b245c19df43f046cfeee92ffc0c.pdf', NULL, 'Pending', '2025-09-24 14:07:22', '2025-09-24 17:12:49');
 
 -- --------------------------------------------------------
 
@@ -243,11 +361,13 @@ CREATE TABLE `surat_sktm` (
   `id` int(11) NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(100) NOT NULL,
+  `scan_surat_rt` varchar(255) NOT NULL,
+  `nomor_surat` varchar(100) DEFAULT NULL,
   `nama_pemohon` varchar(100) NOT NULL,
   `tempat_lahir` varchar(100) NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `nik` varchar(20) NOT NULL,
+  `nik` varchar(16) NOT NULL,
+  `telepon_pemohon` varchar(20) DEFAULT NULL,
   `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
   `warganegara` varchar(50) NOT NULL,
   `agama` varchar(50) NOT NULL,
@@ -257,7 +377,9 @@ CREATE TABLE `surat_sktm` (
   `id_dtks` varchar(50) DEFAULT NULL,
   `penghasilan_bulanan` varchar(100) NOT NULL,
   `keperluan` text NOT NULL,
-  `tgl_dibuat` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_user` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -265,8 +387,27 @@ CREATE TABLE `surat_sktm` (
 -- Dumping data for table `surat_sktm`
 --
 
-INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `tgl_dibuat`, `id_user`) VALUES
-(1, '089/SP/RT.003/IX/2025', '2025-09-11', '92c1f7dee71ca4a3a2ebb5de2c04accb.pdf', 'AUDYA MAUDY PUTRI', 'Tangerang Selatan', '2015-08-08', '3674074808151001', 'Perempuan', 'Indonesia', 'Islam', 'Pelajar/mahasiswa', 'MAYANG WIDARAPURI', 'Perum Villa Tekno Blok M 16 RT 003 RW 009 Kelurahan kademangan Kecamatan Setu Kota Tangerang Selatan.\r\n', 'Belum Terdaftar', '< Rp 1.000.000', ' Persyaratan PIP', '2025-09-16 09:27:02', NULL);
+INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(8, '089/SP/RT.003/IX/2025', '2025-09-24', 'd517149a19ab8ff9c360a1c797d4b91f.pdf', NULL, 'Andrian fakih', 'Bogor', '2025-09-24', '3171070901010006', '6285174103802', 'Laki-laki', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'Ciledug', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Disetujui', '2025-09-24 14:32:18', '2025-09-25 02:11:01', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `uploadvideo`
+--
+
+CREATE TABLE `uploadvideo` (
+  `id_konfigurasi` int(11) NOT NULL,
+  `nama_konfigurasi` varchar(100) NOT NULL,
+  `nilai_konfigurasi` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `uploadvideo`
+--
+
+INSERT INTO `uploadvideo` (`id_konfigurasi`, `nama_konfigurasi`, `nilai_konfigurasi`) VALUES
+(1, 'youtube_link', '');
 
 -- --------------------------------------------------------
 
@@ -314,12 +455,6 @@ ALTER TABLE `informasi`
   ADD PRIMARY KEY (`id_informasi`);
 
 --
--- Indexes for table `konfigurasi`
---
-ALTER TABLE `konfigurasi`
-  ADD PRIMARY KEY (`id_konfigurasi`);
-
---
 -- Indexes for table `level`
 --
 ALTER TABLE `level`
@@ -344,10 +479,34 @@ ALTER TABLE `surat_domisili_yayasan`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `surat_kematian`
+--
+ALTER TABLE `surat_kematian`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `surat_kematian_nondukcapil`
+--
+ALTER TABLE `surat_kematian_nondukcapil`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `surat_keterangan_suami_istri`
+--
+ALTER TABLE `surat_keterangan_suami_istri`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `uploadvideo`
+--
+ALTER TABLE `uploadvideo`
+  ADD PRIMARY KEY (`id_konfigurasi`);
 
 --
 -- Indexes for table `user`
@@ -379,12 +538,6 @@ ALTER TABLE `informasi`
   MODIFY `id_informasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `konfigurasi`
---
-ALTER TABLE `konfigurasi`
-  MODIFY `id_konfigurasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `level`
 --
 ALTER TABLE `level`
@@ -394,7 +547,7 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `surat_belum_bekerja`
 --
 ALTER TABLE `surat_belum_bekerja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_belum_memiliki_rumah`
@@ -406,13 +559,37 @@ ALTER TABLE `surat_belum_memiliki_rumah`
 -- AUTO_INCREMENT for table `surat_domisili_yayasan`
 --
 ALTER TABLE `surat_domisili_yayasan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `surat_kematian`
+--
+ALTER TABLE `surat_kematian`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `surat_kematian_nondukcapil`
+--
+ALTER TABLE `surat_kematian_nondukcapil`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `surat_keterangan_suami_istri`
+--
+ALTER TABLE `surat_keterangan_suami_istri`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `uploadvideo`
+--
+ALTER TABLE `uploadvideo`
+  MODIFY `id_konfigurasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`

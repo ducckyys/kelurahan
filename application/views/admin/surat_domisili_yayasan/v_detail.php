@@ -1,6 +1,13 @@
 <div class="page-inner">
     <div class="page-header">
-        <h4 class="page-title">Detail Surat Domisili Yayasan</h4>
+        <h4 class="page-title">Detail Domisili Yayasan</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home"><a href="<?= base_url('admin/dashboard') ?>"><i class="flaticon-home"></i></a></li>
+            <li class="separator"><i class="flaticon-right-arrow"></i></li>
+            <li class="nav-item"><a href="<?= base_url('admin/surat_domisili_yayasan') ?>">Data Domisili Yayasan</a></li>
+            <li class="separator"><i class="flaticon-right-arrow"></i></li>
+            <li class="nav-item"><a>Detail</a></li>
+        </ul>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -8,10 +15,31 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title">Detail Pengajuan: <?= html_escape($surat->nama_organisasi); ?></h4>
-                        <a href="<?= base_url('admin/surat_domisili_yayasan'); ?>" class="btn btn-secondary btn-round ml-auto"><i class="fas fa-arrow-left"></i> Kembali</a>
+                        <a href="<?= base_url('admin/surat_domisili_yayasan'); ?>" class="btn btn-secondary btn-round ml-auto">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
+                    <?php
+                    $bisaCetak = true;
+                    $pesanError = [];
+                    if (empty($surat->nomor_surat)) {
+                        $bisaCetak = false;
+                        $pesanError[] = '<strong>Nomor Surat</strong> belum diisi.';
+                    }
+                    if ($surat->status != 'Disetujui') {
+                        $bisaCetak = false;
+                        $pesanError[] = '<strong>Status Surat</strong> masih "' . $surat->status . '", belum "Disetujui".';
+                    }
+
+                    if (!$bisaCetak):
+                    ?>
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Surat Belum Siap Cetak!</h4>
+                            <p class="mb-0">Pastikan <b>**Nomor Surat**</b> sudah diisi dan <b>**Status**</b> telah diubah menjadi "Disetujui" di halaman edit.</p>
+                        </div>
+                    <?php endif; ?>
                     <div class="row">
                         <div class="col-md-6">
                             <h5>Data Penanggung Jawab</h5>
@@ -20,16 +48,22 @@
                                 <dd class="col-sm-8">: <?= html_escape($surat->nama_penanggung_jawab); ?></dd>
                                 <dt class="col-sm-4">NIK</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->nik); ?></dd>
+                                <dt class="col-sm-4">No. Telepon</dt>
+                                <dd class="col-sm-8">: <?= html_escape($surat->telepon_pemohon); ?></dd>
                                 <dt class="col-sm-4">Tempat, Tgl Lahir</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->tempat_lahir . ', ' . date('d M Y', strtotime($surat->tanggal_lahir))); ?></dd>
                                 <dt class="col-sm-4">Jenis Kelamin</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->jenis_kelamin); ?></dd>
+                                <dt class="col-sm-4">Agama</dt>
+                                <dd class="col-sm-8">: <?= html_escape($surat->agama); ?></dd>
+                                <dt class="col-sm-4">Kewarganegaraan</dt>
+                                <dd class="col-sm-8">: <?= html_escape($surat->kewarganegaraan); ?></dd>
                                 <dt class="col-sm-4">Alamat</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->alamat_pemohon); ?></dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
-                            <h5>Data Yayasan</h5>
+                            <h5>Data Yayasan / Organisasi</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">Nama Yayasan</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->nama_organisasi); ?></dd>
@@ -69,10 +103,42 @@
                             </dl>
                         </div>
                     </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Data Administrasi & Dokumen Pendukung</h5>
+                            <dl class="row">
+                                <dt class="col-sm-3">Status Pengajuan</dt>
+                                <dd class="col-sm-9">:
+                                    <?php
+                                    if ($surat->status == 'Pending') $badge = 'badge-warning';
+                                    elseif ($surat->status == 'Disetujui') $badge = 'badge-success';
+                                    else $badge = 'badge-danger';
+                                    ?>
+                                    <span class="badge <?= $badge; ?>"><?= $surat->status; ?></span>
+                                </dd>
+                                <dt class="col-sm-3">Nomor Surat Kelurahan</dt>
+                                <dd class="col-sm-9">:<strong><?= html_escape($surat->nomor_surat) ?: '<span class="text-muted">Belum diinput</span>'; ?></strong></dd>
+                                <dt class="col-sm-3">No. Surat RT/RW</dt>
+                                <dd class="col-sm-9">: <?= html_escape($surat->nomor_surat_rt); ?></dd>
+                                <dt class="col-sm-3">Tgl. Surat RT/RW</dt>
+                                <dd class="col-sm-9">: <?= date('d M Y', strtotime($surat->tanggal_surat_rt)); ?></dd>
+                                <dt class="col-sm-12 mt-2"><a href="<?= base_url('uploads/surat_rt/' . $surat->scan_surat_rt); ?>" target="_blank" class="btn btn-primary btn-block"><i class="fas fa-file-alt"></i> Lihat Surat Pengantar RT/RW</a></dt>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
-                    <a href="<?= base_url('admin/surat_domisili_yayasan/edit/' . $surat->id); ?>" class="btn btn-warning"><i class="fa fa-edit"></i> Edit Data</a>
-                    <a href="<?= base_url('admin/surat_domisili_yayasan/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success"><i class="fa fa-print"></i> Cetak Surat</a>
+                    <a href="<?= base_url('admin/surat_domisili_yayasan/edit/' . $surat->id); ?>" class="btn btn-warning"><i class="fa fa-edit"></i> Edit Data Ini</a>
+                    <?php if ($bisaCetak): ?>
+                        <a href="<?= base_url('admin/surat_domisili_yayasan/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success">
+                            <i class="fa fa-print"></i> Cetak Surat
+                        </a>
+                    <?php else: ?>
+                        <button class="btn btn-success" disabled title="Lengkapi data di halaman edit terlebih dahulu">
+                            <i class="fa fa-print"></i> Cetak Surat
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

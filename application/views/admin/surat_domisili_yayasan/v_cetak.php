@@ -35,21 +35,6 @@
             font-size: 12pt;
         }
 
-        /* ===== Watermark aman untuk cetak ===== */
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            z-index: -1;
-            /* cukup -1 agar kompatibel engine print */
-            font-size: 140pt;
-            /* sedikit dikecilkan agar muat 1 halaman */
-            font-weight: bold;
-            color: rgba(0, 0, 0, 0.08);
-            pointer-events: none;
-        }
-
         /* ===== Header (kop surat) fixed ===== */
         #header {
             position: fixed;
@@ -227,7 +212,6 @@
 </head>
 
 <body>
-    <div class="watermark">SDY</div>
 
     <div id="header">
         <div class="kop-surat-wrapper">
@@ -255,7 +239,7 @@
 
     <div id="content">
         <p class="judul-surat">SURAT KETERANGAN</p>
-        <p class="nomor-surat">Nomor : 145 / <?= str_repeat("&nbsp;", 10); ?> / Kel.KDM/ <?= date('Y'); ?></p>
+        <p class="nomor-surat">Nomor : <?= html_escape($surat->nomor_surat) ?: '.................................'; ?></p>
 
         <p class="isi-surat pembuka">
             Yang bertanda tangan di bawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan dengan ini menerangkan bahwa :
@@ -332,7 +316,7 @@
             <tr>
                 <td>Akta Pendirian</td>
                 <td>:</td>
-                <td>Notaris: <?= html_escape($surat->nama_notaris_pendirian); ?></td>
+                <td><?= html_escape($surat->nama_notaris_pendirian); ?></td>
             </tr>
             <tr>
                 <td>Nomor</td>
@@ -344,7 +328,7 @@
                 <tr>
                     <td>Akta Perubahan</td>
                     <td>:</td>
-                    <td>Notaris: <?= html_escape($surat->nama_notaris_perubahan); ?></td>
+                    <td><?= html_escape($surat->nama_notaris_perubahan); ?></td>
                 </tr>
                 <tr>
                     <td>Nomor</td>

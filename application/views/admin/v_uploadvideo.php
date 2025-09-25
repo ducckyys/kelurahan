@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <div class="card-title">Formulir Pengaturan</div>
                 </div>
-                <form action="<?= base_url('admin/pengaturan/update'); ?>" method="POST">
+                <form action="<?= base_url('admin/uploadvideo/update'); ?>" method="POST">
                     <div class="card-body">
                         <?php if ($this->session->flashdata('success')): ?>
                             <div class="alert alert-success" role="alert"><?= $this->session->flashdata('success'); ?></div>
