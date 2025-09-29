@@ -32,13 +32,25 @@
 
                         <div class="col-12">
                             <label class="form-label">Upload Scan/Foto Surat RT/RW</label>
+
+                            <!-- INPUT ASLI: tidak diubah -->
                             <input type="file" name="scan_surat_rt"
                                 class="form-control <?= form_error('scan_surat_rt') || $this->session->flashdata('upload_error') ? 'is-invalid' : ''; ?>" required>
+
                             <div class="invalid-feedback"><?= form_error('scan_surat_rt'); ?></div>
                             <?php if ($this->session->flashdata('upload_error')): ?>
                                 <div class="text-danger small mt-1"><?= $this->session->flashdata('upload_error'); ?></div>
                             <?php endif; ?>
-                            <div class="form-text mt-1">Format: PDF/JPG/PNG (maks. 2 MB)</div>
+                            <div class="form-text mt-1">
+                                Pilih <b>Kamera</b> untuk memotret langsung, atau <b>File Manager</b> bila sudah punya file PDF/JPG/PNG (maks. 2 MB).
+                            </div>
+
+                            <!-- Preview ringan (opsional, tidak wajib) -->
+                            <div id="srtPreview" class="mt-2" style="display:none;">
+                                <img id="srtPreviewImg" alt="Pratinjau" class="img-fluid rounded" style="max-height:240px; display:none;" />
+                                <div id="srtPreviewFile" class="small text-muted" style="display:none;"></div>
+                                <button type="button" id="srtClear" class="btn btn-link btn-sm ps-0">Hapus pilihan</button>
+                            </div>
                         </div>
                     </div>
 

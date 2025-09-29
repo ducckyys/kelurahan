@@ -23,7 +23,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/kelurahan/';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host   = $_SERVER['HTTP_HOST']; // berisi :8080 jika ada
+$script = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/'); // -> /kelurahan
+$config['base_url'] = $scheme . '://' . $host . $script . '/';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------

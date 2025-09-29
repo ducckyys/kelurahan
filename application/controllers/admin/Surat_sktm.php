@@ -91,6 +91,8 @@ class Surat_sktm extends CI_Controller
             return redirect('admin/surat_sktm/edit/' . $id);
         }
 
+        // $post = $this->input->post(NULL, TRUE);
+
         $data = [
             'nomor_surat_rt'       => $this->input->post('nomor_surat_rt', true),
             'tanggal_surat_rt'     => $this->input->post('tanggal_surat_rt', true) ?: null,
@@ -134,9 +136,41 @@ class Surat_sktm extends CI_Controller
             $data['scan_surat_rt'] = $up['file_name'];
         }
 
-        $this->db->where('id', $id)->update('surat_sktm', $data);
+        // Ambil data lama SEBELUM di-update untuk perbandingan status
+        // $surat_lama = $this->M_sktm->get_by_id($id);
+
+        // Lakukan proses update ke database
+        $this->M_sktm->update($id, $data);
+
+        // =============================================================
+        // TAMBAHAN: Logika Kirim Notifikasi WhatsApp Saat Status Berubah
+        // =============================================================
+        // $status_baru = $post['status'];
+
+        // // Kirim notifikasi hanya jika status berubah dari "Pending"
+        // if ($surat_lama && $surat_lama->status == 'Pending' && ($status_baru == 'Disetujui' || $status_baru == 'Ditolak')) {
+
+        //     $nomor_telepon = $surat_lama->telepon_pemohon;
+        //     $nama_pemohon = $surat_lama->nama_pemohon;
+        //     $pesan = '';
+
+        //     if ($status_baru == 'Disetujui') {
+        //         $pesan = "Selamat Bpk/Ibu $nama_pemohon, pengajuan SKTM Anda telah DISETUJUI. Silakan datang ke kantor kelurahan untuk mengambil surat Anda.";
+        //     } elseif ($status_baru == 'Ditolak') {
+        //         $pesan = "Mohon maaf Bpk/Ibu $nama_pemohon, pengajuan SKTM Anda DITOLAK. Silakan hubungi petugas kelurahan untuk informasi lebih lanjut.";
+        //     }
+
+        //     // Kirim WhatsApp jika ada pesan yang perlu dikirim
+        //     if (!empty($pesan) && !empty($nomor_telepon)) {
+        //         kirim_whatsapp($nomor_telepon, $nama_pemohon, $pesan);
+        //     }
+        // }
+        // =============================================================
+        // AKHIR BAGIAN TAMBAHAN
+        // =============================================================
+
         $this->session->set_flashdata('success', 'Data SKTM berhasil diperbarui.');
-        return redirect('admin/surat_sktm'); // <— konsistenkan rute
+        redirect('admin/surat_sktm/detail/' . $id);
     }
 
     public function cetak($id)

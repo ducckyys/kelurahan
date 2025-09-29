@@ -124,11 +124,10 @@ class Pelayanan extends CI_Controller
         ];
 
         $this->M_sktm->save($data_to_save);
-        $nomor_telepon = $post['telepon_pemohon'];
-        $nama_pemohon = $post['nama_pemohon'];
-        $pesan = "Terima kasih Bpk/Ibu $nama_pemohon. Pengajuan Surat Keterangan Tidak Mampu (SKTM) Anda telah kami terima dan sedang dalam proses peninjauan oleh petugas kami.";
-
-        kirim_whatsapp($nomor_telepon, $pesan);
+        // $nomor_telepon = $post['telepon_pemohon'];
+        // $nama_pemohon = $post['nama_pemohon'];
+        // $pesan = "Terima kasih Bpk/Ibu $nama_pemohon. Pengajuan Surat Keterangan Tidak Mampu (SKTM) Anda telah kami terima dan sedang dalam proses peninjauan oleh petugas kami.";
+        // kirim_whatsapp($nomor_telepon, $nama_pemohon, $pesan);
         $this->session->set_flashdata('success', 'Pengajuan SKTM Anda telah berhasil dikirim.');
         redirect('pelayanan/sukses');
     }

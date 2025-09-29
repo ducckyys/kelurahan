@@ -1,40 +1,60 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-if (!function_exists('kirim_whatsapp')) {
+// if (!function_exists('kirim_whatsapp')) {
 
-    function kirim_whatsapp($nomor_tujuan, $pesan)
-    {
-        // Ganti dengan API Key Anda dari Fonnte
-        $apiKey = 'MnCgngGQHywjar8raEKKD4Eywpt';
+//     /**
+//      * Mengirim pesan WhatsApp menggunakan API Mekari Qontak
+//      *
+//      * @param string $nomor_tujuan Nomor tujuan dengan format 62xxxx
+//      * @param string $nama_tujuan Nama penerima pesan
+//      * @param string $pesan Teks pesan yang akan dikirim
+//      * @return bool|string Response dari server API atau FALSE jika gagal
+//      */
+//     function kirim_whatsapp($nomor_tujuan, $nama_tujuan, $pesan)
+//     {
+//         // Ganti dengan Access Token Anda dari Mekari Qontak
+//         $accessToken = '---';
 
-        // Pastikan nomor diawali dengan 62
-        if (substr($nomor_tujuan, 0, 1) == '0') {
-            $nomor_tujuan = '62' . substr($nomor_tujuan, 1);
-        }
+//         // Ganti dengan Channel Integration ID Anda
+//         $channelId = '---';
 
-        $curl = curl_init();
+//         // Pastikan nomor diawali dengan 62
+//         if (substr($nomor_tujuan, 0, 1) == '0') {
+//             $nomor_tujuan = '62' . substr($nomor_tujuan, 1);
+//         }
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.fonnte.com/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array(
-                'target' => $nomor_tujuan,
-                'message' => $pesan,
-            ),
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: ' . $apiKey
-            ),
-        ));
+//         // Siapkan data sesuai format yang diminta Mekari Qontak
+//         $payload = json_encode([
+//             "to_number" => $nomor_tujuan,
+//             "to_name" => $nama_tujuan,
+//             "message_type" => "text",
+//             "channel_integration_id" => $channelId,
+//             "text" => [
+//                 "body" => $pesan
+//             ]
+//         ]);
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-        return $response; // Mengembalikan response dari Fonnte
-    }
-}
+//         $curl = curl_init();
+
+//         curl_setopt_array($curl, array(
+//             CURLOPT_URL => 'https://chat-api.qontak.com/api/v1/broadcasts/whatsapp/direct',
+//             CURLOPT_RETURNTRANSFER => true,
+//             CURLOPT_ENCODING => '',
+//             CURLOPT_MAXREDIRS => 10,
+//             CURLOPT_TIMEOUT => 0,
+//             CURLOPT_FOLLOWLOCATION => true,
+//             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//             CURLOPT_CUSTOMREQUEST => 'POST',
+//             CURLOPT_POSTFIELDS => $payload,
+//             CURLOPT_HTTPHEADER => array(
+//                 'Authorization: Bearer ' . $accessToken,
+//                 'Content-Type: application/json'
+//             ),
+//         ));
+
+//         $response = curl_exec($curl);
+//         curl_close($curl);
+//         return $response;
+//     }
+// }
