@@ -197,6 +197,14 @@ class Surat_kematian extends CI_Controller
 
     public function delete($id)
     {
+
+        // Pastikan hanya SUPERADMIN yang bisa hapus
+        if ($this->session->userdata('role') !== 'superadmin') {
+            $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
+            redirect('admin/surat_sktm');
+            return; // hentikan eksekusi
+        }
+
         $row = $this->M_kematian->get_by_id($id);
         if ($row && !empty($row->scan_surat_rt)) {
             $path = FCPATH . 'uploads/surat/' . $row->scan_surat_rt; // sama dengan upload_path

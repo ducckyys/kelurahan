@@ -1,28 +1,49 @@
-<section id="home" class="hero d-flex align-items-center">
-    <div class="container">
+<?php if (!empty($rt_top) || !empty($rt_bottom)) : ?>
+    <section id="marquee-info" class="bg-primary text-white py-2">
+        <div class="container-fluid px-lg-5">
+            <?php if (!empty($rt_top)) : ?>
+                <marquee behavior="scroll"
+                    direction="<?= html_escape($rt_top->direction); ?>"
+                    scrollamount="<?= (int)$rt_top->speed; ?>">
+                    <?= html_escape($rt_top->content); ?>
+                </marquee>
+                <div class="my-1"></div>
+            <?php endif; ?>
+
+            <?php if (!empty($rt_bottom)) : ?>
+                <marquee behavior="scroll"
+                    direction="<?= html_escape($rt_bottom->direction); ?>"
+                    scrollamount="<?= (int)$rt_bottom->speed; ?>">
+                    <?= html_escape($rt_bottom->content); ?>
+                </marquee>
+            <?php endif; ?>
+        </div>
+    </section>
+<?php endif; ?>
+
+<section id="home" class="py-5 d-flex align-items-center mb-5 mt-5">
+    <div class="container-fluid px-lg-5">
         <div class="row align-items-center">
             <div class="col-lg-7">
                 <h1 class="display-5 fw-bold mb-3">Layanan Publik Kelurahan yang Mudah & Transparan</h1>
                 <p class="lead text-muted">Akses informasi, ajukan layanan, dan baca berita terbaru seputar kelurahan Anda dalam satu halaman.</p>
                 <a href="<?= base_url('pelayanan'); ?>" class="btn btn-primary btn-lg me-2">Ajukan Layanan</a>
-                <a href="<?= site_url('informasi'); ?>" class="btn btn-outline-primary btn-lg">Lihat Informasi</a>
-            </div>
-            <div class="col-lg-5 mt-4 mt-lg-0">
-                <div class="hero-card shadow-sm rounded-4 p-4 bg-white">
-                    <h5 class="fw-semibold">Jam Layanan</h5>
-                    <ul class="list-unstyled mb-0 small">
-                        <li>Senin-Jumat: 08.00-15.00 WIB</li>
-                        <li>Istirahat: 12.00-13.00 WIB</li>
-                        <li>Sabtu/Minggu & Hari Libur: Tutup</li>
-                    </ul>
-                </div>
+                <a href="<?= site_url('#Layanan'); ?>" class="btn btn-outline-primary btn-lg">Layanan kami</a>
             </div>
         </div>
     </div>
 </section>
 
+<section>
+    <p>Layanan kami</p>
+</section>
+
+<section>
+    <p>Jangkauan Pelayanan</p>
+</section>
+
 <section id="galeri" class="py-5">
-    <div class="container">
+    <div class="container-fluid px-lg-5">
         <div class="row mb-4">
             <div class="col-12 text-center">
                 <h2 class="section-title">Galeri Kademangan</h2>
@@ -59,7 +80,7 @@
 </section>
 
 <section id="berita" class="py-5 bg-light">
-    <div class="container">
+    <div class="container-fluid px-lg-5">
         <div class="row mb-4">
             <div class="col-12 text-center">
                 <h2 class="section-title">Berita Terbaru</h2>
@@ -102,17 +123,40 @@ if (!empty($youtube_link)) {
     if ($video_id) {
 ?>
         <section id="video" class="py-5">
-            <div class="container">
+            <div class="container-fluid px-lg-5">
                 <div class="row mb-4">
                     <div class="col-12 text-center">
                         <h2 class="section-title">Video</h2>
                         <p class="text-muted">Kenali lebih dekat Kelurahan Kademangan.</p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-10 mx-auto">
-                        <div class="ratio ratio-16x9 shadow-sm rounded-4 overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/<?= $video_id; ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="video-card shadow-sm rounded-4 overflow-hidden">
+                            <div class="video-thumbnail position-relative">
+                                <iframe
+                                    src="https://www.youtube.com/embed/<?= $video_id; ?>?rel=0"
+                                    title="YouTube video player"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                    class="video-frame w-100 h-100"></iframe>
+
+                                <!-- Overlay bawah -->
+                                <div class="video-info d-flex justify-content-between align-items-center px-4 py-3">
+                                    <div>
+                                        <h5 class="video-title mb-1"><?= html_escape($video_meta['title']); ?></h5>
+                                        <p class="video-channel mb-0"><?= html_escape($video_meta['author_name']); ?></p>
+                                    </div>
+                                    <a
+                                        href="https://www.youtube.com/watch?v=<?= $video_id; ?>"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm">
+                                        <i class="bi bi-youtube me-1"></i> Tonton di YouTube
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -123,37 +167,6 @@ if (!empty($youtube_link)) {
 }
 ?>
 
-<section id="informasi" class="py-5 bg-light">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-12 text-center">
-                <h2 class="section-title">Informasi Kademangan</h2>
-                <p class="text-muted">Pengumuman penting dari kelurahan untuk warga.</p>
-            </div>
-        </div>
-        <div class="row g-4">
-            <?php if (!empty($informasi_list)) : ?>
-                <?php foreach ($informasi_list as $info) : ?>
-                    <div class="col-md-4">
-                        <div class="card h-100 shadow-sm rounded-4">
-                            <div class="card-body">
-                                <span class="badge bg-primary-subtle text-primary mb-2"><?= html_escape($info->kategori); ?></span>
-                                <h6 class="card-title fw-semibold mb-2"><?= html_escape($info->judul_informasi); ?></h6>
-                                <p class="small text-muted mb-0">
-                                    <?= word_limiter(html_escape($info->isi_informasi), 15); ?>
-                                </p>
-                            </div>
-                            <div class="card-footer bg-white border-0 pt-0">
-                                <a href="<?= base_url('informasi/detail/' . $info->id_informasi); ?>" class="btn-link small">Lihat Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <div class="col-12 text-center">
-                    <p>Belum ada informasi yang dipublikasikan.</p>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
+<section>
+    <p>Tentang Web - tautan terkait - sosial media</p>
 </section>

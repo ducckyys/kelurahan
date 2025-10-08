@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property M_galeri $M_galeri
  * @property M_informasi $M_informasi
  * @property M_uploadvideo $M_uploadvideo
+ * @property M_runningtext $M_runningtext
  */
 
 class Home extends CI_Controller
@@ -16,7 +17,7 @@ class Home extends CI_Controller
         // Load semua model yang dibutuhkan untuk halaman utama
         $this->load->model('M_berita');
         $this->load->model('M_galeri');
-        $this->load->model('M_informasi');
+        $this->load->model('M_runningtext');
         $this->load->model('M_uploadvideo');
     }
 
@@ -24,19 +25,35 @@ class Home extends CI_Controller
     {
         $data['title'] = "Explore Kademangan";
 
-        $this->load->model('M_uploadvideo');
-
-        // Mengambil data dari database
         $data['berita_list'] = $this->M_berita->get_latest_berita(3); // Ambil 3 berita terbaru
         $data['galeri_list'] = $this->M_galeri->get_latest_galeri(6); // Ambil 6 foto terbaru
-        $data['informasi_list'] = $this->M_informasi->get_latest_info(3); // Ambil 3 info terbaru
         $data['youtube_link'] = $this->M_uploadvideo->get_setting('youtube_link');
 
+        // === Tambahan: ambil metadata YouTube (judul & channel)
+        $video_meta = [
+            'title' => 'Video Kelurahan Kademangan',
+            'author_name' => 'Kelurahan Kademangan'
+        ];
 
-        // Memuat view
-        // Ganti 'layouts_frontend' dengan nama folder layout Anda jika berbeda
+        if (!empty($data['youtube_link'])) {
+            $oembed_url = 'https://www.youtube.com/oembed?url=' . urlencode($data['youtube_link']) . '&format=json';
+            $oembed_data = @file_get_contents($oembed_url);
+
+            if ($oembed_data !== false) {
+                $oembed = json_decode($oembed_data, true);
+                $video_meta['title'] = $oembed['title'] ?? $video_meta['title'];
+                $video_meta['author_name'] = $oembed['author_name'] ?? $video_meta['author_name'];
+            }
+        }
+
+        $data['video_meta'] = $video_meta;
+
+        $data['rt_top']    = $this->M_runningtext->get_active_by_position('top');
+        $data['rt_bottom'] = $this->M_runningtext->get_active_by_position('bottom');
+
+        // Muat tampilan
         $this->load->view('layouts_frontend/header', $data);
-        $this->load->view('pages/v_home', $data); // Ini adalah view konten utama
+        $this->load->view('pages/v_home', $data);
         $this->load->view('layouts_frontend/footer');
     }
 }

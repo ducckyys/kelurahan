@@ -5,12 +5,17 @@ class M_galeri extends CI_Model
 {
     private $table = 'galeri';
 
-    public function get_all()
+    public function get_all($limit = null, $start = 0)
     {
         $this->db->select('galeri.*, user.nama_lengkap');
         $this->db->from($this->table);
         $this->db->join('user', 'user.id_user = galeri.id_user', 'left');
         $this->db->order_by('tgl_upload', 'DESC');
+
+        if (!is_null($limit)) {
+            $this->db->limit((int)$limit, (int)$start);
+        }
+
         return $this->db->get()->result();
     }
 
@@ -18,7 +23,7 @@ class M_galeri extends CI_Model
     {
         $this->db->order_by('tgl_upload', 'DESC');
         $this->db->limit($limit);
-        return $this->db->get('galeri')->result();
+        return $this->db->get($this->table)->result();
     }
 
     public function get_by_id($id)

@@ -216,6 +216,23 @@ class Surat_sktm extends CI_Controller
 
     public function delete($id)
     {
+        // Pastikan hanya SUPERADMIN yang bisa hapus
+        if ($this->session->userdata('role') !== 'superadmin') {
+            $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
+            redirect('admin/surat_sktm');
+            return; // hentikan eksekusi
+        }
+
+        // Hapus file upload jika ada
+        $row = $this->M_sktm->get_by_id($id);
+        if ($row && !empty($row->scan_surat_rt)) {
+            $path = FCPATH . 'uploads/surat_rt/' . $row->scan_surat_rt;
+            if (file_exists($path)) {
+                @unlink($path);
+            }
+        }
+
+        // Jika superadmin, lanjutkan proses hapus
         $this->M_sktm->delete($id);
         $this->session->set_flashdata('success', 'Data berhasil dihapus.');
         redirect('admin/surat_sktm');

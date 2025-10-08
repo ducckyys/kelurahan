@@ -132,6 +132,13 @@ class Surat_belum_bekerja extends CI_Controller
 
     public function delete($id)
     {
+        // Pastikan hanya SUPERADMIN yang bisa hapus
+        if ($this->session->userdata('role') !== 'superadmin') {
+            $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
+            redirect('admin/surat_sktm');
+            return; // hentikan eksekusi
+        }
+
         $surat = $this->M_belum_bekerja->get_by_id($id);
         if ($surat && !empty($surat->scan_surat_rt)) {
             $path = './uploads/surat/' . $surat->scan_surat_rt; // disamakan

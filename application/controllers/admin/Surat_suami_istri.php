@@ -205,6 +205,13 @@ class Surat_suami_istri extends CI_Controller
 
     public function delete($id)
     {
+        // Pastikan hanya SUPERADMIN yang bisa hapus
+        if ($this->session->userdata('role') !== 'superadmin') {
+            $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
+            redirect('admin/surat_sktm');
+            return; // hentikan eksekusi
+        }
+
         // Hapus file upload jika ada
         $row = $this->M_suami_istri->get_by_id($id);
         if ($row && !empty($row->scan_surat_rt)) {

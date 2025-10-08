@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 25, 2025 at 04:58 AM
+-- Generation Time: Oct 07, 2025 at 06:54 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -43,7 +43,7 @@ CREATE TABLE `berita` (
 --
 
 INSERT INTO `berita` (`id_berita`, `judul_berita`, `slug_berita`, `isi_berita`, `kategori`, `gambar`, `tgl_publish`, `id_user`) VALUES
-(1, 'Acara layang-layang', 'acara-layang-layang', 'bermain layangan', 'Kegiatan', '925b93067fb00b3386421441bab5049b.png', '2025-09-12 11:11:40', 1);
+(0, 'Acara layang-layang', 'acara-layang-layang', 'isi aja', 'Kegiatan', '6e092298a1f18528f92d935486cd8920.jpg', '2025-10-07 09:04:06', 1);
 
 -- --------------------------------------------------------
 
@@ -71,32 +71,6 @@ INSERT INTO `galeri` (`id_galeri`, `judul_foto`, `foto`, `tgl_upload`, `id_user`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `informasi`
---
-
-CREATE TABLE `informasi` (
-  `id_informasi` int(11) NOT NULL,
-  `judul_informasi` varchar(255) NOT NULL,
-  `isi_informasi` text NOT NULL,
-  `kategori` enum('Pengumuman','Peraturan','Unduhan') NOT NULL,
-  `tgl_publish` datetime NOT NULL DEFAULT current_timestamp(),
-  `id_user` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `informasi`
---
-
-INSERT INTO `informasi` (`id_informasi`, `judul_informasi`, `isi_informasi`, `kategori`, `tgl_publish`, `id_user`) VALUES
-(1, 'Test pengumuman', 'testing', 'Pengumuman', '2025-09-12 11:11:25', 1),
-(2, 'Surat Izin Usaha', 'harus bawa gerobaknya', 'Peraturan', '2025-09-15 15:09:05', 1),
-(3, 'Surat Izin Usaha', 'download dulu', 'Unduhan', '2025-09-15 15:09:23', 1),
-(4, 'libur', 'mantap', 'Pengumuman', '2025-09-15 15:10:17', 1),
-(5, 'Surat Izin Usaha', 'WAJIB OMSET DIATAS 600JUTA/BULAN', 'Peraturan', '2025-09-16 16:29:58', 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `level`
 --
 
@@ -112,6 +86,31 @@ CREATE TABLE `level` (
 INSERT INTO `level` (`id_level`, `nama_level`) VALUES
 (1, 'Superadmin'),
 (2, 'Admin/Staff');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `running_texts`
+--
+
+CREATE TABLE `running_texts` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `position` enum('top','bottom') NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `direction` enum('left','right') NOT NULL DEFAULT 'left',
+  `speed` tinyint(3) UNSIGNED NOT NULL DEFAULT 5,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `running_texts`
+--
+
+INSERT INTO `running_texts` (`id`, `position`, `content`, `direction`, `speed`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'top', 'Selamat Datang di Website Resmi Kelurahan Kademangan | Layanan publik mudah, cepat, dan transparan!', 'left', 6, 0, '2025-10-06 15:12:40', '2025-10-06 21:13:55'),
+(2, 'bottom', 'Hubungi kami melalui media sosial resmi Kelurahan Kademangan | Ikuti update kegiatan terbaru setiap minggu!', 'left', 5, 0, '2025-10-06 15:12:40', '2025-10-06 21:13:55');
 
 -- --------------------------------------------------------
 
@@ -311,7 +310,7 @@ CREATE TABLE `surat_kematian_nondukcapil` (
 --
 
 INSERT INTO `surat_kematian_nondukcapil` (`id`, `nama_ahli_waris`, `nik_ahli_waris`, `telepon_pemohon`, `jenis_kelamin`, `alamat_ahli_waris`, `hubungan_ahli_waris`, `nama_almarhum`, `nik_almarhum`, `tempat_meninggal`, `tanggal_meninggal`, `alamat_almarhum`, `keterangan_almarhum`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `keperluan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Andrian fakih', '3171090101010006', '081328000052', 'Laki-laki', 'Ciledug', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-09-24', 'Ciledug', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-09-24', '133a5cc84ad4ed379dd492f3fa42b629.pdf', NULL, 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 13:59:16', '2025-09-24 16:56:52');
+(1, 'Andrian fakih', '3171090101010006', '081328000052', 'Laki-laki', 'Ciledug', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-09-24', 'Ciledug', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-09-24', '133a5cc84ad4ed379dd492f3fa42b629.pdf', NULL, 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 13:59:16', '2025-10-07 03:50:06');
 
 -- --------------------------------------------------------
 
@@ -388,7 +387,7 @@ CREATE TABLE `surat_sktm` (
 --
 
 INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(8, '089/SP/RT.003/IX/2025', '2025-09-24', 'd517149a19ab8ff9c360a1c797d4b91f.pdf', NULL, 'Andrian fakih', 'Bogor', '2025-09-24', '3171070901010006', '6285174103802', 'Laki-laki', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'Ciledug', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Disetujui', '2025-09-24 14:32:18', '2025-09-25 02:11:01', 1);
+(8, '089/SP/RT.003/IX/2025', '2025-09-24', 'd517149a19ab8ff9c360a1c797d4b91f.pdf', NULL, 'Andrian fakih', 'Bogor', '2025-09-24', '3171070901010006', '6285174103802', 'Laki-laki', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'Ciledug', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 14:32:18', '2025-10-07 03:54:49', 1);
 
 -- --------------------------------------------------------
 
@@ -407,7 +406,7 @@ CREATE TABLE `uploadvideo` (
 --
 
 INSERT INTO `uploadvideo` (`id_konfigurasi`, `nama_konfigurasi`, `nilai_konfigurasi`) VALUES
-(1, 'youtube_link', '');
+(1, 'youtube_link', 'https://www.youtube.com/watch?v=0-ziJXSkTI0');
 
 -- --------------------------------------------------------
 
@@ -437,28 +436,23 @@ INSERT INTO `user` (`id_user`, `nama_lengkap`, `username`, `password`, `foto`, `
 --
 
 --
--- Indexes for table `berita`
---
-ALTER TABLE `berita`
-  ADD PRIMARY KEY (`id_berita`);
-
---
 -- Indexes for table `galeri`
 --
 ALTER TABLE `galeri`
   ADD PRIMARY KEY (`id_galeri`);
 
 --
--- Indexes for table `informasi`
---
-ALTER TABLE `informasi`
-  ADD PRIMARY KEY (`id_informasi`);
-
---
 -- Indexes for table `level`
 --
 ALTER TABLE `level`
   ADD PRIMARY KEY (`id_level`);
+
+--
+-- Indexes for table `running_texts`
+--
+ALTER TABLE `running_texts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_pos_active` (`position`,`is_active`);
 
 --
 -- Indexes for table `surat_belum_bekerja`
@@ -520,28 +514,22 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `berita`
---
-ALTER TABLE `berita`
-  MODIFY `id_berita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `galeri`
 --
 ALTER TABLE `galeri`
   MODIFY `id_galeri` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `informasi`
---
-ALTER TABLE `informasi`
-  MODIFY `id_informasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT for table `level`
 --
 ALTER TABLE `level`
   MODIFY `id_level` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `running_texts`
+--
+ALTER TABLE `running_texts`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `surat_belum_bekerja`

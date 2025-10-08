@@ -18,13 +18,44 @@ class Uploadvideo extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
+
         $this->load->model('M_uploadvideo');
+
+        if ($this->session->userdata('id_level') !== '1') {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki izin untuk mengakses halaman tersebut.');
+            redirect('admin/dashboard');
+        }
     }
 
     public function index()
     {
-        $data['title'] = "Pengaturan Website";
-        $data['youtube_link'] = $this->M_uploadvideo->get_setting('youtube_link');
+        // Ambil link YouTube dari database
+        $youtube_link = $this->M_uploadvideo->get_setting('youtube_link');
+
+        // Siapkan default metadata
+        $video_meta = [
+            'title' => 'Video Kelurahan Kademangan',
+            'author_name' => 'Kelurahan Kademangan'
+        ];
+
+        // Jika ada link, coba ambil metadata via oEmbed YouTube
+        if (!empty($youtube_link)) {
+            $oembed_url = 'https://www.youtube.com/oembed?url=' . urlencode($youtube_link) . '&format=json';
+            $oembed_data = @file_get_contents($oembed_url);
+
+            if ($oembed_data !== false) {
+                $oembed = json_decode($oembed_data, true);
+                $video_meta['title'] = $oembed['title'] ?? $video_meta['title'];
+                $video_meta['author_name'] = $oembed['author_name'] ?? $video_meta['author_name'];
+            }
+        }
+
+        // Kirim ke view
+        $data = [
+            'title' => 'Explore Kademangan',
+            'youtube_link' => $youtube_link,
+            'video_meta' => $video_meta
+        ];
 
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
