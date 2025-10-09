@@ -35,12 +35,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Isi Berita</label>
-                            <textarea name="isi_berita" class="form-control" rows="8" required></textarea>
+                            <label>Isi Berita <span class="text-danger">*</span></label>
+                            <textarea id="isi_berita" name="isi_berita" class="form-control" rows="8"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Gambar (jpg/jpeg/png/gif, max 5MB)</label>
-                            <input type="file" name="gambar" class="form-control" accept=".jpg,.jpeg,.png,.gif" required>
+                            <input type="file" name="gambar" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp">
                         </div>
 
                         <div class="d-flex gap-2">

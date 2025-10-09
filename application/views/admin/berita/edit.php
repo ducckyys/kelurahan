@@ -39,7 +39,7 @@
                         </div>
                         <div class="form-group">
                             <label>Isi Berita</label>
-                            <textarea name="isi_berita" class="form-control" rows="8" required><?= html_escape($berita->isi_berita); ?></textarea>
+                            <textarea id="isi_berita" name="isi_berita" class="form-control" rows="8" required><?= $berita->isi_berita; ?></textarea>
                         </div>
 
                         <div class="form-group">

@@ -52,6 +52,7 @@ class M_berita extends CI_Model
 
     public function save($data)
     {
+        unset($data['id_berita']);
         return $this->db->insert($this->table, $data);
     }
 

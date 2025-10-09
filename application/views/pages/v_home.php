@@ -1,3 +1,16 @@
+<section id="home" class="py-5 d-flex align-items-center mb-5 mt-5">
+    <div class="container-fluid px-lg-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="display-5 fw-bold mb-3">Layanan Publik Kelurahan yang Mudah & Transparan</h1>
+                <p class="lead text-muted">Akses informasi, ajukan layanan, dan baca berita terbaru seputar kelurahan Anda dalam satu halaman.</p>
+                <a href="<?= base_url('pelayanan'); ?>" class="btn btn-primary btn-lg me-2">Ajukan Layanan</a>
+                <a href="<?= site_url('#Layanan'); ?>" class="btn btn-outline-primary btn-lg">Layanan kami</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <?php if (!empty($rt_top) || !empty($rt_bottom)) : ?>
     <section id="marquee-info" class="bg-primary text-white py-2">
         <div class="container-fluid px-lg-5">
@@ -21,25 +34,138 @@
     </section>
 <?php endif; ?>
 
-<section id="home" class="py-5 d-flex align-items-center mb-5 mt-5">
+<section id="Layanan" class="py-5">
     <div class="container-fluid px-lg-5">
-        <div class="row align-items-center">
-            <div class="col-lg-7">
-                <h1 class="display-5 fw-bold mb-3">Layanan Publik Kelurahan yang Mudah & Transparan</h1>
-                <p class="lead text-muted">Akses informasi, ajukan layanan, dan baca berita terbaru seputar kelurahan Anda dalam satu halaman.</p>
-                <a href="<?= base_url('pelayanan'); ?>" class="btn btn-primary btn-lg me-2">Ajukan Layanan</a>
-                <a href="<?= site_url('#Layanan'); ?>" class="btn btn-outline-primary btn-lg">Layanan kami</a>
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-1">Layanan Kami</h2>
+                <p class="text-muted">Solusi layanan publik yang mudah, cepat, dan transparan.</p>
             </div>
         </div>
+
+        <?php if (!empty($layanan_list)): ?>
+            <div class="position-relative">
+
+                <!-- Tombol navigasi -->
+                <button id="layananPrev" class="nav-arrow btn btn-outline-primary btn-sm position-absolute top-50 start-0 translate-middle-y d-none d-lg-inline-flex" type="button" aria-label="Sebelumnya">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button id="layananNext" class="nav-arrow btn btn-outline-primary btn-sm position-absolute top-50 end-0 translate-middle-y d-none d-lg-inline-flex" type="button" aria-label="Berikutnya">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+                <!-- Track slider -->
+                <div id="layananSlider"
+                    class="d-flex flex-nowrap gap-4 overflow-auto pb-2"
+                    style="scroll-snap-type:x mandatory; scroll-behavior:smooth;">
+                    <?php foreach ($layanan_list as $l): ?>
+                        <!-- Gunakan kelas grid untuk lebar responsif per item -->
+                        <div class="slider-item col-10 col-sm-6 col-lg-3 p-0 flex-shrink-0" style="scroll-snap-align:start;">
+                            <div class="card service-card h-100 overflow-hidden">
+                                <?php if (!empty($l->gambar)): ?>
+                                    <img src="<?= base_url('uploads/layanan/' . $l->gambar); ?>"
+                                        alt="<?= html_escape($l->judul); ?>"
+                                        class="card-img-top">
+                                <?php else: ?>
+                                    <div class="card-img-top bg-light"></div>
+                                <?php endif; ?>
+
+                                <div class="card-body">
+                                    <h5 class="card-title mb-1"><?= html_escape($l->judul); ?></h5>
+                                    <span class="title-underline"></span>
+                                    <p class="card-text small text-muted mb-0">
+                                        <?= nl2br(html_escape($l->deskripsi)); ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Tombol navigasi untuk mobile (opsional) -->
+                <div class="d-grid gap-2 d-lg-none mt-3">
+                    <div class="d-flex justify-content-center gap-2">
+                        <button id="layananPrevSm" class="btn btn-outline-primary btn-sm" type="button" aria-label="Sebelumnya">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button id="layananNextSm" class="btn btn-outline-primary btn-sm" type="button" aria-label="Berikutnya">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        <?php else: ?>
+            <div class="text-center text-muted">Belum ada layanan yang ditambahkan.</div>
+        <?php endif; ?>
     </div>
 </section>
 
-<section>
-    <p>Layanan kami</p>
-</section>
+<section id="coverage" class="py-5">
+    <div class="container-fluid px-lg-5">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-1">Skala Kami</h2>
+                <p class="text-muted">Berpengalaman melayani lingkungan pemerintahan & warga secara transparan.</p>
+            </div>
+        </div>
 
-<section>
-    <p>Jangkauan Pelayanan</p>
+        <?php
+        // formatter angka compact: 1.1 Mio / 803 K / 123
+        if (!function_exists('compact_number')) {
+            function compact_number($n)
+            {
+                if ($n >= 1000000) return rtrim(rtrim(number_format($n / 1000000, 1, '.', ''), '0'), '.') . ' Mio';
+                if ($n >= 1000)    return rtrim(rtrim(number_format($n / 1000,    0, '.', ''), '0'), '.') . ' K';
+                return number_format((int)$n, 0, ',', '.');
+            }
+        }
+
+        $iconBase = base_url('uploads/icons/');
+
+        $cards = [
+            [
+                'title' => 'KK yang Dilayani',
+                'desc'  => 'Semua keluarga bisa mengakses layanan kami.',
+                'value' => compact_number((int)$coverage->jumlah_kk),
+                'icon'  => !empty($coverage->icon_kk) ? $iconBase . $coverage->icon_kk : base_url('assets/img/icons/kk.png'),
+            ],
+            [
+                'title' => 'Jumlah Penduduk',
+                'desc'  => 'Identitas dan layanan publik yang inklusif.',
+                'value' => compact_number((int)$coverage->jumlah_penduduk),
+                'icon'  => !empty($coverage->icon_penduduk) ? $iconBase . $coverage->icon_penduduk : base_url('assets/img/icons/penduduk.png'),
+            ],
+            [
+                'title' => 'Jumlah RW',
+                'desc'  => 'Kolaborasi tingkat wilayah untuk pelayanan.',
+                'value' => compact_number((int)$coverage->jumlah_rw),
+                'icon'  => !empty($coverage->icon_rw) ? $iconBase . $coverage->icon_rw : base_url('assets/img/icons/rw.png'),
+            ],
+            [
+                'title' => 'Jumlah RT',
+                'desc'  => 'Layanan dekat warga di tingkat rukun tetangga.',
+                'value' => compact_number((int)$coverage->jumlah_rt),
+                'icon'  => !empty($coverage->icon_rt) ? $iconBase . $coverage->icon_rt : base_url('assets/img/icons/rt.png'),
+            ],
+        ];
+        ?>
+
+        <div class="row g-4">
+            <?php foreach ($cards as $c): ?>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card metric-card news-card h-100 overflow-hidden rounded-4 shadow-sm">
+                        <div class="card-body text-center d-flex flex-column">
+                            <img src="<?= $c['icon']; ?>" alt="" class="metric-illustration mx-auto mb-2">
+                            <h5 class="metric-title mb-1"><?= html_escape($c['title']); ?></h5>
+                            <p class="metric-desc text-muted mb-4"><?= html_escape($c['desc']); ?></p>
+                            <div class="metric-value mt-auto"><?= $c['value']; ?></div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </section>
 
 <section id="galeri" class="py-5">
@@ -87,19 +213,31 @@
                 <p class="text-muted">Kegiatan kelurahan dan informasi aktual untuk warga.</p>
             </div>
         </div>
+
         <div class="row g-4">
             <?php if (!empty($berita_list)) : ?>
                 <?php foreach ($berita_list as $berita) : ?>
                     <div class="col-md-4">
-                        <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
-                            <img src="<?= base_url('uploads/berita/' . $berita->gambar); ?>" class="card-img-top" alt="<?= html_escape($berita->judul_berita); ?>" style="height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <span class="badge bg-primary-subtle text-primary mb-2"><?= html_escape($berita->kategori); ?></span>
+                        <div class="card news-card h-100 overflow-hidden rounded-4 shadow-sm">
+                            <img
+                                src="<?= base_url('uploads/berita/' . $berita->gambar); ?>"
+                                class="card-img-top news-img"
+                                alt="<?= html_escape($berita->judul_berita); ?>"
+                                style="height: 200px; object-fit: cover;">
+
+                            <div class="card-body d-flex flex-column">
+                                <span class="badge bg-primary-subtle text-primary align-self-start mb-2">
+                                    <?= html_escape($berita->kategori); ?>
+                                </span>
                                 <h5 class="card-title"><?= html_escape($berita->judul_berita); ?></h5>
-                                <p class="card-text small text-muted"><?= word_limiter(html_escape($berita->isi_berita), 15); ?></p>
-                            </div>
-                            <div class="card-footer bg-white border-0">
-                                <a href="<?= base_url('berita/detail/' . $berita->slug_berita); ?>" class="btn btn-outline-primary btn-sm">Baca Selengkapnya</a>
+
+                                <p class="card-text small text-muted mb-3 flex-grow-1">
+                                    <?= word_limiter(strip_tags($berita->isi_berita), 15); ?>
+                                </p>
+
+                                <a href="<?= base_url('berita/detail/' . $berita->slug_berita); ?>" class="btn btn-outline-primary btn-sm mt-auto">
+                                    Baca Selengkapnya
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -112,6 +250,7 @@
         </div>
     </div>
 </section>
+
 
 <?php
 // Cek jika link youtube ada isinya

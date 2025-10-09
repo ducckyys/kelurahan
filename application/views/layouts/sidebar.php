@@ -90,9 +90,21 @@
                             <p>Galeri</p>
                         </a>
                     </li>
+                    <li class="nav-item <?= ($seg2 == 'layanan') ? 'active' : '' ?>">
+                        <a href="<?= base_url('admin/layanan'); ?>">
+                            <i class="fas fa-th-large"></i>
+                            <p>Layanan</p>
+                        </a>
+                    </li>
                     <li class="nav-item <?= ($seg2 == 'uploadvideo') ? 'active' : '' ?>">
                         <a href="<?= base_url('admin/uploadvideo'); ?>"><i class="fas fa-cog"></i>
                             <p>Pengaturan Video</p>
+                        </a>
+                    </li>
+                    <li class="nav-item <?= ($seg2 == 'coverage') ? 'active' : '' ?>">
+                        <a href="<?= base_url('admin/coverage'); ?>">
+                            <i class="fas fa-chart-area"></i>
+                            <p>Jangkauan Layanan</p>
                         </a>
                     </li>
                     <li class="nav-item <?= ($seg2 == 'runningtext') ? 'active' : '' ?>">

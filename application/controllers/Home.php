@@ -7,6 +7,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property M_informasi $M_informasi
  * @property M_uploadvideo $M_uploadvideo
  * @property M_runningtext $M_runningtext
+ * @property M_layanan $M_layanan
+ * @property M_coverage $M_coverage
  */
 
 class Home extends CI_Controller
@@ -19,6 +21,9 @@ class Home extends CI_Controller
         $this->load->model('M_galeri');
         $this->load->model('M_runningtext');
         $this->load->model('M_uploadvideo');
+        $this->load->model('M_layanan');
+        $this->load->helper('text');
+        $this->load->model('M_coverage');
     }
 
     public function index()
@@ -28,6 +33,8 @@ class Home extends CI_Controller
         $data['berita_list'] = $this->M_berita->get_latest_berita(3); // Ambil 3 berita terbaru
         $data['galeri_list'] = $this->M_galeri->get_latest_galeri(6); // Ambil 6 foto terbaru
         $data['youtube_link'] = $this->M_uploadvideo->get_setting('youtube_link');
+        $data['layanan_list'] = $this->M_layanan->get_all_active();
+        $data['coverage'] = $this->M_coverage->get_single();
 
         // === Tambahan: ambil metadata YouTube (judul & channel)
         $video_meta = [
