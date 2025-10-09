@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2025 at 06:54 AM
+-- Generation Time: Oct 09, 2025 at 11:32 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `berita` (
-  `id_berita` int(11) NOT NULL,
+  `id_berita` int(10) UNSIGNED NOT NULL,
   `judul_berita` varchar(255) NOT NULL,
   `slug_berita` varchar(255) NOT NULL,
   `isi_berita` text NOT NULL,
@@ -43,7 +43,33 @@ CREATE TABLE `berita` (
 --
 
 INSERT INTO `berita` (`id_berita`, `judul_berita`, `slug_berita`, `isi_berita`, `kategori`, `gambar`, `tgl_publish`, `id_user`) VALUES
-(0, 'Acara layang-layang', 'acara-layang-layang', 'isi aja', 'Kegiatan', '6e092298a1f18528f92d935486cd8920.jpg', '2025-10-07 09:04:06', 1);
+(2, 'Jangan Panik Mogok! Ini Daftar Bengkel Motor dan Mobil Terdekat di Kademangan, Setu', 'jangan-panik-mogok-ini-daftar-bengkel-motor-dan-mobil-terdekat-di-kademangan-setu', '<p><strong>TANGERANG SELATAN, 9 Oktober 2025</strong> – Kademangan, sebagai salah satu kelurahan yang terus berkembang di Kecamatan Setu, Tangerang Selatan, memiliki tingkat mobilitas warga yang tinggi. Seiring dengan itu, kebutuhan akan layanan perawatan dan perbaikan kendaraan menjadi sangat esensial. Bagi para pengendara yang mengalami masalah pada kendaraannya, baik untuk servis rutin maupun kondisi darurat, menemukan bengkel terpercaya adalah sebuah keharusan.</p><p>Tim redaksi telah merangkum beberapa bengkel motor dan mobil di sekitar Kademangan yang bisa menjadi referensi utama bagi warga. Dari bengkel umum hingga spesialis, berikut adalah daftarnya:</p><h3><strong>Rekomendasi Bengkel Mobil di Kademangan</strong></h3><p>Bagi pemilik kendaraan roda empat, perawatan seperti ganti oli, servis AC, hingga perbaikan kaki-kaki seringkali dibutuhkan. Beberapa bengkel ini dikenal memiliki reputasi yang baik di kalangan warga setempat.</p><ol><li><strong>BENGKEL MOBIL MITRA JAYA</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, ganti oli, tune-up, dan perbaikan kaki-kaki.</li><li><strong>Alamat:</strong> Jl. Raya Kademangan, Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Salah satu bengkel yang sudah cukup lama beroperasi di area ini. Dikenal karena montirnya yang berpengalaman dan penanganan yang relatif cepat untuk servis ringan.</li><li><a href=\"https://maps.app.goo.gl/tufcehqc8kMa5iRD6\">https://maps.app.goo.gl/tufcehqc8kMa5iRD6</a></li></ul></li><li><strong>KADEMANGAN AC MOBIL</strong><ul><li><strong>Spesialisasi:</strong> Perbaikan dan perawatan AC mobil.</li><li><strong>Alamat:</strong> Terletak tidak jauh dari jalan utama, mudah diakses dari perumahan sekitar.</li><li><strong>Keterangan:</strong> Menjadi rujukan utama bagi pengemudi yang mengalami masalah AC, mulai dari tidak dingin, bau, hingga isi freon. Harganya kompetitif dengan pengerjaan yang teliti.</li></ul></li><li><strong>GARASI 99 AUTO SERVICE</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, kelistrikan, dan modifikasi ringan.</li><li><strong>Alamat:</strong> Jl. Amd. Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Bengkel ini cukup populer di kalangan anak muda dan komunitas otomotif karena selain melayani servis rutin, juga menerima permintaan modifikasi ringan seperti instalasi audio dan lampu.</li></ul></li></ol><h3><strong>Rekomendasi Bengkel Motor di Kademangan</strong></h3><p>Pengguna sepeda motor yang jumlahnya mendominasi di wilayah ini juga memiliki banyak pilihan. Berikut beberapa bengkel motor yang menjadi andalan warga Kademangan.</p><ol><li><strong>AHASS KADEMANGAN JAYA MOTOR (Bengkel Resmi Honda)</strong><ul><li><strong>Spesialisasi:</strong> Servis dan suku cadang asli motor Honda.</li><li><strong>Alamat:</strong> Jl. Raya Puspiptek (mudah dijangkau dari Kademangan).</li><li><strong>Keterangan:</strong> Pilihan utama bagi pengguna motor Honda yang ingin menjaga garansi dan kualitas servis sesuai standar pabrikan. Layanan booking service biasanya tersedia untuk menghindari antrean.</li></ul></li><li><strong>BENGKEL MOTOR ABADI</strong><ul><li><strong>Spesialisasi:</strong> Servis umum semua merek, tambal ban, ganti oli.</li><li><strong>Alamat:</strong> Jl. Kademangan Raya (dekat area pertokoan).</li><li><strong>Keterangan:</strong> Bengkel rakyat yang selalu ramai. Menjadi solusi cepat untuk masalah-masalah umum seperti ban bocor, ganti busi, atau servis karburator. Harganya yang terjangkau membuatnya jadi favorit.</li></ul></li><li><strong>JAYA MANDIRI MOTOR</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, turun mesin, dan menyediakan aneka suku cadang.</li><li><strong>Alamat:</strong> Berada di salah satu jalan lingkungan di Kademangan.</li><li><strong>Keterangan:</strong> Dikenal mampu menangani masalah yang lebih berat seperti turun mesin. Montirnya yang sabar dan teliti menjadi nilai tambah bagi pelanggan.</li></ul></li></ol><h3><strong>Tips Memilih Bengkel yang Tepat</strong></h3><p>Camat Setu, Bapak H. Junaedi, S.Pd., saat dihubungi terpisah, mengapresiasi para pelaku usaha UMKM seperti bengkel yang sangat membantu aktivitas warga. \"Keberadaan bengkel di setiap kelurahan, termasuk Kademangan, adalah penopang penting kelancaran mobilitas warga. Kami harap para pemilik bengkel terus menjaga kualitas dan kejujuran,\" ujarnya.</p><p>Bagi warga, disarankan untuk:</p><ul><li><strong>Cek Ulasan:</strong> Manfaatkan ulasan di Google Maps untuk melihat pengalaman pelanggan lain.</li><li><strong>Tanya Estimasi Biaya:</strong> Sebelum pengerjaan dimulai, jangan ragu untuk bertanya perkiraan biaya jasa dan suku cadang.</li><li><strong>Pilih Sesuai Kebutuhan:</strong> Sesuaikan pilihan bengkel dengan jenis masalah kendaraan Anda, apakah umum atau membutuhkan penanganan spesialis.</li></ul><p>Dengan adanya pilihan bengkel yang beragam ini, warga Kademangan dan sekitarnya kini tidak perlu lagi khawatir saat \"kuda besi\" kesayangan mereka membutuhkan perawatan.</p>', 'Umum', 'f4c816650a388274f2e2c3dfa2288ab0.jpg', '2025-10-09 08:50:53', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coverage_stats`
+--
+
+CREATE TABLE `coverage_stats` (
+  `id` int(11) NOT NULL,
+  `jumlah_kk` int(11) NOT NULL DEFAULT 0,
+  `jumlah_penduduk` int(11) NOT NULL DEFAULT 0,
+  `jumlah_rw` int(11) NOT NULL DEFAULT 0,
+  `jumlah_rt` int(11) NOT NULL DEFAULT 0,
+  `icon_kk` varchar(255) DEFAULT NULL,
+  `icon_penduduk` varchar(255) DEFAULT NULL,
+  `icon_rw` varchar(255) DEFAULT NULL,
+  `icon_rt` varchar(255) DEFAULT NULL,
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `coverage_stats`
+--
+
+INSERT INTO `coverage_stats` (`id`, `jumlah_kk`, `jumlah_penduduk`, `jumlah_rw`, `jumlah_rt`, `icon_kk`, `icon_penduduk`, `icon_rw`, `icon_rt`, `updated_at`) VALUES
+(1, 7884, 25724, 9, 68, NULL, NULL, NULL, NULL, '2025-10-09 15:52:41');
 
 -- --------------------------------------------------------
 
@@ -67,6 +93,33 @@ INSERT INTO `galeri` (`id_galeri`, `judul_foto`, `foto`, `tgl_upload`, `id_user`
 (1, 'BATAN INDAH', 'b048a6f2e0e691777c3fa123b2f7ccdd.jpg', '2025-09-12 11:12:18', 1),
 (2, 'AMARAPURA', 'fc837a5294ceda5a4b8319e71be4e02e.jpg', '2025-09-15 21:42:47', 1),
 (3, 'PALEM SERPONG INDAH', '38d89f44014349adec8cbbc56009c1cf.jpg', '2025-09-15 21:43:09', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `layanan`
+--
+
+CREATE TABLE `layanan` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `judul` varchar(120) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `gambar` varchar(255) DEFAULT NULL,
+  `urut` int(11) DEFAULT 0,
+  `aktif` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `layanan`
+--
+
+INSERT INTO `layanan` (`id`, `judul`, `deskripsi`, `gambar`, `urut`, `aktif`, `created_at`) VALUES
+(1, 'Surat Keterangan Tidak Mampu', 'Layanan pembuatan Surat Keterangan Tidak Mampu (SKTM) bagi warga yang tergolong pra-sejahtera. Surat ini digunakan sebagai syarat untuk mengajukan berbagai program bantuan pemerintah, seperti keringanan biaya pendidikan dan jaminan kesehatan.', 'fa5892facd892f322351c7947aa69a2e.png', 1, 1, '2025-10-08 21:28:58'),
+(2, 'Surat Keterangan Belum Bekerja', 'Layanan ini ditujukan bagi warga yang memerlukan Surat Keterangan Belum Bekerja sebagai dokumen resmi untuk menyatakan status tidak sedang bekerja. Surat ini berfungsi sebagai bukti formal yang sah dan seringkali dibutuhkan untuk melengkapi persyaratan administrasi.', 'f2a9943fbb952d112db9b5d9781a9615.png', 2, 1, '2025-10-08 23:35:46'),
+(3, 'Surat Keterangan Domisili Yayasan', 'Layanan ini diperuntukkan bagi pengurus yayasan yang ingin mendapatkan bukti legalitas alamat resmi (domisili) yayasannya. Surat Keterangan Domisili ini berfungsi sebagai dokumen dasar yang wajib dimiliki oleh setiap yayasan untuk dapat mengurus perizinan dan keperluan legal lainnya.', '952f90dd96b493c0f60d936de08d597a.png', 3, 1, '2025-10-08 23:38:23'),
+(4, 'Surat Keterangan Belum Memiliki Rumah', 'Layanan ini ditujukan bagi warga yang membutuhkan surat keterangan resmi sebagai bukti bahwa mereka belum memiliki rumah atas nama pribadi atau pasangan. Dokumen ini sangat penting karena menjadi pintu gerbang untuk mengakses program perumahan yang disubsidi oleh pemerintah bagi Masyarakat Berpenghasilan Rendah (MBR).\r\n\r\n', '30c89e19ee5681acec8b46578430a47a.png', 4, 1, '2025-10-08 23:40:16'),
+(5, 'Penerbitan Akta Kematian', 'Layanan ini adalah proses pencatatan peristiwa kematian seorang penduduk untuk diterbitkan Akta Kematian oleh Dinas Kependudukan dan Pencatatan Sipil (Dukcapil). Akta Kematian merupakan dokumen vital yang memberikan kepastian hukum mengenai status kependudukan seseorang yang telah meninggal dunia dan merupakan dasar untuk berbagai proses administrasi bagi ahli waris.', 'cba9257285914415949c5cfc1fdcfdd8.png', 5, 1, '2025-10-08 23:49:43');
 
 -- --------------------------------------------------------
 
@@ -436,10 +489,28 @@ INSERT INTO `user` (`id_user`, `nama_lengkap`, `username`, `password`, `foto`, `
 --
 
 --
+-- Indexes for table `berita`
+--
+ALTER TABLE `berita`
+  ADD PRIMARY KEY (`id_berita`);
+
+--
+-- Indexes for table `coverage_stats`
+--
+ALTER TABLE `coverage_stats`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `galeri`
 --
 ALTER TABLE `galeri`
   ADD PRIMARY KEY (`id_galeri`);
+
+--
+-- Indexes for table `layanan`
+--
+ALTER TABLE `layanan`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `level`
@@ -514,10 +585,28 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `berita`
+--
+ALTER TABLE `berita`
+  MODIFY `id_berita` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `coverage_stats`
+--
+ALTER TABLE `coverage_stats`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `galeri`
 --
 ALTER TABLE `galeri`
   MODIFY `id_galeri` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `layanan`
+--
+ALTER TABLE `layanan`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `level`
