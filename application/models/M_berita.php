@@ -31,6 +31,36 @@ class M_berita extends CI_Model
         return $this->get_all();
     }
 
+    public function get_related_by_category($kategori, $exclude_id = null, $limit = 5)
+    {
+        $this->db->select('berita.*, user.nama_lengkap');
+        $this->db->from($this->table);
+        $this->db->join('user', 'user.id_user = berita.id_user', 'left');
+        if ($kategori !== '') {
+            $this->db->where('berita.kategori', $kategori);
+        }
+        if (!empty($exclude_id)) {
+            $this->db->where('berita.id_berita <>', $exclude_id);
+        }
+        $this->db->order_by('tgl_publish', 'DESC');
+        $this->db->limit((int)$limit);
+        return $this->db->get()->result();
+    }
+
+    public function get_latest_except($exclude_id = null, $limit = 5)
+    {
+        $this->db->select('berita.*, user.nama_lengkap');
+        $this->db->from($this->table);
+        $this->db->join('user', 'user.id_user = berita.id_user', 'left');
+        if (!empty($exclude_id)) {
+            $this->db->where('berita.id_berita <>', $exclude_id);
+        }
+        $this->db->order_by('tgl_publish', 'DESC');
+        $this->db->limit((int)$limit);
+        return $this->db->get()->result();
+    }
+
+
     public function get_latest_berita($limit = 3)
     {
         return $this->get_all($limit, 0);

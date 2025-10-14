@@ -18,6 +18,10 @@ class Coverage extends CI_Controller
         if ($this->session->userdata('status') !== "login") {
             redirect(base_url("login"));
         }
+        if ($this->session->userdata('id_level') !== '1') {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki izin untuk mengakses halaman tersebut.');
+            redirect('admin/dashboard');
+        }
         $this->load->model('M_coverage');
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['url', 'form']);

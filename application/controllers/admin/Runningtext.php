@@ -13,7 +13,9 @@ class Runningtext extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // TODO: pasang guard admin (cek login/role).
+        if ($this->session->userdata('status') !== "login") {
+            redirect(base_url("login"));
+        }
         $this->load->model('M_runningtext');
         $this->load->library('form_validation');
         $this->load->helper(['url', 'form']);

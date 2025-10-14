@@ -1,76 +1,131 @@
-<section class="berita-section detail py-5">
+<section id="berita-detail" class="py-5">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
+        <a href="<?= site_url('berita'); ?>" class="back-icon mb-3 d-inline-flex" aria-label="Kembali">
+            <!-- (ikon kembali sama seperti di atas) -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                <path fill-rule="evenodd" d="M15 8a.75.75 0 0 1-.75.75H3.56l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 1 1 1.06 1.06L3.56 7.25h10.69A.75.75 0 0 1 15 8z" />
+            </svg>
+            <span class="ms-2 fw-semibold">Kembali ke Daftar Berita</span>
+        </a>
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <!-- breadcrumb mini bisa ditambah jika mau -->
-                    </div>
-                    <a href="<?= base_url('berita'); ?>" class="back-icon" aria-label="Kembali">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                            viewBox="0 0 16 16" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                d="M15 8a.75.75 0 0 1-.75.75H3.56l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 1 1 1.06 1.06L3.56 7.25h10.69A.75.75 0 0 1 15 8z" />
-                        </svg>
-                        <span class="ms-2 fw-semibold">Kembali</span>
-                    </a>
-                </div>
-
-                <h1 class="display-6 fw-bold mb-3"><?= html_escape($berita->judul_berita); ?></h1>
-
-                <div class="text-muted small mb-4">
-                    <span>Dipublikasikan pada: <?= date('d F Y', strtotime($berita->tgl_publish)); ?></span>
-                    <?php if (!empty($berita->penulis)) : ?>
-                        <span class="mx-2">|</span>
-                        <span>Oleh: <?= html_escape($berita->penulis); ?></span>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <article class="card shadow-sm rounded-4 overflow-hidden">
+                    <?php if (!empty($berita->gambar)): ?>
+                        <img src="<?= base_url('uploads/berita/' . $berita->gambar); ?>" class="w-100" alt="<?= html_escape($berita->judul_berita); ?>" style="max-height:420px; object-fit:cover;">
                     <?php endif; ?>
-                </div>
 
-                <img
-                    src="<?= base_url('uploads/berita/' . $berita->gambar); ?>"
-                    class="img-fluid rounded-4 shadow-sm mb-4"
-                    alt="<?= html_escape($berita->judul_berita); ?>">
+                    <div class="card-body">
+                        <?php
+                        // Ambil tanggal & penulis dengan fallback yang aman
+                        $tgl = $berita->tgl_publish ?? ($berita->created_at ?? ($berita->tanggal ?? date('Y-m-d')));
+                        $penulis = trim($berita->penulis ?? '') !== '' ? $berita->penulis : 'Admin Kelurahan';
+                        ?>
+                        <span class="badge bg-primary-subtle text-primary mb-2"><?= html_escape($berita->kategori); ?></span>
+                        <h1 class="h3"><?= html_escape($berita->judul_berita); ?></h1>
 
-                <?php
-                // IZINKAN TAG DASAR + <a>
-                $allowed_tags = '<p><br><strong><b><em><i><u><blockquote><ul><ol><li><h2><h3><h4><h5><h6><hr><a>';
+                        <div class="text-muted small mb-4">
+                            Dipublikasikan oleh
+                            <span class="fw-semibold text-primary"><?= html_escape($penulis); ?></span>
+                            pada
+                            <time datetime="<?= date('Y-m-d', strtotime($tgl)); ?>">
+                                <?= date('d M Y', strtotime($tgl)); ?>
+                            </time>
+                        </div>
 
-                $raw = (string) $berita->isi_berita;
 
-                // 1) Buang tag di luar whitelist
-                $safe_html = strip_tags($raw, $allowed_tags);
+                        <div class="article-content">
+                            <?= safe_rte($berita->isi_berita ?? '', 'detail'); ?>
+                        </div>
+                    </div>
+                </article>
+            </div>
 
-                // 2) Bersihkan atribut berbahaya pada <a>
-                //    - hapus event handler (onclick, onload, dst) & style inline
-                $safe_html = preg_replace('/\s+on\w+="[^"]*"/i', '', $safe_html);
-                $safe_html = preg_replace("/\s+on\w+='[^']*'/i", '', $safe_html);
-                $safe_html = preg_replace('/\s+style="[^"]*"/i', '', $safe_html);
-                $safe_html = preg_replace("/\s+style='[^']*'/i", '', $safe_html);
+            <div class="col-lg-4">
+                <aside class="sticky-top" style="top: 90px;">
 
-                // 3) Normalkan <a> agar hanya punya href yang aman (http/https/mailto) + target/rel
-                $safe_html = preg_replace_callback(
-                    '/<a\b[^>]*href\s*=\s*(["\'])(.*?)\1[^>]*>/i',
-                    function ($m) {
-                        $href = trim($m[2]);
-                        // izinkan hanya http, https, mailto
-                        if (!preg_match('#^(https?://|mailto:)#i', $href)) {
-                            $href = '#';
-                        }
-                        // rebuild tag pembuka <a ...>
-                        $href = htmlspecialchars($href, ENT_QUOTES, 'UTF-8');
-                        return '<a href="' . $href . '" target="_blank" rel="noopener nofollow ugc">';
-                    },
-                    $safe_html
-                );
+                    <?php if (!empty($related)): ?>
+                        <div class="card shadow-sm rounded-4 overflow-hidden mb-4">
+                            <div class="card-body">
+                                <h5 class="section-title mb-3">Berita Terkait</h5>
+                                <ul class="list-unstyled m-0">
+                                    <?php foreach ($related as $r): ?>
+                                        <li class="d-flex gap-3 align-items-start mb-3">
+                                            <a href="<?= base_url('berita/detail/' . $r->slug_berita); ?>" class="d-inline-block flex-shrink-0">
+                                                <img
+                                                    src="<?= !empty($r->gambar) ? base_url('uploads/berita/' . $r->gambar) : base_url('assets/img/noimage.jpg'); ?>"
+                                                    alt="<?= html_escape($r->judul_berita); ?>"
+                                                    class="rounded"
+                                                    style="width:96px;height:72px;object-fit:cover;border:2px solid var(--accent);">
+                                            </a>
+                                            <div class="flex-grow-1">
+                                                <a href="<?= base_url('berita/detail/' . $r->slug_berita); ?>"
+                                                    class="fw-semibold text-decoration-none d-block">
+                                                    <?= character_limiter(html_escape($r->judul_berita), 70); ?>
+                                                </a>
 
-                // 4) Rapikan spasi
-                $safe_html = preg_replace('/\s+/', ' ', $safe_html);
-                $safe_html = str_replace(['<p> ', ' </p>'], ['<p>', '</p>'], $safe_html);
-                ?>
-                <div class="article-content">
-                    <?= $safe_html; ?>
-                </div>
+                                                <!-- META: penulis + tanggal -->
+                                                <small class="text-muted d-block mt-1">
+                                                    Dipublikasikan oleh
+                                                    <span class="fw-semibold text-primary">
+                                                        <?= html_escape($r->penulis ?? $r->nama_lengkap ?? 'Admin Kelurahan'); ?>
+                                                    </span>
+                                                    <?php if (!empty($r->tgl_publish)): ?>
+                                                        • <time datetime="<?= date('Y-m-d', strtotime($r->tgl_publish)); ?>">
+                                                            <?= date('d M Y', strtotime($r->tgl_publish)); ?>
+                                                        </time>
+                                                    <?php endif; ?>
+                                                </small>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="card shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body">
+                            <h5 class="section-title mb-3">Berita Lainnya</h5>
+                            <ul class="list-unstyled m-0">
+                                <?php if (!empty($latest)): ?>
+                                    <?php foreach ($latest as $l): ?>
+                                        <li class="d-flex gap-3 align-items-start mb-3">
+                                            <a href="<?= base_url('berita/detail/' . $l->slug_berita); ?>" class="d-inline-block flex-shrink-0">
+                                                <img
+                                                    src="<?= !empty($l->gambar) ? base_url('uploads/berita/' . $l->gambar) : base_url('assets/img/noimage.jpg'); ?>"
+                                                    alt="<?= html_escape($l->judul_berita); ?>"
+                                                    class="rounded"
+                                                    style="width:96px;height:72px;object-fit:cover;border:2px solid var(--accent);">
+                                            </a>
+                                            <div class="flex-grow-1">
+                                                <a href="<?= base_url('berita/detail/' . $l->slug_berita); ?>"
+                                                    class="fw-semibold text-decoration-none d-block">
+                                                    <?= character_limiter(html_escape($l->judul_berita), 70); ?>
+                                                </a>
+
+                                                <!-- META: penulis + tanggal -->
+                                                <small class="text-muted d-block mt-1">
+                                                    Dipublikasikan oleh
+                                                    <span class="fw-semibold text-primary">
+                                                        <?= html_escape($l->penulis ?? $l->nama_lengkap ?? 'Admin Kelurahan'); ?>
+                                                    </span>
+                                                    <?php if (!empty($l->tgl_publish)): ?>
+                                                        • <time datetime="<?= date('Y-m-d', strtotime($l->tgl_publish)); ?>">
+                                                            <?= date('d M Y', strtotime($l->tgl_publish)); ?>
+                                                        </time>
+                                                    <?php endif; ?>
+                                                </small>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <li class="text-muted">Belum ada berita lain.</li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </div>
     </div>

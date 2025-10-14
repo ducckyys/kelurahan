@@ -1,8 +1,7 @@
 /* =========================================================
 = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
                   TEMA UTAMA & RESET RINGAN
-= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-*/
+========================================================= */
 :root {
   --primary: #1F6FEB;
   --accent:  #F5B301;
@@ -21,8 +20,7 @@ a:hover { text-decoration: none; }
 .card { border-radius: 1rem; }
 
 /* =========================================================
-======
-NAVBAR (2 LAPIS): TOPBAR + MENUBAR
+= NAVBAR (2 LAPIS): TOPBAR + MENUBAR
 ========================================================= */
 .nav-topbar {
   background: var(--white);
@@ -37,37 +35,87 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
 }
 .nav-topbar .container { position: relative; }
 .navbar-brand-center {
-  position: absolute; left: 50%; top: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
-  white-space: nowrap; margin: 0; z-index: 1;
+  white-space: nowrap;
+  margin: 0;
+  z-index: 1;
 }
-.navbar-brand, .navbar-brand-center { font-weight: 700; color: var(--primary) !important; }
+.navbar-brand,
+.navbar-brand-center {
+  font-weight: 700;
+  color: var(--primary) !important;
+}
 .navbar .nav-link {
-  font-weight: 600; color: var(--text) !important;
-  transition: color .25s ease; position: relative; padding: .6rem 1rem;
+  font-weight: 600;
+  color: var(--text) !important;
+  transition: color .25s ease;
+  position: relative;
+  padding: .6rem 1rem;
 }
-.navbar .nav-link:hover, .navbar .nav-link:focus { color: var(--accent) !important; }
+.navbar .nav-link:hover,
+.navbar .nav-link:focus { color: var(--accent) !important; }
 .navbar .nav-link.active { color: var(--accent) !important; }
 .container-menu .nav-link.active::after,
 .container-menu .nav-link:focus::after {
-  content:""; position:absolute; left:1rem; right:1rem; bottom:-.35rem;
-  height:2px; background:#0d6efd; border-radius:2px;
+  content:"";
+  position:absolute;
+  left:1rem;
+  right:1rem;
+  bottom:-.35rem;
+  height:2px;
+  background:#0d6efd;
+  border-radius:2px;
 }
-.navbar .btn-login, .navbar .btn.btn-outline-primary {
-  border: 2px solid var(--primary); color: var(--primary); font-weight: 600;
-  border-radius: 8px; padding: 6px 16px; background: var(--white); transition: all .25s ease;
+.navbar .btn-login,
+.navbar .btn.btn-outline-primary {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 16px;
+  background: var(--white);
+  transition: all .25s ease;
 }
-.navbar .btn-login:hover, .navbar .btn.btn-outline-primary:hover {
-  background: var(--primary); color: var(--white);
+.navbar .btn-login:hover,
+.navbar .btn.btn-outline-primary:hover {
+  background: var(--primary);
+  color: var(--white);
 }
 
+.navbar .nav-link.active{
+  color: var(--primary) !important;
+  font-weight: 700;
+}
+
+    .container-menu .nav-link{ position:relative; }
+    .container-menu .nav-link.active{ color:var(--primary) !important; }
+    .container-menu .nav-link.active::after{
+      content:""; position:absolute; left:1rem; right:1rem; bottom:-.35rem;
+      height:3px; border-radius:2px; background:var(--accent);
+    }
+    /* efek hover */
+    .navbar .nav-link:hover, .navbar .nav-link:focus{ color:var(--accent) !important; }
+
+    /* khusus HALAMAN HOME: strip kuning di atas kapsul menubar */
+    body.is-home .nav-menubar .menubar-floating{
+      border-top:6px solid var(--accent);
+      border-radius:14px;
+    }
+
 /* =========================================================
-====== BURGER/TOGGLER (MOBILE) ================================= */
+= BURGER/TOGGLER (MOBILE)
+========================================================= */
 .nav-topbar .navbar-toggler { display: inline-flex; }
-@media (min-width: 992px) { .nav-topbar .navbar-toggler { display: none !important; } }
+@media (min-width: 992px) {
+  .nav-topbar .navbar-toggler { display: none !important; }
+}
 
 /* =========================================================
-====== MENUBAR CENTER + DROPDOWN ============================= */
+= MENUBAR CENTER + DROPDOWN
+========================================================= */
 .container-menu .navbar-collapse { justify-content: flex-start !important; }
 .container-menu .dropdown-menu { min-width: 260px; }
 @media (min-width: 992px) {
@@ -75,199 +123,217 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
 }
 
 /* =========================================================
-====== MENUBAR MENGAMBANG =================================== */
+= MENUBAR MENGAMBANG
+========================================================= */
 .menubar-floating{
   background: rgba(255,255,255,.92);
-  border: 1px solid #e9eefb; border-radius: 10px;
+  border: 1px solid #e9eefb;
+  border-radius: 5px;
   box-shadow: 0 10px 30px rgba(31,111,235,.08), 0 2px 6px rgba(0,0,0,.04);
-  padding: 6px 10px; margin: 10px 0; margin-left: 0; margin-right: auto;
-  backdrop-filter: saturate(160%) blur(6px); -webkit-backdrop-filter: saturate(160%) blur(6px);
+  padding: 6px 10px;
+  margin: 10px 0;
+  margin-left: 0;
+  margin-right: auto;
+  backdrop-filter: saturate(160%) blur(6px);
+  -webkit-backdrop-filter: saturate(160%) blur(6px);
   width: 100%;
 }
 .menubar-floating .nav-link .bi { font-size: 1.05rem; line-height: 1; }
 .nav-menubar .container.container-menu { max-width: 1320px; }
 .menubar-floating .nav-link { padding: .6rem 1rem; }
 .navbar .dropdown-menu{
-  z-index: 1050; border-radius:14px; border:1px solid #e9eefb; box-shadow:0 16px 40px rgba(0,0,0,.08); overflow:visible;
+  z-index: 1050;
+  border-radius:14px;
+  border:1px solid #e9eefb;
+  box-shadow:0 16px 40px rgba(0,0,0,.08);
+  overflow:visible;
 }
 @media (max-width: 991.98px){
-  .menubar-floating{ border-radius:0; border:0; box-shadow:none; margin:0; background:#fff; padding:0; }
+  .menubar-floating{
+    border-radius:0;
+    border:0;
+    box-shadow:none;
+    margin:0;
+    background:#fff;
+    padding:0;
+  }
 }
 
 /* =========================================================
-====== BUTTON PRIMER GLOBAL ================================= */
-.btn-primary{ background-color:var(--primary); border-color:var(--primary); }
-.btn-primary:hover{ background-color:var(--accent); border-color:var(--accent); color:var(--text); }
+= BUTTON PRIMER GLOBAL
+========================================================= */
+.btn-primary{
+  background-color:var(--primary);
+  border-color:var(--primary);
+}
+.btn-primary:hover{
+  background-color:var(--accent);
+  border-color:var(--accent);
+  color:var(--text);
+}
 
 /* =========================================================
-====== BACK ICON ============================================ */
-.back-icon{ display:inline-flex; align-items:center; padding:8px 12px; border-radius:8px; margin-right:16px; color:#6c757d; transition:all .2s ease; }
-.back-icon svg{ width:24px !important; height:24px !important; fill:currentColor; }
+= BACK ICON
+========================================================= */
+.back-icon{
+  display:inline-flex;
+  align-items:center;
+  padding:8px 12px;
+  border-radius:8px;
+  margin-right:16px;
+  color:#6c757d;
+  transition:all .2s ease;
+}
+.back-icon svg{ width:24px; height:24px; fill:currentColor; }
 .back-icon:hover{ color:#000; background-color:#f0f0f0; }
 
 /* =========================================================
-====== HERO ================================================= */
+= HERO
+========================================================= */
 .hero{
   min-height: calc(100vh - 112px);
   padding: 96px 0 64px;
   background: linear-gradient(180deg, var(--light-bg) 0%, var(--white) 100%);
-  color: var(--text); position: relative;
+  color: var(--text);
+  position: relative;
 }
 .hero .container{ position: relative; z-index: 1; }
 .hero p.lead, .hero p.text-muted{ color:#000 !important; }
 
 /* =========================================================
-====== HERO-CARD (JAM LAYANAN) =============================== */
+= HERO-CARD (JAM LAYANAN)
+========================================================= */
 .hero-card{
-  border-radius:20px; background:linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
-  box-shadow:0 4px 20px rgba(0,0,0,.06); padding:24px 28px; color:var(--text);
-  position:relative; overflow:hidden; transition:all .3s ease;
+  border-radius:20px;
+  background:linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+  padding:24px 28px;
+  color:var(--text);
+  position:relative;
+  overflow:hidden;
+  transition:all .3s ease;
 }
-.hero-card::before{ content:""; position:absolute; left:0; top:0; height:100%; width:5px; background-color:var(--accent); border-top-left-radius:20px; border-bottom-left-radius:20px; }
+.hero-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:5px;
+  background-color:var(--accent);
+  border-top-left-radius:20px;
+  border-bottom-left-radius:20px;
+}
 .hero-card:hover{ transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.08); }
-.hero-card h5{ font-weight:700; color:var(--primary); display:flex; align-items:center; gap:8px; margin-bottom:12px; }
-.hero-card h5::before{ content:"\f017"; font-family:"bootstrap-icons"; font-size:1.2rem; color:var(--accent); }
+.hero-card h5{
+  font-weight:700;
+  color:var(--primary);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+.hero-card h5::before{
+  content:"\f017";
+  font-family:"bootstrap-icons";
+  font-size:1.2rem;
+  color:var(--accent);
+}
 .hero-card ul{ margin:0; padding:0; list-style:none; }
 .hero-card li{ font-size:.95rem; color:var(--text); margin-bottom:4px; }
 
 /* =========================================================
-====== SECTION TITLE & INFO CARD ============================ */
-.section-title{ color:var(--primary); border-bottom:3px solid var(--accent); display:inline-block; padding-bottom:4px; font-weight:700; }
-
+= SECTION TITLE & INFO CARD
+========================================================= */
+.section-title{
+  color:var(--primary);
+  border-bottom:3px solid var(--accent);
+  display:inline-block;
+  padding-bottom:4px;
+  font-weight:700;
+}
 .info-card{ border-radius:1rem; transition: transform .15s ease, box-shadow .15s ease; }
 .info-card:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
 .info-item{ border:1px solid #eef2f7; }
 
 /* =========================================================
-====== BERITA & INFORMASI (BASE RULES LAMA) =================
-   Tetap dipertahankan untuk kompatibilitas lama.
-   Di bawah ini ada versi V2 yang lebih spesifik (news-card & info-card-v2).
+= RUNNING TEXT (MARQUEE TOP & BOTTOM)
+========================================================= */
+#marquee-info { background: transparent; }
+#marquee-info .container-fluid { padding-top: 0; padding-bottom: 0; }
+#marquee-info marquee{
+  display: block;
+  padding: .45rem .75rem;
+  border-radius: 8px;
+  margin: 0;
+  white-space: nowrap;
+}
+#marquee-info marquee:first-of-type{
+  background: var(--primary);
+  color: #fff;
+}
+#marquee-info marquee:last-of-type{
+  background: var(--accent);
+  color: #fff;
+}
+#marquee-info marquee a,
+#marquee-info marquee b,
+#marquee-info marquee strong{
+  color:#fff;
+  text-decoration: underline;
+}
+#marquee-info marquee + .my-1 { margin: .5rem 0; }
+.bg-accent { background: var(--accent) !important; color:#fff !important; }
+.rt-strip  { display:block; padding:.45rem .75rem; border-radius:8px; color:#fff; }
+
+/* =========================================================
+= BERITA & INFORMASI (BASE RULES LEGACY)
 ========================================================= */
 #berita .card, #informasi .card{
-  border-radius:16px; border:1px solid #e2e8f0; transition:all .25s ease;
-  background-color: var(--white); position:relative; overflow:hidden;
+  border-radius:16px;
+  border:1px solid #e2e8f0;
+  transition:all .25s ease;
+  background-color: var(--white);
+  position:relative;
+  overflow:hidden;
 }
 #berita .card::before, #informasi .card::before{
-  content:""; position:absolute; top:0; left:0; height:3px; width:100%; background-color:var(--accent); transition:all .25s ease;
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  height:3px;
+  width:100%;
+  background-color:var(--accent);
+  transition:all .25s ease;
 }
 #berita .card:hover::before, #informasi .card:hover::before{ height:5px; }
 #berita .card:hover, #informasi .card:hover{ transform: translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,.08); }
 #berita .btn-outline-primary, #informasi .btn-link{
-  display:inline-block; text-align:center; background-color:var(--primary); color:var(--white);
-  border:1px solid var(--primary); border-radius:8px; padding:6px 14px; font-size:.9rem; font-weight:600;
-  transition:all .25s ease; text-decoration:none;
+  display:inline-block;
+  text-align:center;
+  background-color:var(--primary);
+  color:var(--white);
+  border:1px solid var(--primary);
+  border-radius:8px;
+  padding:6px 14px;
+  font-size:.9rem;
+  font-weight:600;
+  transition:all .25s ease;
+  text-decoration:none;
 }
 #berita .btn-outline-primary:hover, #informasi .btn-link:hover{
-  background-color:var(--accent); border-color:var(--accent); color:var(--text);
+  background-color:var(--accent);
+  border-color:var(--accent);
+  color:var(--text);
 }
 
 /* =========================================================
-====== LAYANAN (match berita) =============================== */
-#Layanan .service-card{
-  background:#fff; border:0; border-radius:1rem;
-  box-shadow:0 .25rem .75rem rgba(0,0,0,.06);
-  transition:box-shadow .2s, transform .2s; position:relative; overflow:hidden;
-}
-#Layanan .service-card:hover{ box-shadow:0 .75rem 1.25rem rgba(0,0,0,.10); transform:translateY(-2px); }
-#Layanan .service-card .card-img-top{
-  height:200px; object-fit:cover;
-  border-top:6px solid var(--accent);
-  border-top-left-radius:1rem; border-top-right-radius:1rem;
-}
-#Layanan .service-card .card-title{ color:var(--primary); font-weight:600; }
-#Layanan .service-card .title-underline{
-  display:inline-block; width:56px; height:3px; border-radius:2px;
-  background:var(--accent); margin:.25rem 0 .75rem;
-}
-#Layanan .service-card .bg-light{ height:200px; }
-
-/* =========================================================
-====== LAYANAN SLIDER (horizontal snap + scrollbar halus) ===
+= ARTIKEL: BASE TYPOGRAPHY (DETAIL PAGE)
 ========================================================= */
-#Layanan #layananSlider{
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  overflow-x: auto;
-  overflow-y: visible;
-  padding-bottom: .25rem; /* ruang kecil buat scrollbar */
-  -webkit-overflow-scrolling: touch;  /* iOS smooth */
-}
-
-/* item fleksibel (lebar ikut grid yang dipakai di markup) */
-#Layanan .slider-item{
-  scroll-snap-align: start;
-  flex: 0 0 auto; /* jangan menyusut */
-}
-
-/* scrollbar rapi */
-#Layanan #layananSlider{
-  scrollbar-width: thin;                   /* Firefox */
-  scrollbar-color: rgba(0,0,0,.2) transparent;
-}
-#Layanan #layananSlider::-webkit-scrollbar{ height: 8px; }
-#Layanan #layananSlider::-webkit-scrollbar-track{ background: transparent; }
-#Layanan #layananSlider::-webkit-scrollbar-thumb{
-  background: rgba(0,0,0,.2);
-  border-radius: 8px;
-}
-
-/* tombol navigasi (opsional perapian) */
-#Layanan #layananPrev,
-#Layanan #layananNext{
-  backdrop-filter: saturate(120%) blur(2px);
-  -webkit-backdrop-filter: saturate(120%) blur(2px);
-  border-radius: 999px;
-}
-
-#Layanan .nav-arrow{
-  z-index: 5;
-  pointer-events: auto;
-}
-#Layanan #layananSlider{
-  position: relative; /* jangan menutupi tombol */
-}
-
-/* =========================================================
-====== BERITA (V2 — khusus .news-card) ======================
-   Pakai selector spesifik supaya override rules base di atas.
-========================================================= */
-#berita .news-card{
-  background: var(--white);
-  border: 0; border-radius: 16px;
-  box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
-  transition: box-shadow .25s, transform .25s;
-  position: relative; overflow: hidden;
-}
-/* matikan aksen ::before dari base-rules untuk card ini */
-#berita .news-card::before{ content:none !important; }
-#berita .news-card:hover{ transform: translateY(-4px); box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10); }
-#berita .news-card .news-img{
-  height:200px; object-fit:cover;
-  border-top:6px solid var(--accent);
-  border-top-left-radius:16px; border-top-right-radius:16px;
-}
-#berita .news-card .card-title{
-  color:var(--primary); font-weight:600; margin-bottom:.5rem; position:relative;
-}
-#berita .news-card .card-title::after{
-  content:""; display:block; width:56px; height:3px; border-radius:2px;
-  background:var(--accent); margin:.25rem 0 .75rem;
-}
-#berita .news-card .btn-outline-primary{
-  background-color: var(--primary); color: var(--white);
-  border:1px solid var(--primary); border-radius:8px;
-  padding:6px 14px; font-size:.9rem; font-weight:600; transition:all .25s;
-}
-#berita .news-card .btn-outline-primary:hover{
-  background-color: var(--accent); border-color: var(--accent); color: var(--text);
-}
-
-.article-content a {
-  text-decoration: underline;
-  word-break: break-word;        /* jaga URL panjang */
-  overflow-wrap: anywhere;       /* dukungan modern */
-}
-
+.article-meta .author { color: var(--primary); font-weight: 600; }
+.article-content a { text-decoration: underline; word-break: break-word; overflow-wrap: anywhere; }
+.article-content img { max-width: 100%; height: auto; border-radius: 8px; }
 .article-content p { margin-bottom: 1rem; line-height: 1.8; }
 .article-content h2, .article-content h3, .article-content h4 { margin-top: 1.25rem; margin-bottom: .75rem; }
 .article-content ul, .article-content ol { padding-left: 1.25rem; margin-bottom: 1rem; }
@@ -280,91 +346,424 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
 }
 
 /* =========================================================
-====== INFORMASI (V2 — khusus .info-card-v2) =================
-   Mirip news-card agar konsisten, tapi selector beda.
+= LAYANAN KAMI (SLIDER + CARD)
+========================================================= */
+#Layanan .service-card{
+  background:#fff;
+  border:0;
+  border-radius:1rem;
+  box-shadow:0 .25rem .75rem rgba(0,0,0,.06);
+  transition:box-shadow .2s, transform .2s;
+  position:relative;
+  overflow:hidden;
+}
+#Layanan .service-card:hover{ box-shadow:0 .75rem 1.25rem rgba(0,0,0,.10); transform:translateY(-2px); }
+#Layanan .service-card .card-img-top{
+  height:200px;
+  object-fit:cover;
+  border-top:6px solid var(--accent);
+  border-top-left-radius:1rem;
+  border-top-right-radius:1rem;
+}
+#Layanan .service-card .card-title{ color:var(--primary); font-weight:600; }
+#Layanan .service-card .title-underline{
+  display:inline-block;
+  width:56px;
+  height:3px;
+  border-radius:2px;
+  background:var(--accent);
+  margin:.25rem 0 .75rem;
+}
+#Layanan .service-card .bg-light{ height:200px; }
+
+/* Slider */
+#Layanan #layananSlider{
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: .25rem;
+  -webkit-overflow-scrolling: touch;
+}
+#Layanan .slider-item{
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+#Layanan #layananSlider{ scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.2) transparent; }
+#Layanan #layananSlider::-webkit-scrollbar{ height: 8px; }
+#Layanan #layananSlider::-webkit-scrollbar-track{ background: transparent; }
+#Layanan #layananSlider::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.2); border-radius: 8px; }
+#Layanan #layananPrev,
+#Layanan #layananNext{
+  backdrop-filter: saturate(120%) blur(2px);
+  -webkit-backdrop-filter: saturate(120%) blur(2px);
+  border-radius: 999px;
+}
+#Layanan .nav-arrow{ z-index: 5; pointer-events: auto; }
+#Layanan #layananSlider{ position: relative; }
+
+/* =========================================================
+= BERITA (HOME) – NEWS CARD V2
+========================================================= */
+#berita .news-card{
+  background: var(--white);
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
+  transition: box-shadow .25s, transform .25s;
+  position: relative;
+  overflow: hidden;
+}
+#berita .news-card::before{ content:none !important; }
+#berita .news-card:hover{ transform: translateY(-4px); box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10); }
+#berita .news-card .news-img{
+  height:200px;
+  object-fit:cover;
+  border-top:6px solid var(--accent);
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+}
+#berita .news-card .card-title{
+  color:var(--primary);
+  font-weight:600;
+  margin-bottom:.5rem;
+  position:relative;
+}
+#berita .news-card .card-title::after{
+  content:"";
+  display:block;
+  width:56px;
+  height:3px;
+  border-radius:2px;
+  background:var(--accent);
+  margin:.25rem 0 .75rem;
+}
+#berita .news-card .btn-outline-primary{
+  background-color: var(--primary);
+  color: var(--white);
+  border:1px solid var(--primary);
+  border-radius:8px;
+  padding:6px 14px;
+  font-size:.9rem;
+  font-weight:600;
+  transition:all .25s;
+}
+#berita .news-card .btn-outline-primary:hover{
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* =========================================================
+= BERITA (LIST) — EXTRA TIGHT SPACING FOR EXCERPT
+   - rapetin padding body card
+   - kecilkan margin antar elemen
+   - rapetin line-height & margin paragraf RTE
+========================================================= */
+
+#berita .news-card .card-body{
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+#berita .news-card .badge{ margin-bottom: .25rem; }
+#berita .news-card .text-muted{ margin-bottom: .2rem; display:block; }
+
+#berita .news-card .card-title{
+  margin-top: .15rem;
+  margin-bottom: .2rem;
+}
+#berita .news-card .card-title::after{
+  margin: .15rem 0 .5rem;
+}
+
+/* rapetin area konten artikel di dalam card */
+#berita .news-card .article-content{
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+}
+
+/* paragraf RTE di list: benar-benar rapat */
+#berita .news-card .article-content p,
+#berita .news-card .article-excerpt p{
+  line-height: 1.45;
+  margin-top: .1rem;
+  margin-bottom: .1rem;
+}
+
+/* clamp tetap aktif (maks 5 baris) */
+#berita .news-card .article-excerpt{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+/* hilangkan sisa gap di elemen pertama/terakhir */
+#berita .news-card .article-excerpt > :first-child{ margin-top: 0; }
+#berita .news-card .article-excerpt > :last-child { margin-bottom: 0; }
+
+/* sedikit lebih rapat lagi khusus layar kecil */
+@media (max-width: 576.98px){
+  #berita .news-card .card-body{ padding-top: .65rem; padding-bottom: .65rem; }
+  #berita .news-card .article-content p,
+  #berita .news-card .article-excerpt p{
+    line-height: 1.4;
+    margin-top: .08rem;
+    margin-bottom: .08rem;
+  }
+}
+
+/* =========================================================
+= BERITA (LIST) — HARD OVERRIDE LINE-HEIGHT EXCERPT
+========================================================= */
+#berita .news-card .article-content,
+#berita .news-card .article-content p{
+  line-height: 1.42 !important;   /* rapat */
+}
+
+#berita .news-card .article-content p{
+  margin-top: .08rem !important;
+  margin-bottom: .08rem !important;
+}
+
+#berita .news-card .card-text,
+#berita .news-card .card-text * {
+  font-weight: 400 !important;
+}
+
+/* =========================================================
+= INFORMASI (HOME) – INFO CARD V2
 ========================================================= */
 #informasi .info-card-v2{
   background: var(--white);
-  border: 0; border-radius: 16px;
+  border: 0;
+  border-radius: 16px;
   box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
   transition: box-shadow .25s, transform .25s;
-  position: relative; overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
-/* matikan aksen ::before dari base-rules untuk card ini */
 #informasi .info-card-v2::before{ content:none !important; }
 #informasi .info-card-v2:hover{ transform: translateY(-4px); box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10); }
 #informasi .info-card-v2 .info-img{
-  height:200px; object-fit:cover;
+  height:200px;
+  object-fit:cover;
   border-top:6px solid var(--accent);
-  border-top-left-radius:16px; border-top-right-radius:16px;
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
 }
 #informasi .info-card-v2 .card-title{
-  color:var(--primary); font-weight:600; margin-bottom:.5rem; position:relative;
+  color:var(--primary);
+  font-weight:600;
+  margin-bottom:.5rem;
+  position:relative;
 }
 #informasi .info-card-v2 .card-title::after{
-  content:""; display:block; width:56px; height:3px; border-radius:2px;
-  background:var(--accent); margin:.25rem 0 .75rem;
+  content:"";
+  display:block;
+  width:56px;
+  height:3px;
+  border-radius:2px;
+  background:var(--accent);
+  margin:.25rem 0 .75rem;
 }
-/* tombol opsional di Informasi */
 #informasi .info-card-v2 .btn-primary{
-  background-color: var(--primary); border-color: var(--primary);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 #informasi .info-card-v2 .btn-primary:hover{
-  background-color: var(--accent); border-color: var(--accent); color: var(--text);
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
 }
 
 /* =========================================================
-====== GALERI (CAROUSEL) =================================== */
+= GALERI (CAROUSEL)
+========================================================= */
 #galeri .carousel-item { height: 420px; }
 #galeri .carousel-item img{
-  width:100%; height:100%; object-fit:cover; object-position:center; border-radius:.75rem;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  border-radius:.75rem;
 }
 .carousel-item .carousel-caption{
   background:linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,0));
-  bottom:0; left:0; right:0; padding:40px 20px 20px;
-  opacity:0; transition:opacity .4s ease-in-out;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:40px 20px 20px;
+  opacity:0;
+  transition:opacity .4s ease-in-out;
 }
 #carouselGaleri:hover .carousel-item.active .carousel-caption{ opacity:1; }
 .carousel-caption h5{
-  font-weight:700; font-size:2.5rem; text-shadow:1px 1px 3px rgba(0,0,0,.5);
+  font-weight:700;
+  font-size:2.5rem;
+  text-shadow:1px 1px 3px rgba(0,0,0,.5);
 }
 
 /* =========================================================
-====== VIDEO SECTION ======================================= */
+= VIDEO SECTION
+========================================================= */
 #video iframe{
-  aspect-ratio:16 / 9; width:100%; height:auto; min-height:420px;
-  border-radius:16px; box-shadow:0 6px 24px rgba(0,0,0,.08); transition:transform .3s ease;
+  aspect-ratio:16 / 9;
+  width:100%;
+  height:auto;
+  min-height:420px;
+  border-radius:16px;
+  box-shadow:0 6px 24px rgba(0,0,0,.08);
+  transition:transform .3s ease;
 }
 #video iframe:hover{ transform: scale(1.01); }
-#video .ratio{ --bs-aspect-ratio:60%; border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,.08); }
+#video .ratio{
+  --bs-aspect-ratio:60%;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.08);
+}
 
 /* =========================================================
-====== MENU-RAIL (DESKTOP) ================================= */
+   VIDEO (brand style biru-kuning-putih)
+========================================================= */
+
+#video .brand-card{
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
+  transition: transform .25s, box-shadow .25s;
+  position: relative;
+  overflow: hidden;
+}
+#video .brand-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10);
+}
+
+/* strip kuning atas (konsisten dengan card lain) */
+#video .brand-card .brand-strip{
+  content:"";
+  position:absolute; left:0; right:0; top:0;
+  height:6px;
+  background: var(--accent);
+  z-index: 2;
+}
+
+/* area media */
+#video .video-thumbnail{
+  background: linear-gradient(180deg, var(--light-bg) 0%, #fff 100%);
+}
+#video .video-frame{
+  aspect-ratio: 16 / 9;
+  width: 100%; height: auto; min-height: 420px;
+  display: block;
+  border: 0;
+}
+
+/* bar info bawah */
+#video .video-info{
+  background: color-mix(in srgb, var(--primary) 8%, #ffffff 92%);
+  border-top: 1px solid #eef2f7;
+}
+
+/* judul biru + underline kuning */
+#video .video-title{
+  color: var(--primary);
+  font-weight: 700;
+  position: relative;
+}
+#video .video-title::after{
+  content:"";
+  display:block;
+  width:56px; height:3px; border-radius:2px;
+  background: var(--accent);
+  margin-top: .25rem;
+}
+
+/* badge play kecil brand */
+#video .yt-badge{
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #fff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.9);
+  flex: 0 0 auto;
+  font-size: 20px;
+}
+
+/* tombol brand (match global) */
+#video .btn-brand{
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+#video .btn-brand:hover{
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* responsif: tinggi minimum iframe lebih rendah di mobile */
+@media (max-width: 575.98px){
+  #video .video-frame{ min-height: 280px; }
+}
+
+/* =========================================================
+= MENU-RAIL (DESKTOP)
+========================================================= */
 .menu-rail{
-  --rail-bg: var(--white); --rail-border: var(--light-bg);
-  position: relative; display:inline-block; padding:6px 10px; border:1px solid var(--rail-border);
-  background:var(--rail-bg); border-radius:18px; box-shadow:0 6px 18px rgba(0,0,0,0.04);
-  transition: box-shadow .2s ease, transform .2s ease; margin-top:10px;
+  --rail-bg: var(--white);
+  --rail-border: var(--light-bg);
+  position: relative;
+  display:inline-block;
+  padding:6px 10px;
+  border:1px solid var(--rail-border);
+  background:var(--rail-bg);
+  border-radius:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.04);
+  transition: box-shadow .2s ease, transform .2s ease;
+  margin-top:10px;
 }
 .menu-rail:hover{ box-shadow:0 10px 28px rgba(0,0,0,0.08); transform: translateY(-1px); }
-.menu-rail::before, .menu-rail::after{
-  content:""; position:absolute; top:50%; width:42px; height:42px; background:var(--white);
-  border-radius:50%; transform:translateY(-50%); z-index:0; box-shadow: inset 0 0 0 1px var(--rail-border); pointer-events:none;
+.menu-rail::before,
+.menu-rail::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width:42px;
+  height:42px;
+  background:var(--white);
+  border-radius:50%;
+  transform:translateY(-50%);
+  z-index:0;
+  box-shadow: inset 0 0 0 1px var(--rail-border);
+  pointer-events:none;
 }
-.menu-rail::before{ left:-21px; } .menu-rail::after{ right:-21px; }
+.menu-rail::before{ left:-21px; }
+.menu-rail::after{ right:-21px; }
 .menu-rail > .navbar-nav{ position:relative; z-index:1; }
-.menu-pill{ border-radius:999px; padding:8px 14px !important; font-weight:600; color:var(--text) !important; transition: background-color .18s ease, color .18s ease; }
+.menu-pill{
+  border-radius:999px;
+  padding:8px 14px !important;
+  font-weight:600;
+  color:var(--text) !important;
+  transition: background-color .18s ease, color .18s ease;
+}
 .menu-pill:hover, .menu-pill:focus{ background:var(--light-bg); color:var(--primary) !important; }
-.menu-pill.active{ background: color-mix(in srgb, var(--primary) 12%, var(--white) 88%); color:var(--primary) !important; }
+.menu-pill.active{
+  background: color-mix(in srgb, var(--primary) 12%, var(--white) 88%);
+  color:var(--primary) !important;
+}
 @media (max-width: 991.98px){ .menu-rail{ display:none; } }
 
 /* =========================================================
-   JANGKAUAN LAYANAN — SAMA PAKEM WARNA DGN LAYANAN KAMI
-   - Strip top var(--accent)
-   - Title biru + underline kuning
-   - Icon capsule putih ber-ring kuning
-   ========================================================= */
-
+= JANGKAUAN LAYANAN (COVERAGE METRICS)
+========================================================= */
 #coverage .metric-card{
   background: var(--white);
   border: 0;
@@ -374,34 +773,36 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
   position: relative;
   overflow: hidden;
 }
-
-/* strip aksen kuning di bagian atas (match service/news) */
 #coverage .metric-card::before{
   content:"";
-  position:absolute; left:0; top:0; right:0;
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
   height:6px;
   background: var(--accent);
 }
-
-/* hover efek sama */
 #coverage .metric-card:hover{
   transform: translateY(-4px);
   box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10);
 }
-
-/* icon capsule putih + ring tipis kuning */
 #coverage .metric-illustration{
-  width: 110px; height: 110px; object-fit: contain; display:block;
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  display:block;
 }
 #coverage .metric-illustration-wrap{
-  width: 120px; height: 120px; margin: 6px auto 10px;
+  width: 120px;
+  height: 120px;
+  margin: 6px auto 10px;
   border-radius: 20px;
   background: #fff;
-  display:flex; align-items:center; justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
 }
-
-/* judul biru + underline kuning (match service-card/title-underline) */
 #coverage .metric-title{
   color: var(--primary);
   font-weight: 600;
@@ -411,18 +812,17 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
 #coverage .metric-title::after{
   content:"";
   display:block;
-  width:56px; height:3px; border-radius:2px;
+  width:56px;
+  height:3px;
+  border-radius:2px;
   background: var(--accent);
-  margin:.25rem auto .75rem;        /* center seperti contoh */
+  margin:.25rem auto .75rem;
 }
-
-/* deskripsi muted */
 #coverage .metric-desc{
   color:#64748b;
-  font-size:.95rem; line-height:1.5;
+  font-size:.95rem;
+  line-height:1.5;
 }
-
-/* angka besar biru (brand) */
 #coverage .metric-value{
   color: var(--primary);
   font-weight: 800;
@@ -430,30 +830,48 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
   font-size: clamp(28px, 4.2vw, 44px);
   margin-top: auto;
 }
-
-/* ====== Jika Boss pakai .coverage-card (varian lama) ====== */
 #coverage .coverage-card{
-  background: var(--white); border:0; border-radius:16px;
+  background: var(--white);
+  border:0;
+  border-radius:16px;
   box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
   transition: box-shadow .25s, transform .25s;
-  position: relative; overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 #coverage .coverage-card::before{
-  content:""; position:absolute; left:0; top:0; right:0; height:6px; background: var(--accent);
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
+  height:6px;
+  background: var(--accent);
 }
 #coverage .coverage-card:hover{
   transform: translateY(-4px);
   box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10);
 }
 #coverage .coverage-icon-wrap{
-  width:60px; height:60px; border-radius:14px; background:#fff;
-  display:flex; align-items:center; justify-content:center;
+  width:60px;
+  height:60px;
+  border-radius:14px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
 }
-#coverage .coverage-icon{ width:48px; height:48px; object-fit:contain; display:block; }
+#coverage .coverage-icon{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+  display:block;
+}
 
 /* =========================================================
-====== UTILITY & FIX ======================================= */
+= UTILITY & LAYERING FIX
+========================================================= */
 .section-muted{ color:#64748b; }
 .shadow-soft{ box-shadow:0 8px 28px rgba(0,0,0,.08); }
 .border-light{ border-color:#e2e8f0 !important; }
@@ -461,16 +879,20 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
 .navbar .nav-link:focus, .navbar .nav-link:active,
 .navbar .dropdown-toggle:focus, .navbar .dropdown-toggle:active,
 .dropdown-menu .dropdown-item:focus, .dropdown-menu .dropdown-item:active{
-  outline:none !important; box-shadow:none !important; background-color:transparent !important;
+  outline:none !important;
+  box-shadow:none !important;
+  background-color:transparent !important;
 }
-@media (max-width: 991.98px){ .container-menu .nav-link:focus::after{ content:none !important; } }
-.navbar .nav-link:focus-visible, .navbar .dropdown-toggle:focus-visible{
-  outline:2px solid var(--primary); outline-offset:2px;
+@media (max-width: 991.98px){
+  .container-menu .nav-link:focus::after{ content:none !important; }
+}
+.navbar .nav-link:focus-visible,
+.navbar .dropdown-toggle:focus-visible{
+  outline:2px solid var(--primary);
+  outline-offset:2px;
 }
 
-/* =========================
-   FIX: Navbar & Dropdown layering
-   ========================= */
+/* Layering */
 .nav-topbar,
 .nav-menubar,
 .navbar,
@@ -479,24 +901,18 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
   z-index: 2000;
   overflow: visible;
 }
-
 .navbar .dropdown-menu {
   position: absolute;
   z-index: 2050;
   overflow: visible;
 }
-
 .nav-topbar .container,
 .container-menu,
 .navbar .container,
 .navbar .navbar-collapse {
   overflow: visible !important;
 }
-
-.menubar-floating {
-  z-index: 2100;
-}
-
+.menubar-floating { z-index: 2100; }
 #Layanan .service-card,
 #berita .news-card,
 #informasi .info-card-v2,
@@ -505,7 +921,6 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
   position: relative;
   z-index: auto;
 }
-
 #Layanan, #berita, #informasi, .hero {
   transform: none !important;
   filter: none !important;
@@ -513,3 +928,145 @@ NAVBAR (2 LAPIS): TOPBAR + MENUBAR
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+
+/* =========================================================
+   FORM BRAND ACCENTS — BIRU • KUNING • PUTIH
+   Dipakai di semua form yg dibungkus .brand-card
+========================================================= */
+
+/* Judul blok (h5) diberi garis kuning tipis */
+.brand-card h5{
+  color:#0f172a;
+  font-weight:700;
+  position:relative;
+  margin-bottom:1rem;
+}
+.brand-card h5::after{
+  content:"";
+  display:block;
+  width:64px; height:3px; border-radius:2px;
+  background:var(--accent);           /* kuning */
+  margin-top:.35rem;
+}
+
+/* Garis pemisah yang halus */
+.brand-card hr{
+  border:0;
+  border-top:1px solid #eef2f7;
+  margin:1.25rem 0;
+}
+
+/* Label required: bintang kuning otomatis */
+.brand-card .form-label.required::after{
+  content:" *";
+  color:var(--accent);
+  font-weight:700;
+}
+
+/* Input/select/textarea dengan ring biru lembut saat fokus */
+.brand-card .form-control,
+.brand-card .form-select{
+  border-color:#e2e8f0;
+}
+.brand-card .form-control:focus,
+.brand-card .form-select:focus{
+  border-color: color-mix(in srgb, var(--primary) 70%, #ffffff);
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Checkbox & radio: biru saat aktif */
+.brand-card .form-check-input:checked{
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+.brand-card .form-check-input:focus{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Help text & link bernuansa brand */
+.brand-card .form-text{ color:#64748b; }
+.brand-card .form-text a{
+  color: var(--primary); text-decoration: underline;
+}
+.brand-card .form-text a:hover{
+  color: var(--accent);
+}
+
+/* Tombol utama biru, hover kuning (match brand) */
+.brand-card .btn-primary{
+  background-color: var(--primary);
+  border-color: var(--primary);
+  font-weight:600;
+}
+.brand-card .btn-primary:hover{
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* Tombol reset tetap netral tapi rapi */
+.brand-card .btn-light{
+  border:1px solid #e2e8f0;
+}
+
+/* Kartu form: strip kuning di atas (jika belum ditambahkan) */
+.brand-card{
+  background:#fff;                   /* putih */
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  box-shadow:0 .25rem .75rem rgba(0,0,0,.06);
+  position:relative; overflow:hidden;
+  transition:transform .25s, box-shadow .25s;
+}
+.brand-card::before{
+  content:"";
+  position:absolute; left:0; right:0; top:0;
+  height:6px; background:var(--accent);
+}
+.brand-card:hover{
+  transform: translateY(-2px);
+  box-shadow:0 .75rem 1.25rem rgba(0,0,0,.10);
+}
+
+/* Badge kecil opsional untuk judul halaman */
+.page-badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:9px;
+  background:var(--primary); color:#fff; font-size:14px; font-weight:700;
+  margin-right:.5rem;
+}
+
+/* =========================================================
+   NAV ACTIVE — SINGLE SOURCE OF TRUTH (OVERRIDE)
+   ========================================================= */
+
+/* warna & weight link aktif (atau yang pakai aria-current) */
+.nav-menubar .nav-link.active,
+.nav-menubar .nav-link[aria-current="page"] {
+  color: var(--primary) !important;
+  font-weight: 700;
+}
+
+/* underline/strip kuning di item aktif */
+.container-menu .nav-link { position: relative; }
+.container-menu .nav-link.active::after,
+.container-menu .nav-link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: -.35rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent); /* kuning brand */
+}
+
+/* highlight item aktif di dropdown */
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* =========================================================

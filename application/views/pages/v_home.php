@@ -12,27 +12,34 @@
 </section>
 
 <?php if (!empty($rt_top) || !empty($rt_bottom)) : ?>
-    <section id="marquee-info" class="bg-primary text-white py-2">
+    <section id="marquee-info" class="py-2"> <!-- hapus text-white -->
         <div class="container-fluid px-lg-5">
+
             <?php if (!empty($rt_top)) : ?>
-                <marquee behavior="scroll"
+                <marquee
+                    behavior="scroll"
                     direction="<?= html_escape($rt_top->direction); ?>"
-                    scrollamount="<?= (int)$rt_top->speed; ?>">
+                    scrollamount="<?= (int)$rt_top->speed; ?>"
+                    style="display:block;background:var(--primary);color:#fff;padding:.45rem .75rem;border-radius:8px;">
                     <?= html_escape($rt_top->content); ?>
                 </marquee>
-                <div class="my-1"></div>
+                <div style="height:.5rem"></div>
             <?php endif; ?>
 
             <?php if (!empty($rt_bottom)) : ?>
-                <marquee behavior="scroll"
+                <marquee
+                    behavior="scroll"
                     direction="<?= html_escape($rt_bottom->direction); ?>"
-                    scrollamount="<?= (int)$rt_bottom->speed; ?>">
+                    scrollamount="<?= (int)$rt_bottom->speed; ?>"
+                    style="display:block;background:var(--accent);color:#fff;padding:.45rem .75rem;border-radius:8px;">
                     <?= html_escape($rt_bottom->content); ?>
                 </marquee>
             <?php endif; ?>
+
         </div>
     </section>
 <?php endif; ?>
+
 
 <section id="Layanan" class="py-5">
     <div class="container-fluid px-lg-5">
@@ -111,13 +118,11 @@
         </div>
 
         <?php
-        // formatter angka compact: 1.1 Mio / 803 K / 123
-        if (!function_exists('compact_number')) {
-            function compact_number($n)
+        // formatter angka TANPA pembulatan (7884, 25.724, dst)
+        if (!function_exists('format_int')) {
+            function format_int($n)
             {
-                if ($n >= 1000000) return rtrim(rtrim(number_format($n / 1000000, 1, '.', ''), '0'), '.') . ' Mio';
-                if ($n >= 1000)    return rtrim(rtrim(number_format($n / 1000,    0, '.', ''), '0'), '.') . ' K';
-                return number_format((int)$n, 0, ',', '.');
+                return number_format((int)$n, 0, ',', '.'); // 25724 -> 25.724
             }
         }
 
@@ -127,25 +132,25 @@
             [
                 'title' => 'KK yang Dilayani',
                 'desc'  => 'Semua keluarga bisa mengakses layanan kami.',
-                'value' => compact_number((int)$coverage->jumlah_kk),
+                'value' => format_int((int)$coverage->jumlah_kk),
                 'icon'  => !empty($coverage->icon_kk) ? $iconBase . $coverage->icon_kk : base_url('assets/img/icons/kk.png'),
             ],
             [
                 'title' => 'Jumlah Penduduk',
                 'desc'  => 'Identitas dan layanan publik yang inklusif.',
-                'value' => compact_number((int)$coverage->jumlah_penduduk),
+                'value' => format_int((int)$coverage->jumlah_penduduk),
                 'icon'  => !empty($coverage->icon_penduduk) ? $iconBase . $coverage->icon_penduduk : base_url('assets/img/icons/penduduk.png'),
             ],
             [
                 'title' => 'Jumlah RW',
                 'desc'  => 'Kolaborasi tingkat wilayah untuk pelayanan.',
-                'value' => compact_number((int)$coverage->jumlah_rw),
+                'value' => format_int((int)$coverage->jumlah_rw),
                 'icon'  => !empty($coverage->icon_rw) ? $iconBase . $coverage->icon_rw : base_url('assets/img/icons/rw.png'),
             ],
             [
                 'title' => 'Jumlah RT',
                 'desc'  => 'Layanan dekat warga di tingkat rukun tetangga.',
-                'value' => compact_number((int)$coverage->jumlah_rt),
+                'value' => format_int((int)$coverage->jumlah_rt),
                 'icon'  => !empty($coverage->icon_rt) ? $iconBase . $coverage->icon_rt : base_url('assets/img/icons/rt.png'),
             ],
         ];
@@ -229,10 +234,30 @@
                                 <span class="badge bg-primary-subtle text-primary align-self-start mb-2">
                                     <?= html_escape($berita->kategori); ?>
                                 </span>
-                                <h5 class="card-title"><?= html_escape($berita->judul_berita); ?></h5>
 
-                                <p class="card-text small text-muted mb-3 flex-grow-1">
-                                    <?= word_limiter(strip_tags($berita->isi_berita), 15); ?>
+                                <!-- META: Penulis + Tanggal -->
+                                <div class="text-muted small mb-1">
+                                    Dipublikasikan oleh
+                                    <span class="fw-semibold text-primary">
+                                        <?= html_escape($berita->nama_lengkap ?? 'Admin Kelurahan'); ?>
+                                    </span>
+                                    <?php if (!empty($berita->tgl_publish)): ?>
+                                        • <time datetime="<?= date('Y-m-d', strtotime($berita->tgl_publish)); ?>">
+                                            <?= date('d M Y', strtotime($berita->tgl_publish)); ?>
+                                        </time>
+                                    <?php endif; ?>
+                                </div>
+
+                                <h5 class="card-title mb-2"><?= html_escape($berita->judul_berita); ?></h5>
+
+                                <p class="card-text small text-muted mb-3 flex-grow-1 home-news-excerpt">
+                                    <?php
+                                    $raw   = (string) $berita->isi_berita;
+                                    $plain = html_entity_decode($raw, ENT_QUOTES, 'UTF-8');
+                                    $plain = strip_tags($plain);
+                                    $plain = preg_replace('/\s+/', ' ', $plain);
+                                    echo character_limiter(trim($plain), 160);
+                                    ?>
                                 </p>
 
                                 <a href="<?= base_url('berita/detail/' . $berita->slug_berita); ?>" class="btn btn-outline-primary btn-sm mt-auto">
@@ -252,15 +277,12 @@
 </section>
 
 
-<?php
-// Cek jika link youtube ada isinya
-if (!empty($youtube_link)) {
-    // Proses untuk mengambil ID video dari URL lengkap
+<?php if (!empty($youtube_link)): ?>
+    <?php
     parse_str(parse_url($youtube_link, PHP_URL_QUERY), $youtube_vars);
     $video_id = isset($youtube_vars['v']) ? $youtube_vars['v'] : null;
-
-    if ($video_id) {
-?>
+    ?>
+    <?php if ($video_id): ?>
         <section id="video" class="py-5">
             <div class="container-fluid px-lg-5">
                 <div class="row mb-4">
@@ -272,7 +294,10 @@ if (!empty($youtube_link)) {
 
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <div class="video-card shadow-sm rounded-4 overflow-hidden">
+                        <div class="video-card brand-card shadow-sm rounded-4 overflow-hidden">
+                            <!-- strip kuning -->
+                            <span class="brand-strip"></span>
+
                             <div class="video-thumbnail position-relative">
                                 <iframe
                                     src="https://www.youtube.com/embed/<?= $video_id; ?>?rel=0"
@@ -282,16 +307,21 @@ if (!empty($youtube_link)) {
                                     allowfullscreen
                                     class="video-frame w-100 h-100"></iframe>
 
-                                <!-- Overlay bawah -->
+                                <!-- Bar info bawah -->
                                 <div class="video-info d-flex justify-content-between align-items-center px-4 py-3">
-                                    <div>
-                                        <h5 class="video-title mb-1"><?= html_escape($video_meta['title']); ?></h5>
-                                        <p class="video-channel mb-0"><?= html_escape($video_meta['author_name']); ?></p>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="yt-badge" aria-hidden="true">
+                                            <i class="bi bi-play-fill"></i>
+                                        </span>
+                                        <div>
+                                            <h5 class="video-title mb-1"><?= html_escape($video_meta['title']); ?></h5>
+                                            <p class="video-channel mb-0 text-muted"><?= html_escape($video_meta['author_name']); ?></p>
+                                        </div>
                                     </div>
-                                    <a
-                                        href="https://www.youtube.com/watch?v=<?= $video_id; ?>"
+
+                                    <a href="https://www.youtube.com/watch?v=<?= $video_id; ?>"
                                         target="_blank"
-                                        class="btn btn-primary btn-sm">
+                                        class="btn btn-brand btn-sm">
                                         <i class="bi bi-youtube me-1"></i> Tonton di YouTube
                                     </a>
                                 </div>
@@ -301,10 +331,8 @@ if (!empty($youtube_link)) {
                 </div>
             </div>
         </section>
-<?php
-    }
-}
-?>
+    <?php endif; ?>
+<?php endif; ?>
 
 <section>
     <p>Tentang Web - tautan terkait - sosial media</p>

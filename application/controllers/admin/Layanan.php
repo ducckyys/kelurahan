@@ -13,7 +13,13 @@ class Layanan extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // TODO: pasang guard admin sesuai sistem loginmu
+        if ($this->session->userdata('status') !== "login") {
+            redirect(base_url("login"));
+        }
+        if ($this->session->userdata('id_level') !== '1') {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki izin untuk mengakses halaman tersebut.');
+            redirect('admin/dashboard');
+        }
         $this->load->model('M_layanan');
         $this->load->helper(['form', 'url', 'file', 'text']);
         $this->load->library(['form_validation', 'upload', 'session']);

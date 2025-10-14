@@ -2,17 +2,18 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * @property M_sktm $M_sktm
  * @property CI_Input $input
- * @property CI_Session $session
- * @property CI_pdf $pdf
- * @property CI_upload $upload
- * @property CI_DB_query_builder $db
+ * @property CI_Session $session 
  * @property CI_Form_validation $form_validation
+ * @property CI_Upload $upload
+ * @property M_sktm $M_sktm
+ * @property PDF $pdf
  */
 
 class Surat_sktm extends CI_Controller
 {
+    private $pendukung_dir;
+
     public function __construct()
     {
         parent::__construct();
@@ -20,6 +21,13 @@ class Surat_sktm extends CI_Controller
             redirect(base_url("login"));
         }
         $this->load->model('M_sktm');
+
+        $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
+        if (!is_dir($this->pendukung_dir)) {
+            @mkdir($this->pendukung_dir, 0755, true);
+        }
+        $this->load->library('upload');
+        $this->load->helper(['url', 'form']);
     }
 
     public function index()
@@ -38,7 +46,6 @@ class Surat_sktm extends CI_Controller
         if (!$data['surat']) {
             redirect('admin/surat_sktm');
         }
-
         $data['title'] = "Detail Pengajuan SKTM";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -59,15 +66,52 @@ class Surat_sktm extends CI_Controller
         $this->load->view('layouts/footer');
     }
 
+    private function upload_multiple_from_admin()
+    {
+        if (empty($_FILES['dokumen_pendukung']['name']) || empty($_FILES['dokumen_pendukung']['name'][0])) {
+            return []; // tidak wajib saat edit
+        }
+        $allowed = 'pdf|jpg|jpeg|png';
+        $max_kb  = 2048;
+
+        $uploaded = [];
+        $files = $_FILES['dokumen_pendukung'];
+        $count = count($files['name']);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($files['error'][$i] !== UPLOAD_ERR_OK) {
+                $this->session->set_flashdata('error', 'Gagal unggah salah satu dokumen (error code ' . $files['error'][$i] . ').');
+                return false;
+            }
+            $_FILES['single']['name']     = $files['name'][$i];
+            $_FILES['single']['type']     = $files['type'][$i];
+            $_FILES['single']['tmp_name'] = $files['tmp_name'][$i];
+            $_FILES['single']['error']    = $files['error'][$i];
+            $_FILES['single']['size']     = $files['size'][$i];
+
+            $config = [
+                'upload_path'   => $this->pendukung_dir,
+                'allowed_types' => $allowed,
+                'max_size'      => $max_kb,
+                'encrypt_name'  => TRUE,
+            ];
+            $this->upload->initialize($config, true);
+            if (!$this->upload->do_upload('single')) {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                return false;
+            }
+            $data = $this->upload->data();
+            $uploaded[] = $data['file_name'];
+        }
+        return $uploaded;
+    }
+
     public function update($id)
     {
-        // Validasi
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT', 'trim');
-        $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT', 'trim'); // jika wajib: tambahkan 'required'
+        $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT', 'trim');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
-
         $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
-
         $this->form_validation->set_rules('nama_pemohon', 'Nama Pemohon', 'required|trim');
         $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required|trim');
         $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required|trim');
@@ -79,10 +123,7 @@ class Surat_sktm extends CI_Controller
         $this->form_validation->set_rules('nama_orang_tua', 'Nama Orang Tua', 'required|trim');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
         $this->form_validation->set_rules('id_dtks', 'ID DTKS', 'trim');
-
-        // opsional: batasi angka saja untuk telepon, atau cukup trim
-        $this->form_validation->set_rules('telepon_pemohon', 'No. Telepon', 'trim'); // bisa tambah regex/ numeric
-
+        $this->form_validation->set_rules('telepon_pemohon', 'No. Telepon', 'trim');
         $this->form_validation->set_rules('penghasilan_bulanan', 'Penghasilan Bulanan', 'required|trim');
         $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
 
@@ -91,14 +132,26 @@ class Surat_sktm extends CI_Controller
             return redirect('admin/surat_sktm/edit/' . $id);
         }
 
-        // $post = $this->input->post(NULL, TRUE);
+        $surat = $this->M_sktm->get_by_id($id);
+        $existing = [];
+        if ($surat && !empty($surat->dokumen_pendukung)) {
+            $decoded = json_decode($surat->dokumen_pendukung, true);
+            if (is_array($decoded)) $existing = $decoded;
+            else if (is_string($surat->dokumen_pendukung)) $existing = [$surat->dokumen_pendukung];
+        }
+
+        $newFiles = $this->upload_multiple_from_admin();
+        if ($newFiles === false) {
+            return redirect('admin/surat_sktm/edit/' . $id);
+        }
+        // strategi: append file baru ke list lama
+        $allFiles = array_values(array_filter(array_merge($existing, $newFiles)));
 
         $data = [
             'nomor_surat_rt'       => $this->input->post('nomor_surat_rt', true),
             'tanggal_surat_rt'     => $this->input->post('tanggal_surat_rt', true) ?: null,
             'nomor_surat'          => $this->input->post('nomor_surat', true) ?: null,
-            'status'               => $this->input->post('status', true), // <— tambahkan
-
+            'status'               => $this->input->post('status', true),
             'nama_pemohon'         => $this->input->post('nama_pemohon', true),
             'tempat_lahir'         => $this->input->post('tempat_lahir', true),
             'tanggal_lahir'        => $this->input->post('tanggal_lahir', true),
@@ -112,62 +165,12 @@ class Surat_sktm extends CI_Controller
             'id_dtks'              => $this->input->post('id_dtks', true) ?: null,
             'penghasilan_bulanan'  => $this->input->post('penghasilan_bulanan', true),
             'keperluan'            => $this->input->post('keperluan', true),
-
-            'telepon_pemohon'      => $this->input->post('telepon_pemohon', true), // <— tambahkan
-
-            'id_user'              => $this->session->userdata('id_user') ?: null
+            'telepon_pemohon'      => $this->input->post('telepon_pemohon', true),
+            'id_user'              => $this->session->userdata('id_user') ?: null,
+            'dokumen_pendukung'    => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
 
-        // Upload scan_surat_rt (opsional)
-        if (!empty($_FILES['scan_surat_rt']['name'])) {
-            $config = [
-                'upload_path'   => './uploads/surat/',
-                'allowed_types' => 'pdf|jpg|jpeg|png',
-                'max_size'      => 2048,
-                'encrypt_name'  => TRUE
-            ];
-            $this->load->library('upload', $config);
-
-            if (!$this->upload->do_upload('scan_surat_rt')) {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
-                return redirect('admin/surat_sktm/edit/' . $id);
-            }
-            $up = $this->upload->data();
-            $data['scan_surat_rt'] = $up['file_name'];
-        }
-
-        // Ambil data lama SEBELUM di-update untuk perbandingan status
-        // $surat_lama = $this->M_sktm->get_by_id($id);
-
-        // Lakukan proses update ke database
         $this->M_sktm->update($id, $data);
-
-        // =============================================================
-        // TAMBAHAN: Logika Kirim Notifikasi WhatsApp Saat Status Berubah
-        // =============================================================
-        // $status_baru = $post['status'];
-
-        // // Kirim notifikasi hanya jika status berubah dari "Pending"
-        // if ($surat_lama && $surat_lama->status == 'Pending' && ($status_baru == 'Disetujui' || $status_baru == 'Ditolak')) {
-
-        //     $nomor_telepon = $surat_lama->telepon_pemohon;
-        //     $nama_pemohon = $surat_lama->nama_pemohon;
-        //     $pesan = '';
-
-        //     if ($status_baru == 'Disetujui') {
-        //         $pesan = "Selamat Bpk/Ibu $nama_pemohon, pengajuan SKTM Anda telah DISETUJUI. Silakan datang ke kantor kelurahan untuk mengambil surat Anda.";
-        //     } elseif ($status_baru == 'Ditolak') {
-        //         $pesan = "Mohon maaf Bpk/Ibu $nama_pemohon, pengajuan SKTM Anda DITOLAK. Silakan hubungi petugas kelurahan untuk informasi lebih lanjut.";
-        //     }
-
-        //     // Kirim WhatsApp jika ada pesan yang perlu dikirim
-        //     if (!empty($pesan) && !empty($nomor_telepon)) {
-        //         kirim_whatsapp($nomor_telepon, $nama_pemohon, $pesan);
-        //     }
-        // }
-        // =============================================================
-        // AKHIR BAGIAN TAMBAHAN
-        // =============================================================
 
         $this->session->set_flashdata('success', 'Data SKTM berhasil diperbarui.');
         redirect('admin/surat_sktm/detail/' . $id);
@@ -175,64 +178,48 @@ class Surat_sktm extends CI_Controller
 
     public function cetak($id)
     {
-        // 1. Ambil data surat dari database
         $data['surat'] = $this->M_sktm->get_by_id($id);
-
-        // Redirect jika data tidak ditemukan
         if (!$data['surat']) {
             redirect('admin/surat_sktm');
         }
-
-        // =================================================================
-        // LOGIKA BARU: Pengecekan Nomor Surat DAN Status
-        // =================================================================
         if (empty($data['surat']->nomor_surat)) {
             $this->session->set_flashdata('error', 'Gagal cetak! Nomor surat belum diisi.');
             redirect('admin/surat_sktm/edit/' . $id);
-            return; // Hentikan eksekusi
+            return;
         }
-
         if ($data['surat']->status != 'Disetujui') {
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
             redirect('admin/surat_sktm/edit/' . $id);
-            return; // Hentikan eksekusi
+            return;
         }
-        // =================================================================
-        // AKHIR LOGIKA BARU
-        // =================================================================
 
         $data['title'] = "Cetak SKTM - " . $data['surat']->nama_pemohon;
-
-        // 2. Load view cetak ke dalam sebuah variabel
         $html = $this->load->view('admin/sktm/v_cetak', $data, true);
-
-        // 3. Load library Pdf
         $this->load->library('pdf');
-
-        // 4. Generate PDF
         $filename = 'SKTM-' . preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama_pemohon);
         $this->pdf->generate($html, $filename, 'F4', 'portrait');
     }
 
     public function delete($id)
     {
-        // Pastikan hanya SUPERADMIN yang bisa hapus
         if ($this->session->userdata('role') !== 'superadmin') {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
             redirect('admin/surat_sktm');
-            return; // hentikan eksekusi
+            return;
         }
 
-        // Hapus file upload jika ada
         $row = $this->M_sktm->get_by_id($id);
-        if ($row && !empty($row->scan_surat_rt)) {
-            $path = FCPATH . 'uploads/surat_rt/' . $row->scan_surat_rt;
-            if (file_exists($path)) {
-                @unlink($path);
+        if ($row && !empty($row->dokumen_pendukung)) {
+            $files = json_decode($row->dokumen_pendukung, true);
+            if (is_string($row->dokumen_pendukung) && !is_array($files)) $files = [$row->dokumen_pendukung];
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    $path = FCPATH . 'uploads/pendukung/' . $file;
+                    if (file_exists($path)) @unlink($path);
+                }
             }
         }
 
-        // Jika superadmin, lanjutkan proses hapus
         $this->M_sktm->delete($id);
         $this->session->set_flashdata('success', 'Data berhasil dihapus.');
         redirect('admin/surat_sktm');

@@ -2,25 +2,36 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
+ * Controller: Surat_suami_istri
+ *
  * @property M_suami_istri $M_suami_istri
- * @property CI_Input $input
  * @property CI_Session $session
  * @property CI_Upload $upload
  * @property CI_Form_validation $form_validation
  * @property CI_Loader $load
  * @property CI_DB_query_builder $db
  * @property CI_PDF $pdf
+ * @property CI_Input $input
  */
+
 class Surat_suami_istri extends CI_Controller
 {
+    private $pendukung_dir;
+
     public function __construct()
     {
         parent::__construct();
-        // Auth
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
         $this->load->model('M_suami_istri');
+
+        $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
+        if (!is_dir($this->pendukung_dir)) {
+            @mkdir($this->pendukung_dir, 0755, true);
+        }
+        $this->load->library('upload');
+        $this->load->helper(['url', 'form']);
     }
 
     public function index()
@@ -36,9 +47,8 @@ class Surat_suami_istri extends CI_Controller
     public function detail($id)
     {
         $data['surat'] = $this->M_suami_istri->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_suami_istri');
-        }
+        if (!$data['surat']) redirect('admin/surat_suami_istri');
+
         $data['title'] = "Detail Pengajuan Suami Istri";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -49,9 +59,8 @@ class Surat_suami_istri extends CI_Controller
     public function edit($id)
     {
         $data['surat'] = $this->M_suami_istri->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_suami_istri');
-        }
+        if (!$data['surat']) redirect('admin/surat_suami_istri');
+
         $data['title'] = "Edit Surat Keterangan Suami Istri";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -59,35 +68,74 @@ class Surat_suami_istri extends CI_Controller
         $this->load->view('layouts/footer');
     }
 
+    /** === Upload multi dokumen pendukung (seperti SKTM) === */
+    private function upload_multiple_from_admin()
+    {
+        if (
+            empty($_FILES['dokumen_pendukung']['name']) ||
+            empty($_FILES['dokumen_pendukung']['name'][0])
+        ) {
+            return []; // tidak wajib saat edit
+        }
+
+        $allowed  = 'pdf|jpg|jpeg|png';
+        $max_kb   = 2048;
+        $files    = $_FILES['dokumen_pendukung'];
+        $count    = count($files['name']);
+        $uploaded = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($files['error'][$i] !== UPLOAD_ERR_OK) {
+                $this->session->set_flashdata(
+                    'error',
+                    'Gagal unggah salah satu dokumen (error code ' . $files['error'][$i] . ').'
+                );
+                return false;
+            }
+
+            $_FILES['single'] = [
+                'name'     => $files['name'][$i],
+                'type'     => $files['type'][$i],
+                'tmp_name' => $files['tmp_name'][$i],
+                'error'    => $files['error'][$i],
+                'size'     => $files['size'][$i],
+            ];
+
+            $config = [
+                'upload_path'   => $this->pendukung_dir,
+                'allowed_types' => $allowed,
+                'max_size'      => $max_kb,
+                'encrypt_name'  => TRUE,
+            ];
+            $this->upload->initialize($config, true);
+
+            if (!$this->upload->do_upload('single')) {
+                $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+                return false;
+            }
+            $data       = $this->upload->data();
+            $uploaded[] = $data['file_name'];
+        }
+        return $uploaded;
+    }
+
     public function update($id)
     {
-        // --- Validasi ---
+        // validasi singkat (sesuaikan dengan view)
         $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
 
-        // Pihak 1
         $this->form_validation->set_rules('nama_pihak_satu', 'Nama Pihak Pertama', 'required|trim');
         $this->form_validation->set_rules('nik_pihak_satu', 'NIK Pihak Pertama', 'required|trim|min_length[16]|max_length[16]|numeric');
-        $this->form_validation->set_rules('telepon_pemohon', 'No. Telepon', 'trim');
         $this->form_validation->set_rules('alamat_pihak_satu', 'Alamat Pihak Pertama', 'required|trim');
 
-        // Opsional pihak 1 (sesuai view)
-        $this->form_validation->set_rules('tempat_lahir_pihak_satu', 'Tempat Lahir Pihak Pertama', 'trim');
-        $this->form_validation->set_rules('tanggal_lahir_pihak_satu', 'Tanggal Lahir Pihak Pertama', 'trim');
-        $this->form_validation->set_rules('jenis_kelamin_pihak_satu', 'Jenis Kelamin Pihak Pertama', 'trim|in_list[,Laki-laki,Perempuan]');
-        $this->form_validation->set_rules('agama_pihak_satu', 'Agama Pihak Pertama', 'trim');
-        $this->form_validation->set_rules('pekerjaan_pihak_satu', 'Pekerjaan Pihak Pertama', 'trim');
-        $this->form_validation->set_rules('warganegara_pihak_satu', 'Warganegara Pihak Pertama', 'trim');
-
-        // Pihak 2
         $this->form_validation->set_rules('nama_pihak_dua', 'Nama Pihak Kedua', 'required|trim');
         $this->form_validation->set_rules('nik_pihak_dua', 'NIK Pihak Kedua', 'required|trim|min_length[16]|max_length[16]|numeric');
         $this->form_validation->set_rules('alamat_pihak_dua', 'Alamat Pihak Kedua', 'required|trim');
 
-        // Lain-lain
         $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
 
-        // RT/RW (opsional, sesuai view)
+        // nomor/tanggal surat RT bisa tetap dipakai (hanya metadata, bukan file)
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT/RW', 'trim');
         $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT/RW', 'trim');
 
@@ -96,95 +144,68 @@ class Surat_suami_istri extends CI_Controller
             return redirect('admin/surat_suami_istri/edit/' . $id);
         }
 
-        // --- Ambil data sebelumnya (untuk replace file lama) ---
         $row = $this->M_suami_istri->get_by_id($id);
         if (!$row) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan.');
             return redirect('admin/surat_suami_istri');
         }
 
-        $uploaded_filename = $row->scan_surat_rt ?: null;
-
-        // --- Upload file (opsional) ---
-        if (!empty($_FILES['scan_surat_rt']['name'])) {
-            $config = [
-                'upload_path'   => './uploads/surat_rt/',
-                'allowed_types' => 'pdf|jpg|jpeg|png',
-                'max_size'      => 2048, // 2MB (sesuai view)
-                'encrypt_name'  => TRUE
-            ];
-            $this->load->library('upload', $config);
-
-            if (!$this->upload->do_upload('scan_surat_rt')) {
-                $this->session->set_flashdata('upload_error', $this->upload->display_errors('', ''));
-                return redirect('admin/surat_suami_istri/edit/' . $id);
-            }
-
-            $up = $this->upload->data();
-            $uploaded_filename = $up['file_name'];
-
-            // Hapus file lama jika ada
-            if (!empty($row->scan_surat_rt)) {
-                $old = FCPATH . 'uploads/surat_rt/' . $row->scan_surat_rt;
-                if (file_exists($old)) {
-                    @unlink($old);
-                }
-            }
+        // gabung lampiran lama + baru
+        $existing = [];
+        if (!empty($row->dokumen_pendukung)) {
+            $dec = json_decode($row->dokumen_pendukung, true);
+            if (is_array($dec)) $existing = $dec;
+            elseif (is_string($row->dokumen_pendukung)) $existing = [$row->dokumen_pendukung];
         }
 
-        // --- Susun data dari POST (XSS filter TRUE) ---
-        $post = $this->input->post(NULL, TRUE);
+        $newFiles = $this->upload_multiple_from_admin();
+        if ($newFiles === false) {
+            return redirect('admin/surat_suami_istri/edit/' . $id);
+        }
+        $allFiles = array_values(array_filter(array_merge($existing, $newFiles)));
 
+        $post = $this->input->post(NULL, TRUE);
         $data = [
             'status'                    => $post['status'],
-            'nomor_surat'               => !empty($post['nomor_surat']) ? $post['nomor_surat'] : NULL,
+            'nomor_surat'               => $post['nomor_surat'] ?: NULL,
 
-            // Pihak pertama
             'nama_pihak_satu'           => $post['nama_pihak_satu'],
             'nik_pihak_satu'            => $post['nik_pihak_satu'],
-            'telepon_pemohon'           => isset($post['telepon_pemohon']) ? $post['telepon_pemohon'] : null,
-            'tempat_lahir_pihak_satu'   => isset($post['tempat_lahir_pihak_satu']) ? $post['tempat_lahir_pihak_satu'] : null,
-            'tanggal_lahir_pihak_satu'  => isset($post['tanggal_lahir_pihak_satu']) ? $post['tanggal_lahir_pihak_satu'] : null,
-            'jenis_kelamin_pihak_satu'  => isset($post['jenis_kelamin_pihak_satu']) ? $post['jenis_kelamin_pihak_satu'] : null,
-            'agama_pihak_satu'          => isset($post['agama_pihak_satu']) ? $post['agama_pihak_satu'] : null,
-            'pekerjaan_pihak_satu'      => isset($post['pekerjaan_pihak_satu']) ? $post['pekerjaan_pihak_satu'] : null,
-            'warganegara_pihak_satu'    => isset($post['warganegara_pihak_satu']) ? $post['warganegara_pihak_satu'] : null,
+            'telepon_pemohon'           => $post['telepon_pemohon'] ?? null,
+            'tempat_lahir_pihak_satu'   => $post['tempat_lahir_pihak_satu'] ?? null,
+            'tanggal_lahir_pihak_satu'  => $post['tanggal_lahir_pihak_satu'] ?? null,
+            'jenis_kelamin_pihak_satu'  => $post['jenis_kelamin_pihak_satu'] ?? null,
+            'agama_pihak_satu'          => $post['agama_pihak_satu'] ?? null,
+            'pekerjaan_pihak_satu'      => $post['pekerjaan_pihak_satu'] ?? null,
+            'warganegara_pihak_satu'    => $post['warganegara_pihak_satu'] ?? null,
             'alamat_pihak_satu'         => $post['alamat_pihak_satu'],
 
-            // Pihak kedua
             'nama_pihak_dua'            => $post['nama_pihak_dua'],
             'nik_pihak_dua'             => $post['nik_pihak_dua'],
             'alamat_pihak_dua'          => $post['alamat_pihak_dua'],
 
-            // Keperluan
             'keperluan'                 => $post['keperluan'],
 
-            // RT/RW
-            'nomor_surat_rt'            => isset($post['nomor_surat_rt']) ? $post['nomor_surat_rt'] : null,
-            'tanggal_surat_rt'          => isset($post['tanggal_surat_rt']) ? $post['tanggal_surat_rt'] : null,
-            'scan_surat_rt'             => $uploaded_filename,
+            // metadata RT (bukan file)
+            'nomor_surat_rt'            => $post['nomor_surat_rt'] ?? null,
+            'tanggal_surat_rt'          => $post['tanggal_surat_rt'] ?? null,
 
-            // Audit user (opsional)
-            'id'                   => $this->session->userdata('id_user') ?: null,
+            // lampiran multi
+            'dokumen_pendukung'         => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
 
-        // --- Update ---
         $this->M_suami_istri->update($id, $data);
         $this->session->set_flashdata('success', 'Data berhasil diperbarui.');
-        return redirect('admin/surat_suami_istri');
+        return redirect('admin/surat_suami_istri/detail/' . $id);
     }
 
     public function cetak($id)
     {
-        // 1. Ambil data surat
         $data['surat'] = $this->M_suami_istri->get_by_id($id);
-
         if (!$data['surat']) {
             $this->session->set_flashdata('error', 'Data surat tidak ditemukan.');
             return redirect('admin/surat_suami_istri');
         }
-
-        // 2. Cek Nomor & Status
         if (empty($data['surat']->nomor_surat)) {
             $this->session->set_flashdata('error', 'Gagal cetak! Nomor surat belum diisi.');
             return redirect('admin/surat_suami_istri/edit/' . $id);
@@ -194,7 +215,6 @@ class Surat_suami_istri extends CI_Controller
             return redirect('admin/surat_suami_istri/edit/' . $id);
         }
 
-        // 3. Render view ke HTML + generate PDF
         $data['title'] = "Cetak Surat Suami Istri - " . $data['surat']->nama_pihak_satu;
         $html = $this->load->view('admin/suami_istri/v_cetak', $data, true);
 
@@ -205,23 +225,25 @@ class Surat_suami_istri extends CI_Controller
 
     public function delete($id)
     {
-        // Pastikan hanya SUPERADMIN yang bisa hapus
         if ($this->session->userdata('role') !== 'superadmin') {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
-            redirect('admin/surat_sktm');
-            return; // hentikan eksekusi
+            return redirect('admin/surat_suami_istri');
         }
 
-        // Hapus file upload jika ada
         $row = $this->M_suami_istri->get_by_id($id);
-        if ($row && !empty($row->scan_surat_rt)) {
-            $path = FCPATH . 'uploads/surat_rt/' . $row->scan_surat_rt;
-            if (file_exists($path)) {
-                @unlink($path);
+
+        // hapus dokumen pendukung (JSON) di uploads/pendukung
+        if ($row && !empty($row->dokumen_pendukung)) {
+            $files = json_decode($row->dokumen_pendukung, true);
+            if (is_string($row->dokumen_pendukung) && !is_array($files)) $files = [$row->dokumen_pendukung];
+            if (is_array($files)) {
+                foreach ($files as $fn) {
+                    $p = FCPATH . 'uploads/pendukung/' . $fn;
+                    if (file_exists($p)) @unlink($p);
+                }
             }
         }
 
-        // Hapus data
         $this->M_suami_istri->delete($id);
         $this->session->set_flashdata('success', 'Data berhasil dihapus.');
         return redirect('admin/surat_suami_istri');

@@ -23,23 +23,16 @@
                 <div class="card-body">
                     <?php
                     $bisaCetak = true;
-                    $pesanError = [];
-                    if (empty($surat->nomor_surat)) {
-                        $bisaCetak = false;
-                        $pesanError[] = '<strong>Nomor Surat</strong> belum diisi.';
-                    }
-                    if ($surat->status != 'Disetujui') {
-                        $bisaCetak = false;
-                        $pesanError[] = '<strong>Status Surat</strong> masih "' . $surat->status . '", belum "Disetujui".';
-                    }
-
-                    if (!$bisaCetak):
+                    if (empty($surat->nomor_surat)) $bisaCetak = false;
+                    if ($surat->status != 'Disetujui') $bisaCetak = false;
                     ?>
+                    <?php if (!$bisaCetak): ?>
                         <div class="alert alert-warning" role="alert">
                             <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Surat Belum Siap Cetak!</h4>
-                            <p class="mb-0">Pastikan <b>**Nomor Surat**</b> sudah diisi dan <b>**Status**</b> telah diubah menjadi "Disetujui" di halaman edit.</p>
+                            <p class="mb-0">Pastikan <b>Nomor Surat</b> sudah diisi dan <b>Status</b> telah diubah menjadi "Disetujui" di halaman edit.</p>
                         </div>
                     <?php endif; ?>
+
                     <div class="row">
                         <div class="col-md-6">
                             <h5>Data Diri Pemohon</h5>
@@ -62,16 +55,16 @@
                             <h5>Data Pengajuan</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">Status Pengajuan</dt>
-                                <dd class="col-sm-8">
-                                    : <?php
-                                        if ($surat->status == 'Pending') $badge = 'badge-warning';
-                                        elseif ($surat->status == 'Disetujui') $badge = 'badge-success';
-                                        else $badge = 'badge-danger';
-                                        ?>
+                                <dd class="col-sm-8">:
+                                    <?php
+                                    if ($surat->status == 'Pending') $badge = 'badge-warning';
+                                    elseif ($surat->status == 'Disetujui') $badge = 'badge-success';
+                                    else $badge = 'badge-danger';
+                                    ?>
                                     <span class="badge <?= $badge; ?>"><?= $surat->status; ?></span>
                                 </dd>
                                 <dt class="col-sm-4">Nomor Surat</dt>
-                                <dd class="col-sm-8">: <strong><?= html_escape($surat->nomor_surat) ?: '<span class="text-muted">Belum diinput</span>'; ?></strong></dd>
+                                <dd class="col-sm-8">: <strong><?= $surat->nomor_surat ? html_escape($surat->nomor_surat) : '<span class="text-muted">Belum diinput</span>'; ?></strong></dd>
                                 <dt class="col-sm-4">Keperluan</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->keperluan); ?></dd>
                                 <dt class="col-sm-4">Tgl. Pengajuan</dt>
@@ -84,22 +77,41 @@
                                 <dd class="col-sm-8">: <?= html_escape($surat->nomor_surat_rt); ?></dd>
                                 <dt class="col-sm-4">Tgl. Surat RT/RW</dt>
                                 <dd class="col-sm-8">: <?= date('d M Y', strtotime($surat->tanggal_surat_rt)); ?></dd>
-                                <dt class="col-sm-12 mt-2"><a href="<?= base_url('uploads/surat_rt/' . $surat->scan_surat_rt); ?>" target="_blank" class="btn btn-primary btn-block"><i class="fas fa-file-alt"></i> Lihat Surat Pengantar RT/RW</a></dt>
+                                <dt class="col-sm-12 mt-2">Lampiran</dt>
+                                <dd class="col-sm-12">
+                                    <?php
+                                    $files = [];
+                                    if (!empty($surat->dokumen_pendukung)) {
+                                        $dec = json_decode($surat->dokumen_pendukung, true);
+                                        if (is_array($dec)) $files = $dec;
+                                        else $files = [$surat->dokumen_pendukung];
+                                    }
+                                    ?>
+                                    <?php if (!empty($files)): ?>
+                                        <ul class="list-unstyled">
+                                            <?php foreach ($files as $fn): ?>
+                                                <li class="mb-1">
+                                                    <i class="fa fa-paperclip"></i>
+                                                    <a href="<?= base_url('uploads/pendukung/' . $fn) ?>" target="_blank" rel="noopener">
+                                                        <?= html_escape($fn) ?>
+                                                    </a>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php else: ?>
+                                        <span class="text-muted">Tidak ada dokumen terunggah.</span>
+                                    <?php endif; ?>
+                                </dd>
                             </dl>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <a href="<?= base_url('admin/surat_belum_bekerja/edit/' . $surat->id); ?>" class="btn btn-warning"><i class="fa fa-edit"></i> Edit Data Ini</a>
-
                     <?php if ($bisaCetak): ?>
-                        <a href="<?= base_url('admin/surat_belum_bekerja/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success">
-                            <i class="fa fa-print"></i> Cetak Surat (PDF)
-                        </a>
+                        <a href="<?= base_url('admin/surat_belum_bekerja/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success"><i class="fa fa-print"></i> Cetak Surat (PDF)</a>
                     <?php else: ?>
-                        <button class="btn btn-success" disabled title="Lengkapi data di halaman edit terlebih dahulu">
-                            <i class="fa fa-print"></i> Cetak Surat (PDF)
-                        </button>
+                        <button class="btn btn-success" disabled><i class="fa fa-print"></i> Cetak Surat (PDF)</button>
                     <?php endif; ?>
                 </div>
             </div>

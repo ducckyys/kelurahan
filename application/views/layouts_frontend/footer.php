@@ -79,6 +79,64 @@
     document.querySelectorAll('.dropdown-menu a[href="#"], .nav-link[href="#"]').forEach((a) => {
         a.addEventListener('click', (e) => e.preventDefault());
     });
+
+    (function() {
+        const input = document.querySelector('input[name="scan_surat_rt"]');
+        const wrap = document.getElementById('srtPreview');
+        const img = document.getElementById('srtPreviewImg');
+        const fileT = document.getElementById('srtPreviewFile');
+        const clear = document.getElementById('srtClear');
+
+        if (!input || !wrap) return;
+
+        input.addEventListener('change', function(e) {
+            const f = this.files && this.files[0] ? this.files[0] : null;
+            if (!f) {
+                wrap.style.display = 'none';
+                return;
+            }
+
+            wrap.style.display = 'block';
+            fileT.style.display = 'none';
+            img.style.display = 'none';
+
+            const ext = (f.name.split('.').pop() || '').toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    img.src = ev.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(f);
+            } else {
+                fileT.textContent = 'File dipilih: ' + f.name + ' (' + Math.round(f.size / 1024) + ' KB)';
+                fileT.style.display = 'block';
+            }
+        });
+
+        clear.addEventListener('click', function() {
+            input.value = '';
+            wrap.style.display = 'none';
+            img.style.display = 'none';
+            fileT.style.display = 'none';
+        });
+    })();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.querySelector('input[name="dokumen_pendukung[]"]');
+        const list = document.getElementById('dokList');
+        if (!input || !list) return;
+
+        input.addEventListener('change', function() {
+            list.innerHTML = '';
+            if (!this.files) return;
+            Array.from(this.files).forEach(function(f) {
+                const li = document.createElement('li');
+                li.textContent = f.name + ' (' + Math.round(f.size / 1024) + ' KB)';
+                list.appendChild(li);
+            });
+        });
+    });
 </script>
 </body>
 

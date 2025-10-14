@@ -9,9 +9,11 @@
             <li class="nav-item"><a>Detail</a></li>
         </ul>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
+
                 <div class="card-header">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title">Detail Pengajuan an. <?= html_escape($surat->nama_almarhum); ?></h4>
@@ -20,30 +22,23 @@
                         </a>
                     </div>
                 </div>
+
                 <div class="card-body">
                     <?php
                     $bisaCetak = true;
-                    $pesanError = [];
-                    if (empty($surat->nomor_surat)) {
-                        $bisaCetak = false;
-                        $pesanError[] = '<strong>Nomor Surat</strong> belum diisi.';
-                    }
-                    if ($surat->status != 'Disetujui') {
-                        $bisaCetak = false;
-                        $pesanError[] = '<strong>Status Surat</strong> masih "' . $surat->status . '", belum "Disetujui".';
-                    }
-
-                    if (!$bisaCetak):
+                    if (empty($surat->nomor_surat)) $bisaCetak = false;
+                    if ($surat->status != 'Disetujui') $bisaCetak = false;
                     ?>
+                    <?php if (!$bisaCetak): ?>
                         <div class="alert alert-warning" role="alert">
                             <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Surat Belum Siap Cetak!</h4>
-                            <p class="mb-0">Pastikan <b>**Nomor Surat**</b> sudah diisi dan <b>**Status**</b> telah diubah menjadi "Disetujui" di halaman edit.</p>
+                            <p class="mb-0">Pastikan <b>Nomor Surat</b> sudah diisi dan <b>Status</b> diubah menjadi "Disetujui" di halaman edit.</p>
                         </div>
                     <?php endif; ?>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h5>Data Ahli Waris (Pelapor)</h5>
+                            <h5>Data Ahli Waris (Pemohon)</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">Nama</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->nama_ahli_waris); ?></dd>
@@ -54,8 +49,9 @@
                                 <dt class="col-sm-4">Hubungan</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->hubungan_ahli_waris); ?></dd>
                                 <dt class="col-sm-4">Alamat</dt>
-                                <dd class="col-sm-8">: <?= html_escape($surat->alamat_ahli_waris); ?></dd>
+                                <dd class="col-sm-8">: <?= nl2br(html_escape($surat->alamat_ahli_waris)); ?></dd>
                             </dl>
+
                             <hr>
                             <h5>Data Almarhum/ah</h5>
                             <dl class="row">
@@ -65,12 +61,12 @@
                                 <dd class="col-sm-8">: <?= html_escape($surat->nik_almarhum); ?></dd>
                                 <dt class="col-sm-4">Keterangan</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->keterangan_almarhum); ?></dd>
-                                <dt class="col-sm-4">Tempat Meninggal</dt>
+                                <dt class="col-sm-4">Tempat</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->tempat_meninggal); ?></dd>
                                 <dt class="col-sm-4">Tanggal</dt>
-                                <dd class="col-sm-8">: <?= date('d M Y', strtotime($surat->tanggal_meninggal)); ?></dd>
+                                <dd class="col-sm-8">: <?= !empty($surat->tanggal_meninggal) ? date('d M Y', strtotime($surat->tanggal_meninggal)) : '-'; ?></dd>
                                 <dt class="col-sm-4">Alamat</dt>
-                                <dd class="col-sm-8">: <?= html_escape($surat->alamat_almarhum); ?></dd>
+                                <dd class="col-sm-8">: <?= nl2br(html_escape($surat->alamat_almarhum)); ?></dd>
                             </dl>
                         </div>
 
@@ -78,39 +74,64 @@
                             <h5>Data Administrasi Surat</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">Status Pengajuan</dt>
-                                <dd class="col-sm-8">
-                                    : <?php
-                                        if ($surat->status == 'Pending') $badge = 'badge-warning';
-                                        elseif ($surat->status == 'Disetujui') $badge = 'badge-success';
-                                        else $badge = 'badge-danger';
-                                        ?>
-                                    <span class="badge <?= $badge; ?>"><?= $surat->status; ?></span>
+                                <dd class="col-sm-8">:
+                                    <?php
+                                    if ($surat->status == 'Pending') $badge = 'badge-warning';
+                                    elseif ($surat->status == 'Disetujui') $badge = 'badge-success';
+                                    else $badge = 'badge-danger';
+                                    ?>
+                                    <span class="badge <?= $badge; ?>"><?= html_escape($surat->status); ?></span>
                                 </dd>
                                 <dt class="col-sm-4">Nomor Surat</dt>
-                                <dd class="col-sm-8">:<strong><?= html_escape($surat->nomor_surat) ?: '<span class="text-muted">Belum diinput</span>'; ?></strong></dd>
+                                <dd class="col-sm-8">: <strong><?= !empty($surat->nomor_surat) ? html_escape($surat->nomor_surat) : '<span class="text-muted">Belum diinput</span>'; ?></strong></dd>
                                 <dt class="col-sm-4">Keperluan</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->keperluan); ?></dd>
                                 <dt class="col-sm-4">Tgl. Pengajuan</dt>
-                                <dd class="col-sm-8">: <?= date('d M Y, H:i', strtotime($surat->created_at)); ?> WIB</dd>
+                                <dd class="col-sm-8">: <?= !empty($surat->created_at) ? date('d M Y, H:i', strtotime($surat->created_at)) . ' WIB' : '-'; ?></dd>
                             </dl>
+
                             <hr>
                             <h5>Dokumen Pendukung</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">No. Surat RT/RW</dt>
                                 <dd class="col-sm-8">: <?= html_escape($surat->nomor_surat_rt); ?></dd>
                                 <dt class="col-sm-4">Tgl. Surat RT/RW</dt>
-                                <dd class="col-sm-8">: <?= date('d M Y', strtotime($surat->tanggal_surat_rt)); ?></dd>
-                                <dt class="col-sm-12 mt-2">
-                                    <a href="<?= base_url('uploads/surat_rt/' . $surat->scan_surat_rt); ?>" target="_blank" class="btn btn-primary btn-block">
-                                        <i class="fas fa-file-alt"></i> Lihat Surat Pengantar
-                                    </a>
-                                </dt>
+                                <dd class="col-sm-8">: <?= !empty($surat->tanggal_surat_rt) ? date('d M Y', strtotime($surat->tanggal_surat_rt)) : '-'; ?></dd>
+                                <dt class="col-sm-12 mt-2">Lampiran</dt>
+                                <dd class="col-sm-12">
+                                    <?php
+                                    $files = [];
+                                    if (!empty($surat->dokumen_pendukung)) {
+                                        $decoded = json_decode($surat->dokumen_pendukung, true);
+                                        if (is_array($decoded)) $files = $decoded;
+                                        elseif (is_string($surat->dokumen_pendukung)) $files = [$surat->dokumen_pendukung];
+                                    }
+                                    ?>
+                                    <?php if (!empty($files)): ?>
+                                        <ul class="list-unstyled">
+                                            <?php foreach ($files as $fn): ?>
+                                                <li class="mb-1">
+                                                    <i class="fa fa-paperclip"></i>
+                                                    <a href="<?= base_url('uploads/pendukung/' . $fn) ?>" target="_blank" rel="noopener">
+                                                        <?= html_escape($fn) ?>
+                                                    </a>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php else: ?>
+                                        <span class="text-muted">Tidak ada dokumen terunggah.</span>
+                                    <?php endif; ?>
+                                </dd>
                             </dl>
                         </div>
                     </div>
                 </div>
+
                 <div class="card-footer">
-                    <a href="<?= base_url('admin/surat_kematian_nondukcapil/edit/' . $surat->id); ?>" class="btn btn-warning"><i class="fa fa-edit"></i> Edit Data Ini</a>
+                    <a href="<?= base_url('admin/surat_kematian_nondukcapil/edit/' . $surat->id); ?>" class="btn btn-warning">
+                        <i class="fa fa-edit"></i> Edit Data Ini
+                    </a>
+
                     <?php if ($bisaCetak): ?>
                         <a href="<?= base_url('admin/surat_kematian_nondukcapil/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success">
                             <i class="fa fa-print"></i> Cetak Surat (PDF)
@@ -121,6 +142,7 @@
                         </button>
                     <?php endif; ?>
                 </div>
+
             </div>
         </div>
     </div>

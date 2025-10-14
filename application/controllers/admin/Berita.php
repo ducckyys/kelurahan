@@ -21,6 +21,11 @@ class Berita extends CI_Controller
         if ($this->session->userdata('status') !== "login") {
             redirect(base_url("login"));
         }
+
+        if ($this->session->userdata('id_level') !== '1') {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki izin untuk mengakses halaman tersebut.');
+            redirect('admin/dashboard');
+        }
     }
 
     // LIST
@@ -178,38 +183,40 @@ class Berita extends CI_Controller
     // ACTION: UPDATE
     public function update($id)
     {
-        $post = $this->input->post();
+        // Ambil dengan kontrol XSS: judul & kategori boleh TRUE, RTE harus FALSE
+        $judul    = $this->input->post('judul_berita', TRUE);
+        $kategori = $this->input->post('kategori', TRUE);
+        $isi      = $this->input->post('isi_berita', FALSE); // RAW HTML
 
         $data = [
-            'judul_berita' => $post['judul_berita'],
-            'isi_berita'   => $post['isi_berita'],
-            'kategori'     => $post['kategori'],
-            'slug_berita'  => url_title($post['judul_berita'], 'dash', true)
+            'judul_berita' => $judul,
+            'isi_berita'   => $isi,
+            'kategori'     => $kategori,
+            'slug_berita'  => url_title($judul, 'dash', true),
         ];
 
-        // Jika ada gambar baru
+        // upload gambar (opsional)
         if (!empty($_FILES["gambar"]["name"])) {
             $berita = $this->M_berita->get_by_id($id);
 
             $upload_dir = FCPATH . 'uploads/berita/';
-            if (!is_dir($upload_dir)) {
-                @mkdir($upload_dir, 0755, true);
-            }
+            if (!is_dir($upload_dir)) @mkdir($upload_dir, 0755, true);
 
-            $config['upload_path']   = $upload_dir;
-            $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size']      = 5120;
-            $config['encrypt_name']  = TRUE;
+            $config = [
+                'upload_path'   => $upload_dir,
+                'allowed_types' => 'gif|jpg|png|jpeg|webp',
+                'max_size'      => 5120,
+                'encrypt_name'  => TRUE,
+            ];
             $this->load->library('upload', $config);
 
             if ($this->upload->do_upload('gambar')) {
-                // hapus lama
                 if (!empty($berita->gambar) && file_exists($upload_dir . $berita->gambar)) {
                     @unlink($upload_dir . $berita->gambar);
                 }
                 $data['gambar'] = $this->upload->data("file_name");
             } else {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
+                $this->session->set_flashdata('error', strip_tags($this->upload->display_errors('', '')));
                 redirect('admin/berita/edit/' . $id);
                 return;
             }

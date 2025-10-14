@@ -23,22 +23,17 @@
                         <h5>Administrasi Surat</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Nomor Surat</label>
-                                    <input type="text" name="nomor_surat" class="form-control" value="<?= html_escape($surat->nomor_surat); ?>" placeholder="Contoh: 400.12.3.1/123 - Pemerintahan">
-                                </div>
+                                <div class="form-group"><label>Nomor Surat</label><input type="text" name="nomor_surat" class="form-control" value="<?= html_escape($surat->nomor_surat); ?>" placeholder="Contoh: 400.12.3.1/123 - Pemerintahan"></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Status Pengajuan</label>
-                                    <select name="status" class="form-control">
+                                <div class="form-group"><label>Status Pengajuan</label><select name="status" class="form-control">
                                         <option value="Pending" <?= ($surat->status == 'Pending') ? 'selected' : ''; ?>>Pending</option>
                                         <option value="Disetujui" <?= ($surat->status == 'Disetujui') ? 'selected' : ''; ?>>Disetujui</option>
                                         <option value="Ditolak" <?= ($surat->status == 'Ditolak') ? 'selected' : ''; ?>>Ditolak</option>
-                                    </select>
-                                </div>
+                                    </select></div>
                             </div>
                         </div>
+
                         <hr class="my-3">
                         <h5 class="mb-3">Data Diri Pemohon</h5>
                         <div class="row">
@@ -63,12 +58,8 @@
                                         <option value="Perempuan" <?= ($surat->jenis_kelamin == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
                                     </select></div>
                             </div>
-
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Warganegara</label>
-                                    <input type="text" name="warganegara" class="form-control" value="<?= html_escape($surat->warganegara); ?>" required>
-                                </div>
+                                <div class="form-group"><label>Warganegara</label><input type="text" name="warganegara" class="form-control" value="<?= html_escape($surat->warganegara); ?>" required></div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>Agama</label><input type="text" name="agama" class="form-control" value="<?= html_escape($surat->agama); ?>" required></div>
@@ -83,38 +74,46 @@
                                 <div class="form-group"><label>Keperluan</label><input type="text" name="keperluan" class="form-control" value="<?= html_escape($surat->keperluan); ?>" required></div>
                             </div>
                         </div>
-                        <hr>
-                        <h5>Surat Pengantar RT/RW</h5>
+
+                        <hr class="my-3">
+                        <h5>Surat Pengantar RT/RW & Dokumen Pendukung</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Nomor Surat RT/RW</label>
-                                    <input type="text" class="form-control" name="nomor_surat_rt"
-                                        value="<?= html_escape($surat->nomor_surat_rt); ?>">
-                                </div>
+                                <div class="form-group"><label>Nomor Surat RT/RW</label><input type="text" class="form-control" name="nomor_surat_rt" value="<?= html_escape($surat->nomor_surat_rt); ?>"></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Tanggal Surat RT/RW</label>
-                                    <input type="date" class="form-control" name="tanggal_surat_rt"
-                                        value="<?= html_escape($surat->tanggal_surat_rt); ?>">
-                                </div>
+                                <div class="form-group"><label>Tanggal Surat RT/RW</label><input type="date" class="form-control" name="tanggal_surat_rt" value="<?= html_escape($surat->tanggal_surat_rt); ?>"></div>
                             </div>
+
+                            <?php
+                            $files = [];
+                            if (!empty($surat->dokumen_pendukung)) {
+                                $dec = json_decode($surat->dokumen_pendukung, true);
+                                if (is_array($dec)) $files = $dec;
+                                else $files = [$surat->dokumen_pendukung];
+                            }
+                            ?>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Scan Surat Pengantar (PDF/JPG/PNG, maks 2MB)</label>
-                                    <input type="file" class="form-control" name="scan_surat_rt" accept=".pdf,.jpg,.jpeg,.png">
-                                    <?php if (!empty($surat->scan_surat_rt)): ?>
-                                        <small class="form-text text-muted">
-                                            File saat ini: <a target="_blank" href="<?= base_url('uploads/surat_rt/' . $surat->scan_surat_rt); ?>">
-                                                <?= html_escape($surat->scan_surat_rt); ?>
-                                            </a>
-                                        </small>
-                                    <?php endif; ?>
+                                    <label>Tambah Dokumen Pendukung (PDF/JPG/PNG, maks 2MB per file)</label>
+                                    <input type="file" class="form-control" name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                                    <small class="form-text text-muted">File baru akan <b>ditambahkan</b> ke daftar lampiran.</small>
                                 </div>
+
+                                <?php if (!empty($files)): ?>
+                                    <div class="mt-2">
+                                        <label class="d-block">Lampiran Saat Ini:</label>
+                                        <ul class="mb-0">
+                                            <?php foreach ($files as $fn): ?>
+                                                <li><a href="<?= base_url('uploads/pendukung/' . $fn); ?>" target="_blank" rel="noopener"><?= html_escape($fn) ?></a></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
+
                     <div class="card-action">
                         <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan Perubahan</button>
                     </div>

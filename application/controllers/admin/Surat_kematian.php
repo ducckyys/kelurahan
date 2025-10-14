@@ -7,12 +7,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Form_validation $form_validation
  * @property CI_Upload $upload
  * @property M_kematian $M_kematian
- * @property CI_pdf $pdf
  * @property CI_DB_query_builder $db
+ * @property CI_pdf $pdf
  */
-
 class Surat_kematian extends CI_Controller
 {
+    private $pendukung_dir;
+
     public function __construct()
     {
         parent::__construct();
@@ -20,6 +21,13 @@ class Surat_kematian extends CI_Controller
             redirect(base_url("login"));
         }
         $this->load->model('M_kematian');
+        $this->load->library(['form_validation', 'upload']);
+        $this->load->helper(['url', 'form', 'security']);
+
+        $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
+        if (!is_dir($this->pendukung_dir)) {
+            @mkdir($this->pendukung_dir, 0755, true);
+        }
     }
 
     public function index()
@@ -35,7 +43,8 @@ class Surat_kematian extends CI_Controller
     public function detail($id)
     {
         $data['surat'] = $this->M_kematian->get_by_id($id);
-        if (!$data['surat']) redirect('admin/surat_kematian');
+        if (!$data['surat']) return redirect('admin/surat_kematian');
+
         $data['title'] = "Detail Surat Kematian";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -43,54 +52,62 @@ class Surat_kematian extends CI_Controller
         $this->load->view('layouts/footer');
     }
 
-    public function cetak($id)
-    {
-        // 1. Ambil data surat dari database
-        $data['surat'] = $this->M_kematian->get_by_id($id);
-
-        // Redirect jika data tidak ditemukan
-        if (!$data['surat']) {
-            redirect('admin/surat_kematian');
-        }
-
-        // =================================================================
-        // LOGIKA BARU: Pengecekan Nomor Surat DAN Status
-        // =================================================================
-        if (empty($data['surat']->nomor_surat)) {
-            $this->session->set_flashdata('error', 'Gagal cetak! Nomor surat belum diisi.');
-            redirect('admin/surat_kematian/edit/' . $id);
-            return; // Hentikan eksekusi
-        }
-
-        if ($data['surat']->status != 'Disetujui') {
-            $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
-            redirect('admin/surat_kematian/edit/' . $id);
-            return; // Hentikan eksekusi
-        }
-        // =================================================================
-        // AKHIR LOGIKA BARU
-        // =================================================================
-
-        $data['title'] = 'Cetak Surat Keterangan Kematian - ' . $data['surat']->nama;
-
-        // 2. Render HTML view ke dalam sebuah variabel
-        $html = $this->load->view('admin/kematian/v_cetak', $data, TRUE);
-
-        // 3. Load library PDF dan generate file
-        $this->load->library('pdf');
-        $filename = 'SKK-' . preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama);
-        $this->pdf->generate($html, $filename, 'F4', 'portrait');
-    }
-
     public function edit($id)
     {
         $data['surat'] = $this->M_kematian->get_by_id($id);
-        if (!$data['surat']) redirect('admin/surat_kematian');
+        if (!$data['surat']) return redirect('admin/surat_kematian');
+
         $data['title'] = "Edit Surat Kematian";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/kematian/v_edit', $data);
         $this->load->view('layouts/footer');
+    }
+
+    private function upload_multiple_from_admin()
+    {
+        if (empty($_FILES['dokumen_pendukung']['name']) || empty($_FILES['dokumen_pendukung']['name'][0])) {
+            return []; // opsional saat edit
+        }
+
+        $allowed   = 'pdf|jpg|jpeg|png';
+        $max_kb    = 2048;
+        $uploaded  = [];
+        $files     = $_FILES['dokumen_pendukung'];
+        $count     = count($files['name']);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($files['error'][$i] !== UPLOAD_ERR_OK) {
+                $this->session->set_flashdata('error', 'Gagal unggah salah satu dokumen (error ' . $files['error'][$i] . ').');
+                return false;
+            }
+
+            $_FILES['single'] = [
+                'name'     => $files['name'][$i],
+                'type'     => $files['type'][$i],
+                'tmp_name' => $files['tmp_name'][$i],
+                'error'    => $files['error'][$i],
+                'size'     => $files['size'][$i],
+            ];
+
+            $config = [
+                'upload_path'   => $this->pendukung_dir,
+                'allowed_types' => $allowed,
+                'max_size'      => $max_kb,
+                'encrypt_name'  => TRUE,
+            ];
+            $this->upload->initialize($config, true);
+
+            if (!$this->upload->do_upload('single')) {
+                $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+                return false;
+            }
+
+            $data = $this->upload->data();
+            $uploaded[] = $data['file_name'];
+        }
+
+        return $uploaded;
     }
 
     public function update($id)
@@ -121,13 +138,11 @@ class Surat_kematian extends CI_Controller
             ['field' => 'pelapor_alamat', 'label' => 'Pelapor Alamat', 'rules' => 'required|trim'],
             ['field' => 'pelapor_hubungan', 'label' => 'Pelapor Hubungan', 'rules' => 'required|trim'],
 
-            // Samakan dengan view: jadikan required bila memang wajib
-            ['field' => 'nomor_surat_rt', 'label' => 'Nomor Surat RT', 'rules' => 'required|trim'],
-            ['field' => 'tanggal_surat_rt', 'label' => 'Tanggal Surat RT', 'rules' => 'required|trim'],
+            // Opsional
+            ['field' => 'nomor_surat_rt', 'label' => 'Nomor Surat RT', 'rules' => 'trim'],
+            ['field' => 'tanggal_surat_rt', 'label' => 'Tanggal Surat RT', 'rules' => 'trim'],
 
             ['field' => 'nomor_surat', 'label' => 'Nomor Surat', 'rules' => 'trim'],
-
-            // TAMBAH INI:
             ['field' => 'status', 'label' => 'Status Pengajuan', 'rules' => 'required|in_list[Pending,Disetujui,Ditolak]'],
         ];
         $this->form_validation->set_rules($rules);
@@ -136,6 +151,23 @@ class Surat_kematian extends CI_Controller
             $this->session->set_flashdata('error', validation_errors());
             return redirect('admin/surat_kematian/edit/' . $id);
         }
+
+        $row = $this->M_kematian->get_by_id($id);
+
+        // Ambil lampiran lama (array filenames)
+        $existing = [];
+        if ($row && !empty($row->dokumen_pendukung)) {
+            $dec = json_decode($row->dokumen_pendukung, true);
+            if (is_array($dec)) $existing = $dec;
+            else $existing = [$row->dokumen_pendukung];
+        }
+
+        // Upload baru (opsional)
+        $newFiles = $this->upload_multiple_from_admin();
+        if ($newFiles === false) {
+            return redirect('admin/surat_kematian/edit/' . $id);
+        }
+        $allFiles = array_values(array_filter(array_merge($existing, $newFiles)));
 
         $data = [
             'nama'                 => $this->input->post('nama', true),
@@ -146,6 +178,7 @@ class Surat_kematian extends CI_Controller
             'agama'                => $this->input->post('agama', true),
             'pekerjaan'            => $this->input->post('pekerjaan', true),
             'alamat'               => $this->input->post('alamat', true),
+
             'hari_meninggal'       => $this->input->post('hari_meninggal', true),
             'tanggal_meninggal'    => $this->input->post('tanggal_meninggal', true),
             'jam_meninggal'        => $this->input->post('jam_meninggal', true),
@@ -163,58 +196,68 @@ class Surat_kematian extends CI_Controller
             'pelapor_alamat'       => $this->input->post('pelapor_alamat', true),
             'pelapor_hubungan'     => $this->input->post('pelapor_hubungan', true),
 
-            'nomor_surat_rt'       => $this->input->post('nomor_surat_rt', true),
-            'tanggal_surat_rt'     => $this->input->post('tanggal_surat_rt', true),
+            'nomor_surat_rt'       => $this->input->post('nomor_surat_rt', true) ?: null,
+            'tanggal_surat_rt'     => $this->input->post('tanggal_surat_rt', true) ?: null,
             'nomor_surat'          => $this->input->post('nomor_surat', true) ?: null,
 
-            // TAMBAH INI:
             'status'               => $this->input->post('status', true),
-
-            // Opsional jejak user:
             'id'              => $this->session->userdata('id') ?: null,
-        ];
 
-        if (!empty($_FILES['scan_surat_rt']['name'])) {
-            $config = [
-                'upload_path'   => './uploads/surat/',
-                'allowed_types' => 'pdf|jpg|jpeg|png',
-                'max_size'      => 2048,
-                'encrypt_name'  => TRUE
-            ];
-            $this->load->library('upload', $config);
-            if (!$this->upload->do_upload('scan_surat_rt')) {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
-                return redirect('admin/surat_kematian/edit/' . $id);
-            }
-            $up = $this->upload->data();
-            $data['scan_surat_rt'] = $up['file_name'];
-        }
+            'dokumen_pendukung'    => !empty($allFiles) ? json_encode($allFiles) : null,
+        ];
 
         $this->db->where('id', $id)->update('surat_kematian', $data);
         $this->session->set_flashdata('success', 'Data berhasil diperbarui.');
-        return redirect('admin/surat_kematian');
+        return redirect('admin/surat_kematian/detail/' . $id);
+    }
+
+    public function cetak($id)
+    {
+        $data['surat'] = $this->M_kematian->get_by_id($id);
+        if (!$data['surat']) return redirect('admin/surat_kematian');
+
+        if (empty($data['surat']->nomor_surat)) {
+            $this->session->set_flashdata('error', 'Gagal cetak! Nomor surat belum diisi.');
+            redirect('admin/surat_kematian/edit/' . $id);
+            return;
+        }
+        if ($data['surat']->status !== 'Disetujui') {
+            $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
+            redirect('admin/surat_kematian/edit/' . $id);
+            return;
+        }
+
+        $data['title'] = 'Cetak Surat Keterangan Kematian - ' . $data['surat']->nama;
+        $html = $this->load->view('admin/kematian/v_cetak', $data, TRUE);
+
+        $this->load->library('pdf');
+        $filename = 'SKK-' . preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama);
+        $this->pdf->generate($html, $filename, 'F4', 'portrait');
     }
 
     public function delete($id)
     {
-
-        // Pastikan hanya SUPERADMIN yang bisa hapus
         if ($this->session->userdata('role') !== 'superadmin') {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
-            redirect('admin/surat_sktm');
-            return; // hentikan eksekusi
+            return redirect('admin/surat_kematian');
         }
 
         $row = $this->M_kematian->get_by_id($id);
-        if ($row && !empty($row->scan_surat_rt)) {
-            $path = FCPATH . 'uploads/surat/' . $row->scan_surat_rt; // sama dengan upload_path
-            if (file_exists($path)) {
-                @unlink($path);
+
+        // Hapus semua lampiran dokumen_pendukung
+        if ($row && !empty($row->dokumen_pendukung)) {
+            $files = json_decode($row->dokumen_pendukung, true);
+            if (is_string($row->dokumen_pendukung) && !is_array($files)) $files = [$row->dokumen_pendukung];
+            if (is_array($files)) {
+                foreach ($files as $fn) {
+                    $path = $this->pendukung_dir . $fn;
+                    if (is_file($path)) @unlink($path);
+                }
             }
         }
 
         $this->M_kematian->delete($id);
         $this->session->set_flashdata('success', 'Data berhasil dihapus.');
-        redirect('admin/surat_kematian');
+        return redirect('admin/surat_kematian');
     }
 }

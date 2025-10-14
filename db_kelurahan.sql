@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 09, 2025 at 11:32 AM
+-- Generation Time: Oct 13, 2025 at 09:01 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -43,7 +43,9 @@ CREATE TABLE `berita` (
 --
 
 INSERT INTO `berita` (`id_berita`, `judul_berita`, `slug_berita`, `isi_berita`, `kategori`, `gambar`, `tgl_publish`, `id_user`) VALUES
-(2, 'Jangan Panik Mogok! Ini Daftar Bengkel Motor dan Mobil Terdekat di Kademangan, Setu', 'jangan-panik-mogok-ini-daftar-bengkel-motor-dan-mobil-terdekat-di-kademangan-setu', '<p><strong>TANGERANG SELATAN, 9 Oktober 2025</strong> – Kademangan, sebagai salah satu kelurahan yang terus berkembang di Kecamatan Setu, Tangerang Selatan, memiliki tingkat mobilitas warga yang tinggi. Seiring dengan itu, kebutuhan akan layanan perawatan dan perbaikan kendaraan menjadi sangat esensial. Bagi para pengendara yang mengalami masalah pada kendaraannya, baik untuk servis rutin maupun kondisi darurat, menemukan bengkel terpercaya adalah sebuah keharusan.</p><p>Tim redaksi telah merangkum beberapa bengkel motor dan mobil di sekitar Kademangan yang bisa menjadi referensi utama bagi warga. Dari bengkel umum hingga spesialis, berikut adalah daftarnya:</p><h3><strong>Rekomendasi Bengkel Mobil di Kademangan</strong></h3><p>Bagi pemilik kendaraan roda empat, perawatan seperti ganti oli, servis AC, hingga perbaikan kaki-kaki seringkali dibutuhkan. Beberapa bengkel ini dikenal memiliki reputasi yang baik di kalangan warga setempat.</p><ol><li><strong>BENGKEL MOBIL MITRA JAYA</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, ganti oli, tune-up, dan perbaikan kaki-kaki.</li><li><strong>Alamat:</strong> Jl. Raya Kademangan, Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Salah satu bengkel yang sudah cukup lama beroperasi di area ini. Dikenal karena montirnya yang berpengalaman dan penanganan yang relatif cepat untuk servis ringan.</li><li><a href=\"https://maps.app.goo.gl/tufcehqc8kMa5iRD6\">https://maps.app.goo.gl/tufcehqc8kMa5iRD6</a></li></ul></li><li><strong>KADEMANGAN AC MOBIL</strong><ul><li><strong>Spesialisasi:</strong> Perbaikan dan perawatan AC mobil.</li><li><strong>Alamat:</strong> Terletak tidak jauh dari jalan utama, mudah diakses dari perumahan sekitar.</li><li><strong>Keterangan:</strong> Menjadi rujukan utama bagi pengemudi yang mengalami masalah AC, mulai dari tidak dingin, bau, hingga isi freon. Harganya kompetitif dengan pengerjaan yang teliti.</li></ul></li><li><strong>GARASI 99 AUTO SERVICE</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, kelistrikan, dan modifikasi ringan.</li><li><strong>Alamat:</strong> Jl. Amd. Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Bengkel ini cukup populer di kalangan anak muda dan komunitas otomotif karena selain melayani servis rutin, juga menerima permintaan modifikasi ringan seperti instalasi audio dan lampu.</li></ul></li></ol><h3><strong>Rekomendasi Bengkel Motor di Kademangan</strong></h3><p>Pengguna sepeda motor yang jumlahnya mendominasi di wilayah ini juga memiliki banyak pilihan. Berikut beberapa bengkel motor yang menjadi andalan warga Kademangan.</p><ol><li><strong>AHASS KADEMANGAN JAYA MOTOR (Bengkel Resmi Honda)</strong><ul><li><strong>Spesialisasi:</strong> Servis dan suku cadang asli motor Honda.</li><li><strong>Alamat:</strong> Jl. Raya Puspiptek (mudah dijangkau dari Kademangan).</li><li><strong>Keterangan:</strong> Pilihan utama bagi pengguna motor Honda yang ingin menjaga garansi dan kualitas servis sesuai standar pabrikan. Layanan booking service biasanya tersedia untuk menghindari antrean.</li></ul></li><li><strong>BENGKEL MOTOR ABADI</strong><ul><li><strong>Spesialisasi:</strong> Servis umum semua merek, tambal ban, ganti oli.</li><li><strong>Alamat:</strong> Jl. Kademangan Raya (dekat area pertokoan).</li><li><strong>Keterangan:</strong> Bengkel rakyat yang selalu ramai. Menjadi solusi cepat untuk masalah-masalah umum seperti ban bocor, ganti busi, atau servis karburator. Harganya yang terjangkau membuatnya jadi favorit.</li></ul></li><li><strong>JAYA MANDIRI MOTOR</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, turun mesin, dan menyediakan aneka suku cadang.</li><li><strong>Alamat:</strong> Berada di salah satu jalan lingkungan di Kademangan.</li><li><strong>Keterangan:</strong> Dikenal mampu menangani masalah yang lebih berat seperti turun mesin. Montirnya yang sabar dan teliti menjadi nilai tambah bagi pelanggan.</li></ul></li></ol><h3><strong>Tips Memilih Bengkel yang Tepat</strong></h3><p>Camat Setu, Bapak H. Junaedi, S.Pd., saat dihubungi terpisah, mengapresiasi para pelaku usaha UMKM seperti bengkel yang sangat membantu aktivitas warga. \"Keberadaan bengkel di setiap kelurahan, termasuk Kademangan, adalah penopang penting kelancaran mobilitas warga. Kami harap para pemilik bengkel terus menjaga kualitas dan kejujuran,\" ujarnya.</p><p>Bagi warga, disarankan untuk:</p><ul><li><strong>Cek Ulasan:</strong> Manfaatkan ulasan di Google Maps untuk melihat pengalaman pelanggan lain.</li><li><strong>Tanya Estimasi Biaya:</strong> Sebelum pengerjaan dimulai, jangan ragu untuk bertanya perkiraan biaya jasa dan suku cadang.</li><li><strong>Pilih Sesuai Kebutuhan:</strong> Sesuaikan pilihan bengkel dengan jenis masalah kendaraan Anda, apakah umum atau membutuhkan penanganan spesialis.</li></ul><p>Dengan adanya pilihan bengkel yang beragam ini, warga Kademangan dan sekitarnya kini tidak perlu lagi khawatir saat \"kuda besi\" kesayangan mereka membutuhkan perawatan.</p>', 'Umum', 'f4c816650a388274f2e2c3dfa2288ab0.jpg', '2025-10-09 08:50:53', 1);
+(2, 'Jangan Panik Mogok! Ini Daftar Bengkel Motor dan Mobil Terdekat di Kademangan, Setu', 'jangan-panik-mogok-ini-daftar-bengkel-motor-dan-mobil-terdekat-di-kademangan-setu', '<p><strong>TANGERANG SELATAN, 9 Oktober 2025</strong> – Kademangan, sebagai salah satu kelurahan yang terus berkembang di Kecamatan Setu, Tangerang Selatan, memiliki tingkat mobilitas warga yang tinggi. Seiring dengan itu, kebutuhan akan layanan perawatan dan perbaikan kendaraan menjadi sangat esensial. Bagi para pengendara yang mengalami masalah pada kendaraannya, baik untuk servis rutin maupun kondisi darurat, menemukan bengkel terpercaya adalah sebuah keharusan.</p><p>Tim redaksi telah merangkum beberapa bengkel motor dan mobil di sekitar Kademangan yang bisa menjadi referensi utama bagi warga. Dari bengkel umum hingga spesialis, berikut adalah daftarnya:</p><h3><strong>Rekomendasi Bengkel Mobil di Kademangan</strong></h3><p>Bagi pemilik kendaraan roda empat, perawatan seperti ganti oli, servis AC, hingga perbaikan kaki-kaki seringkali dibutuhkan. Beberapa bengkel ini dikenal memiliki reputasi yang baik di kalangan warga setempat.</p><ol><li><strong>BENGKEL MOBIL MITRA JAYA</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, ganti oli, tune-up, dan perbaikan kaki-kaki.</li><li><strong>Alamat:</strong> Jl. Raya Kademangan, Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Salah satu bengkel yang sudah cukup lama beroperasi di area ini. Dikenal karena montirnya yang berpengalaman dan penanganan yang relatif cepat untuk servis ringan.</li><li><a href=\"https://maps.app.goo.gl/tufcehqc8kMa5iRD6\">https://maps.app.goo.gl/tufcehqc8kMa5iRD6</a></li></ul></li><li><strong>KADEMANGAN AC MOBIL</strong><ul><li><strong>Spesialisasi:</strong> Perbaikan dan perawatan AC mobil.</li><li><strong>Alamat:</strong> Terletak tidak jauh dari jalan utama, mudah diakses dari perumahan sekitar.</li><li><strong>Keterangan:</strong> Menjadi rujukan utama bagi pengemudi yang mengalami masalah AC, mulai dari tidak dingin, bau, hingga isi freon. Harganya kompetitif dengan pengerjaan yang teliti.</li></ul></li><li><strong>GARASI 99 AUTO SERVICE</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, kelistrikan, dan modifikasi ringan.</li><li><strong>Alamat:</strong> Jl. Amd. Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Bengkel ini cukup populer di kalangan anak muda dan komunitas otomotif karena selain melayani servis rutin, juga menerima permintaan modifikasi ringan seperti instalasi audio dan lampu.</li></ul></li></ol><h3><strong>Rekomendasi Bengkel Motor di Kademangan</strong></h3><p>Pengguna sepeda motor yang jumlahnya mendominasi di wilayah ini juga memiliki banyak pilihan. Berikut beberapa bengkel motor yang menjadi andalan warga Kademangan.</p><ol><li><strong>AHASS KADEMANGAN JAYA MOTOR (Bengkel Resmi Honda)</strong><ul><li><strong>Spesialisasi:</strong> Servis dan suku cadang asli motor Honda.</li><li><strong>Alamat:</strong> Jl. Raya Puspiptek (mudah dijangkau dari Kademangan).</li><li><strong>Keterangan:</strong> Pilihan utama bagi pengguna motor Honda yang ingin menjaga garansi dan kualitas servis sesuai standar pabrikan. Layanan booking service biasanya tersedia untuk menghindari antrean.</li></ul></li><li><strong>BENGKEL MOTOR ABADI</strong><ul><li><strong>Spesialisasi:</strong> Servis umum semua merek, tambal ban, ganti oli.</li><li><strong>Alamat:</strong> Jl. Kademangan Raya (dekat area pertokoan).</li><li><strong>Keterangan:</strong> Bengkel rakyat yang selalu ramai. Menjadi solusi cepat untuk masalah-masalah umum seperti ban bocor, ganti busi, atau servis karburator. Harganya yang terjangkau membuatnya jadi favorit.</li></ul></li><li><strong>JAYA MANDIRI MOTOR</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, turun mesin, dan menyediakan aneka suku cadang.</li><li><strong>Alamat:</strong> Berada di salah satu jalan lingkungan di Kademangan.</li><li><strong>Keterangan:</strong> Dikenal mampu menangani masalah yang lebih berat seperti turun mesin. Montirnya yang sabar dan teliti menjadi nilai tambah bagi pelanggan.</li></ul></li></ol><h3><strong>Tips Memilih Bengkel yang Tepat</strong></h3><p>Camat Setu, Bapak H. Junaedi, S.Pd., saat dihubungi terpisah, mengapresiasi para pelaku usaha UMKM seperti bengkel yang sangat membantu aktivitas warga. \"Keberadaan bengkel di setiap kelurahan, termasuk Kademangan, adalah penopang penting kelancaran mobilitas warga. Kami harap para pemilik bengkel terus menjaga kualitas dan kejujuran,\" ujarnya.</p><p>Bagi warga, disarankan untuk:</p><ul><li><strong>Cek Ulasan:</strong> Manfaatkan ulasan di Google Maps untuk melihat pengalaman pelanggan lain.</li><li><strong>Tanya Estimasi Biaya:</strong> Sebelum pengerjaan dimulai, jangan ragu untuk bertanya perkiraan biaya jasa dan suku cadang.</li><li><strong>Pilih Sesuai Kebutuhan:</strong> Sesuaikan pilihan bengkel dengan jenis masalah kendaraan Anda, apakah umum atau membutuhkan penanganan spesialis.</li></ul><p>Dengan adanya pilihan bengkel yang beragam ini, warga Kademangan dan sekitarnya kini tidak perlu lagi khawatir saat \"kuda besi\" kesayangan mereka membutuhkan perawatan.</p>', 'Umum', '457363093b0f9beac98ae0b9b8cba14f.jpg', '2025-10-09 08:50:53', 1),
+(5, 'Warga Antusias Ikuti Program Pemutihan Pajak Kendaraan Bermotor di Samsat BSD', 'warga-antusias-ikuti-program-pemutihan-pajak-kendaraan-bermotor-di-samsat-bsd', '<p>Kukira <strong>Dia</strong></p>', 'Pengumuman', 'e01ac61dfc225f428d07933b3ee3705d.jpg', '2025-10-10 10:19:24', 1),
+(6, 'Warga Kademangan Gelar Kerja Bakti Massal, Fokus pada Normalisasi Saluran Air Jelang Musim Hujan', 'warga-kademangan-gelar-kerja-bakti-massal-fokus-pada-normalisasi-saluran-air-jelang-musim-hujan', '<p>anjayyyy banjit brok</p>', 'Kegiatan', '71c5fe26389c340b221230b095b69e70.jpg', '2025-10-10 10:19:59', 1);
 
 -- --------------------------------------------------------
 
@@ -69,7 +71,7 @@ CREATE TABLE `coverage_stats` (
 --
 
 INSERT INTO `coverage_stats` (`id`, `jumlah_kk`, `jumlah_penduduk`, `jumlah_rw`, `jumlah_rt`, `icon_kk`, `icon_penduduk`, `icon_rw`, `icon_rt`, `updated_at`) VALUES
-(1, 7884, 25724, 9, 68, NULL, NULL, NULL, NULL, '2025-10-09 15:52:41');
+(1, 7884, 25724, 9, 68, 'f7f56dd8d5606b770e6d45c28ace0b48.png', '840093522e323a13c38e0de648a2c894.png', 'c26d17d054ed729432dc6619a95e537d.png', 'd88d95bb4b96df198f06ed1c295aec93.png', '2025-10-09 20:25:05');
 
 -- --------------------------------------------------------
 
@@ -175,7 +177,7 @@ CREATE TABLE `surat_belum_bekerja` (
   `id` int(11) NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(255) NOT NULL,
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL,
   `nama_pemohon` varchar(100) NOT NULL,
   `tempat_lahir` varchar(100) NOT NULL,
@@ -198,8 +200,8 @@ CREATE TABLE `surat_belum_bekerja` (
 -- Dumping data for table `surat_belum_bekerja`
 --
 
-INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `nik`, `telepon_pemohon`, `warganegara`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(1, '089/SP/RT.003/IX/2025', '2025-09-24', '38ac22442f2fee9a0c5670d20e1682c6.pdf', NULL, 'Andrian fakih', 'Jakarta', '2025-09-24', 'Laki-laki', '3171070901010006', '089514353271', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'Ciledug', 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 12:42:15', '2025-09-24 16:46:04', 1);
+INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `nik`, `telepon_pemohon`, `warganegara`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(3, '089/SP/RT.003/IX/2025', '2025-10-14', '[\"20ea92bfdd603f53a37149780dc6cf98.pdf\",\"1004b951dc7aea53871ec6337a11de2d.pdf\",\"3650fea925564e4af1000e6f62de4f3a.pdf\"]', NULL, 'Andrian fakih', 'Tangerang Selatan', '2025-10-14', 'Laki-laki', '3171070901010006', '085174103802', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Persyaratan PIP', 'Disetujui', '2025-10-13 18:31:56', '2025-10-13 18:42:15', 1);
 
 -- --------------------------------------------------------
 
@@ -222,7 +224,7 @@ CREATE TABLE `surat_belum_memiliki_rumah` (
   `keperluan` text NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(255) NOT NULL,
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL,
   `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -233,8 +235,8 @@ CREATE TABLE `surat_belum_memiliki_rumah` (
 -- Dumping data for table `surat_belum_memiliki_rumah`
 --
 
-INSERT INTO `surat_belum_memiliki_rumah` (`id`, `nama_pemohon`, `nik`, `telepon_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Andrian fakih', '3171070901010006', '089514353271', 'Jakarta', '2025-09-24', 'Laki-laki', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'ciledug', 'Pengajuan Beasiswa Kuliah', '089/SP/RT.003/IX/2025', '2025-09-24', '775766a94b9f3f9d56b111701b2626f2.pdf', NULL, 'Pending', '2025-09-24 13:15:05', '2025-09-24 16:46:18');
+INSERT INTO `surat_belum_memiliki_rumah` (`id`, `nama_pemohon`, `nik`, `telepon_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
+(0, 'Andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-10-14', 'Laki-laki', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKRTA', 'Pengajuan Beasiswa Kuliah', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"024e120c366036d57948fcab625223c5.pdf\",\"caebd6de79517c040cb863f75ce0f9ad.pdf\",\"82fdd8f7970f374fdc75b7be84c88366.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:34:08', '2025-10-13 18:46:00');
 
 -- --------------------------------------------------------
 
@@ -266,7 +268,7 @@ CREATE TABLE `surat_domisili_yayasan` (
   `npwp` varchar(50) NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(255) NOT NULL,
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL,
   `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -278,8 +280,8 @@ CREATE TABLE `surat_domisili_yayasan` (
 -- Dumping data for table `surat_domisili_yayasan`
 --
 
-INSERT INTO `surat_domisili_yayasan` (`id`, `nama_penanggung_jawab`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `alamat_pemohon`, `nama_organisasi`, `jenis_kegiatan`, `alamat_kantor`, `jumlah_pengurus`, `nama_notaris_pendirian`, `nomor_akta_pendirian`, `tanggal_akta_pendirian`, `nama_notaris_perubahan`, `nomor_akta_perubahan`, `tanggal_akta_perubahan`, `npwp`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(1, 'HERLINA MUSTIKASARI ROTI', 'Tangerang Selatan', '2025-09-24', '3674076710970001', '089514353271', 'Laki-laki', 'Indonesia', 'Islamm', 'Ciledug', 'YAYASAN MENATA RUMAH KITA BERSAMA', 'Bidang Sosial dan Pendidikan', 'Ciledug', 14, 'Not. Dr Udin Nasrudin', '106', '2025-09-24', 'Not. Dr Udin Nasrudin', '09', '2025-09-24', '31.190.787.7-411.000', '089/SP/RT.003/IX/2025', '2025-09-24', '7c8f4190754b4851554d27d2bb692436.pdf', NULL, 'Pending', '2025-09-24 12:45:48', '2025-09-24 16:46:11', 1);
+INSERT INTO `surat_domisili_yayasan` (`id`, `nama_penanggung_jawab`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `alamat_pemohon`, `nama_organisasi`, `jenis_kegiatan`, `alamat_kantor`, `jumlah_pengurus`, `nama_notaris_pendirian`, `nomor_akta_pendirian`, `tanggal_akta_pendirian`, `nama_notaris_perubahan`, `nomor_akta_perubahan`, `tanggal_akta_perubahan`, `npwp`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(3, 'HERLINA MUSTIKASARI ROTI', 'Tangerang Selatan', '2025-10-14', '3171070901010006', '085174103802', 'Laki-laki', 'Indonesia', 'Islam', 'JAKARTA', 'YAYASAN MENATA RUMAH KITA BERSAMA', 'Bidang Sosial dan Pendidikan', 'JAKARTA', 12, 'Not. Dr Udin Nasrudin', '106', '2025-10-14', 'Not. Dr Udin Nasrudin', '09', '2025-10-14', '31.190.787.7-411.000', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"44bd389746a8f7d826ac3e9657484123.pdf\",\"2fdd8bd3290ae51d8761388a352dd709.pdf\",\"c9596e5a60ef54e3435a059a4abe2633.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:33:09', '2025-10-13 18:42:23', 1);
 
 -- --------------------------------------------------------
 
@@ -314,7 +316,7 @@ CREATE TABLE `surat_kematian` (
   `pelapor_hubungan` varchar(50) NOT NULL,
   `nomor_surat_rt` varchar(100) DEFAULT NULL,
   `tanggal_surat_rt` date DEFAULT NULL,
-  `scan_surat_rt` varchar(255) DEFAULT NULL,
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL,
   `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -325,8 +327,8 @@ CREATE TABLE `surat_kematian` (
 -- Dumping data for table `surat_kematian`
 --
 
-INSERT INTO `surat_kematian` (`id`, `nama`, `nik`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `agama`, `pekerjaan`, `alamat`, `hari_meninggal`, `tanggal_meninggal`, `jam_meninggal`, `tempat_meninggal`, `sebab_meninggal`, `tempat_pemakaman`, `pelapor_nama`, `pelapor_tempat_lahir`, `pelapor_tanggal_lahir`, `pelapor_agama`, `pelapor_pekerjaan`, `pelapor_nik`, `pelapor_no_telepon`, `pelapor_alamat`, `pelapor_hubungan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
-(0, 'Andrian fakih', '3171070901010006', 'Laki-laki', 'Tangerang Selatan', '2025-09-24', 'Islamm', 'Karyawan Swasta', 'Ciledug', 'Jumat', '2025-09-24', '21:48:00', 'Rumah', 'Sakit', 'TPU Kademangan', 'Andrian fakih', 'Tangerang', '2025-09-24', 'Islam', 'Wirasuasta', '3674074808151001', '089514353271', 'Ciledug', 'Kerabat', '089/SP/RT.003/IX/2025', '2025-09-24', '5bfe61419b1f239023672289bd5ed7c5.pdf', NULL, 'Pending', '2025-09-24 13:49:21', '2025-09-24 16:47:25');
+INSERT INTO `surat_kematian` (`id`, `nama`, `nik`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `agama`, `pekerjaan`, `alamat`, `hari_meninggal`, `tanggal_meninggal`, `jam_meninggal`, `tempat_meninggal`, `sebab_meninggal`, `tempat_pemakaman`, `pelapor_nama`, `pelapor_tempat_lahir`, `pelapor_tanggal_lahir`, `pelapor_agama`, `pelapor_pekerjaan`, `pelapor_nik`, `pelapor_no_telepon`, `pelapor_alamat`, `pelapor_hubungan`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
+(0, 'Davd', '3171070901010006', 'Laki-laki', 'Tangerang Selatan', '2025-10-14', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Jumat', '2025-10-14', '01:34:00', 'Rumah', 'Sakit', 'TPU Kademangan', 'Andrian fakih', 'Tangerang', '2025-10-14', 'Islam', 'Wirasuasta', '3674074808151001', '089514353271', 'JAKARTA', 'Kerabat', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"13bb71227ea7a5fa569023552db28498.pdf\",\"f59746ed0797d154ee28d546a83ee6c5.pdf\",\"db22ee3c5756073e700c3d5b44ed7646.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:35:35', '2025-10-13 18:46:31');
 
 -- --------------------------------------------------------
 
@@ -350,7 +352,7 @@ CREATE TABLE `surat_kematian_nondukcapil` (
   `keterangan_almarhum` varchar(255) DEFAULT NULL COMMENT 'Contoh: Ibu Kandung, Ayah Kandung, dll.',
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(255) NOT NULL,
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL,
   `keperluan` varchar(255) DEFAULT NULL,
   `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
@@ -362,8 +364,8 @@ CREATE TABLE `surat_kematian_nondukcapil` (
 -- Dumping data for table `surat_kematian_nondukcapil`
 --
 
-INSERT INTO `surat_kematian_nondukcapil` (`id`, `nama_ahli_waris`, `nik_ahli_waris`, `telepon_pemohon`, `jenis_kelamin`, `alamat_ahli_waris`, `hubungan_ahli_waris`, `nama_almarhum`, `nik_almarhum`, `tempat_meninggal`, `tanggal_meninggal`, `alamat_almarhum`, `keterangan_almarhum`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `keperluan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Andrian fakih', '3171090101010006', '081328000052', 'Laki-laki', 'Ciledug', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-09-24', 'Ciledug', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-09-24', '133a5cc84ad4ed379dd492f3fa42b629.pdf', NULL, 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 13:59:16', '2025-10-07 03:50:06');
+INSERT INTO `surat_kematian_nondukcapil` (`id`, `nama_ahli_waris`, `nik_ahli_waris`, `telepon_pemohon`, `jenis_kelamin`, `alamat_ahli_waris`, `hubungan_ahli_waris`, `nama_almarhum`, `nik_almarhum`, `tempat_meninggal`, `tanggal_meninggal`, `alamat_almarhum`, `keterangan_almarhum`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `keperluan`, `status`, `created_at`, `updated_at`) VALUES
+(0, 'Andrian fakih', '3171090101010006', '089514353271', 'Laki-laki', 'JAKARTA', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-10-14', 'JAKARTA', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"86e75eef710e662f3eb0b7c886d5ff88.pdf\",\"5f84362ba4a68b27f38bf5642e6187c3.pdf\",\"ecbfec4d00a4d8fb1da568bca5fd005c.pdf\"]', NULL, 'Administrasi', 'Disetujui', '2025-10-13 18:38:44', '2025-10-13 18:47:00');
 
 -- --------------------------------------------------------
 
@@ -389,7 +391,7 @@ CREATE TABLE `surat_keterangan_suami_istri` (
   `keperluan` text NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(255) NOT NULL COMMENT 'Nama file hasil upload',
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL COMMENT 'Diisi oleh admin saat surat diterbitkan',
   `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -400,8 +402,8 @@ CREATE TABLE `surat_keterangan_suami_istri` (
 -- Dumping data for table `surat_keterangan_suami_istri`
 --
 
-INSERT INTO `surat_keterangan_suami_istri` (`id`, `nama_pihak_satu`, `nik_pihak_satu`, `telepon_pemohon`, `tempat_lahir_pihak_satu`, `tanggal_lahir_pihak_satu`, `jenis_kelamin_pihak_satu`, `agama_pihak_satu`, `pekerjaan_pihak_satu`, `warganegara_pihak_satu`, `alamat_pihak_satu`, `nama_pihak_dua`, `nik_pihak_dua`, `alamat_pihak_dua`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-09-24', 'Laki-laki', 'Islamm', 'Mahasiswa', 'Indonesia', 'Tangerang selatan', 'Nayla Rabiatul Hanifa', '3171070901010006', 'Depok', 'Persyaratan Pengajuan KPR', '089/SP/RT.003/IX/2025', '2025-09-24', '4c638b245c19df43f046cfeee92ffc0c.pdf', NULL, 'Pending', '2025-09-24 14:07:22', '2025-09-24 17:12:49');
+INSERT INTO `surat_keterangan_suami_istri` (`id`, `nama_pihak_satu`, `nik_pihak_satu`, `telepon_pemohon`, `tempat_lahir_pihak_satu`, `tanggal_lahir_pihak_satu`, `jenis_kelamin_pihak_satu`, `agama_pihak_satu`, `pekerjaan_pihak_satu`, `warganegara_pihak_satu`, `alamat_pihak_satu`, `nama_pihak_dua`, `nik_pihak_dua`, `alamat_pihak_dua`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
+(3, 'andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-10-14', 'Laki-laki', 'Islam', 'Mahasiswa', 'Indonesia', 'JAKRTA', 'Nayla Rabiatul Hanifa', '3171070901010006', 'JAKARTA', 'Persyaratan Pengajuan KPR', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"1aa3f759a49368d85b0c905cb446cc11.pdf\",\"25d3cd2ee892a3074b1be4986b69aca3.pdf\",\"300f85cbe539719111324459b94b8af0.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:39:40', '2025-10-13 18:57:16');
 
 -- --------------------------------------------------------
 
@@ -413,7 +415,7 @@ CREATE TABLE `surat_sktm` (
   `id` int(11) NOT NULL,
   `nomor_surat_rt` varchar(100) NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `scan_surat_rt` varchar(255) NOT NULL,
+  `dokumen_pendukung` text DEFAULT NULL,
   `nomor_surat` varchar(100) DEFAULT NULL,
   `nama_pemohon` varchar(100) NOT NULL,
   `tempat_lahir` varchar(100) NOT NULL,
@@ -439,8 +441,8 @@ CREATE TABLE `surat_sktm` (
 -- Dumping data for table `surat_sktm`
 --
 
-INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `scan_surat_rt`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(8, '089/SP/RT.003/IX/2025', '2025-09-24', 'd517149a19ab8ff9c360a1c797d4b91f.pdf', NULL, 'Andrian fakih', 'Bogor', '2025-09-24', '3171070901010006', '6285174103802', 'Laki-laki', 'Indonesia', 'Islamm', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'Ciledug', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-09-24 14:32:18', '2025-10-07 03:54:49', 1);
+INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(10, '089/SP/RT.003/IX/2025', '2025-10-14', '[\"e3ec0df1c105c0fc1e38f3d528ead5fc.pdf\",\"eb78554a1197628b4c43102b57f3fc73.pdf\",\"096242eee1a1765b86932268cd779431.pdf\"]', NULL, 'Andrian fakih', 'Tangerang Selatan', '2025-10-14', '3171070901010006', '085174103802', 'Laki-laki', 'Indonesia', 'Islam', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'JAKRTA', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Disetujui', '2025-10-13 18:31:03', '2025-10-13 18:40:30', 1);
 
 -- --------------------------------------------------------
 
@@ -588,7 +590,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `berita`
 --
 ALTER TABLE `berita`
-  MODIFY `id_berita` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_berita` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `coverage_stats`
@@ -624,43 +626,43 @@ ALTER TABLE `running_texts`
 -- AUTO_INCREMENT for table `surat_belum_bekerja`
 --
 ALTER TABLE `surat_belum_bekerja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `surat_belum_memiliki_rumah`
 --
 ALTER TABLE `surat_belum_memiliki_rumah`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `surat_domisili_yayasan`
 --
 ALTER TABLE `surat_domisili_yayasan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `surat_kematian`
 --
 ALTER TABLE `surat_kematian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `surat_kematian_nondukcapil`
 --
 ALTER TABLE `surat_kematian_nondukcapil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `surat_keterangan_suami_istri`
 --
 ALTER TABLE `surat_keterangan_suami_istri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `uploadvideo`
