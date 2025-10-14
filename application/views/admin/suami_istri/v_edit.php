@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php $can_full = isset($can_full_edit) && $can_full_edit === true; ?>
 <div class="page-inner">
     <div class="page-header">
         <h4 class="page-title">Edit Ket. Suami Istri</h4>
@@ -11,11 +12,14 @@
         </ul>
     </div>
 
+    <?php if (!$can_full): ?>
+        <div class="alert alert-info">
+            Anda login sebagai <b>admin</b>. Anda hanya dapat mengubah <b>Status</b> dan <b>Nomor Surat</b>.
+        </div>
+    <?php endif; ?>
+
     <?php if ($this->session->flashdata('error')): ?>
         <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
-    <?php endif; ?>
-    <?php if ($this->session->flashdata('upload_error')): ?>
-        <div class="alert alert-danger"><?= $this->session->flashdata('upload_error'); ?></div>
     <?php endif; ?>
 
     <div class="card">
@@ -55,54 +59,96 @@
                     <!-- Pihak Pertama -->
                     <div class="col-md-6">
                         <h5>Data Pihak Pertama</h5>
-                        <div class="form-group"><label>Nama</label><input type="text" class="form-control" name="nama_pihak_satu" value="<?= html_escape($surat->nama_pihak_satu); ?>" placeholder="Nama sesuai KTP" required></div>
-                        <div class="form-group"><label>NIK</label><input type="text" class="form-control" name="nik_pihak_satu" value="<?= html_escape($surat->nik_pihak_satu); ?>" placeholder="16 digit NIK" required></div>
-                        <div class="form-group"><label>No. Telepon</label><input type="text" class="form-control" name="telepon_pemohon" value="<?= html_escape($surat->telepon_pemohon); ?>" placeholder="Contoh: 081234567890"></div>
-                        <div class="form-group"><label>Tempat Lahir</label><input type="text" class="form-control" name="tempat_lahir_pihak_satu" value="<?= html_escape($surat->tempat_lahir_pihak_satu); ?>" placeholder="Kota tempat lahir"></div>
-                        <div class="form-group"><label>Tanggal Lahir</label><input type="date" class="form-control" name="tanggal_lahir_pihak_satu" value="<?= html_escape($surat->tanggal_lahir_pihak_satu); ?>"></div>
+                        <div class="form-group"><label>Nama</label>
+                            <input type="text" class="form-control" name="nama_pihak_satu"
+                                value="<?= html_escape($surat->nama_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?> required>
+                        </div>
+                        <div class="form-group"><label>NIK</label>
+                            <input type="text" class="form-control" name="nik_pihak_satu"
+                                value="<?= html_escape($surat->nik_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?> required>
+                        </div>
+                        <div class="form-group"><label>No. Telepon</label>
+                            <input type="text" class="form-control" name="telepon_pemohon"
+                                value="<?= html_escape($surat->telepon_pemohon); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
+                        <div class="form-group"><label>Tempat Lahir</label>
+                            <input type="text" class="form-control" name="tempat_lahir_pihak_satu"
+                                value="<?= html_escape($surat->tempat_lahir_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
+                        <div class="form-group"><label>Tanggal Lahir</label>
+                            <input type="date" class="form-control" name="tanggal_lahir_pihak_satu"
+                                value="<?= html_escape($surat->tanggal_lahir_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
                         <div class="form-group">
                             <label>Jenis Kelamin</label>
-                            <select class="form-control" name="jenis_kelamin_pihak_satu">
+                            <select class="form-control" name="jenis_kelamin_pihak_satu" <?= $can_full ? '' : 'disabled' ?>>
                                 <option value="" disabled <?= empty($surat->jenis_kelamin_pihak_satu) ? 'selected' : ''; ?>>Pilih...</option>
                                 <option value="Laki-laki" <?= $surat->jenis_kelamin_pihak_satu === 'Laki-laki' ? 'selected' : ''; ?>>Laki-laki</option>
                                 <option value="Perempuan" <?= $surat->jenis_kelamin_pihak_satu === 'Perempuan' ? 'selected' : ''; ?>>Perempuan</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>Agama</label><input type="text" class="form-control" name="agama_pihak_satu" value="<?= html_escape($surat->agama_pihak_satu); ?>" placeholder="Contoh: Islam"></div>
-                        <div class="form-group"><label>Pekerjaan</label><input type="text" class="form-control" name="pekerjaan_pihak_satu" value="<?= html_escape($surat->pekerjaan_pihak_satu); ?>" placeholder="Contoh: Karyawan Swasta"></div>
-                        <div class="form-group"><label>Warganegara</label><input type="text" class="form-control" name="warganegara_pihak_satu" value="<?= html_escape($surat->warganegara_pihak_satu); ?>" placeholder="Contoh: Indonesia"></div>
-                        <div class="form-group"><label>Alamat</label><textarea class="form-control" name="alamat_pihak_satu" rows="3" placeholder="Alamat lengkap sesuai KTP" required><?= html_escape($surat->alamat_pihak_satu); ?></textarea></div>
+                        <div class="form-group"><label>Agama</label>
+                            <input type="text" class="form-control" name="agama_pihak_satu"
+                                value="<?= html_escape($surat->agama_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
+                        <div class="form-group"><label>Pekerjaan</label>
+                            <input type="text" class="form-control" name="pekerjaan_pihak_satu"
+                                value="<?= html_escape($surat->pekerjaan_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
+                        <div class="form-group"><label>Warganegara</label>
+                            <input type="text" class="form-control" name="warganegara_pihak_satu"
+                                value="<?= html_escape($surat->warganegara_pihak_satu); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
+                        <div class="form-group"><label>Alamat</label>
+                            <textarea class="form-control" name="alamat_pihak_satu" rows="3" <?= $can_full ? '' : 'readonly' ?> required><?= html_escape($surat->alamat_pihak_satu); ?></textarea>
+                        </div>
                     </div>
 
                     <!-- Pihak Kedua -->
                     <div class="col-md-6">
                         <h5>Data Pihak Kedua</h5>
-                        <div class="form-group"><label>Nama</label><input type="text" class="form-control" name="nama_pihak_dua" value="<?= html_escape($surat->nama_pihak_dua); ?>" placeholder="Nama sesuai KTP" required></div>
-                        <div class="form-group"><label>NIK</label><input type="text" class="form-control" name="nik_pihak_dua" value="<?= html_escape($surat->nik_pihak_dua); ?>" placeholder="16 digit NIK" required></div>
-                        <div class="form-group"><label>Alamat</label><textarea class="form-control" name="alamat_pihak_dua" rows="3" placeholder="Alamat lengkap sesuai KTP" required><?= html_escape($surat->alamat_pihak_dua); ?></textarea></div>
+                        <div class="form-group"><label>Nama</label>
+                            <input type="text" class="form-control" name="nama_pihak_dua"
+                                value="<?= html_escape($surat->nama_pihak_dua); ?>" <?= $can_full ? '' : 'readonly' ?> required>
+                        </div>
+                        <div class="form-group"><label>NIK</label>
+                            <input type="text" class="form-control" name="nik_pihak_dua"
+                                value="<?= html_escape($surat->nik_pihak_dua); ?>" <?= $can_full ? '' : 'readonly' ?> required>
+                        </div>
+                        <div class="form-group"><label>Alamat</label>
+                            <textarea class="form-control" name="alamat_pihak_dua" rows="3" <?= $can_full ? '' : 'readonly' ?> required><?= html_escape($surat->alamat_pihak_dua); ?></textarea>
+                        </div>
                     </div>
                 </div>
 
                 <hr>
                 <div class="form-group">
                     <label>Keperluan</label>
-                    <input type="text" class="form-control" name="keperluan" value="<?= html_escape($surat->keperluan); ?>" placeholder="Contoh: Persyaratan Pengurusan Surat Waris" required>
+                    <input type="text" class="form-control" name="keperluan"
+                        value="<?= html_escape($surat->keperluan); ?>" <?= $can_full ? '' : 'readonly' ?> required>
                 </div>
 
                 <hr>
                 <h5>Surat Pengantar RT/RW & Dokumen Pendukung</h5>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group"><label>Nomor Surat RT/RW</label><input type="text" class="form-control" name="nomor_surat_rt" value="<?= html_escape($surat->nomor_surat_rt); ?>" placeholder="Contoh: 01/RT01/RW02/KDM/2025"></div>
+                        <div class="form-group"><label>Nomor Surat RT/RW</label>
+                            <input type="text" class="form-control" name="nomor_surat_rt"
+                                value="<?= html_escape($surat->nomor_surat_rt); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group"><label>Tanggal Surat RT/RW</label><input type="date" class="form-control" name="tanggal_surat_rt" value="<?= html_escape($surat->tanggal_surat_rt); ?>"></div>
+                        <div class="form-group"><label>Tanggal Surat RT/RW</label>
+                            <input type="date" class="form-control" name="tanggal_surat_rt"
+                                value="<?= html_escape($surat->tanggal_surat_rt); ?>" <?= $can_full ? '' : 'readonly' ?>>
+                        </div>
                     </div>
 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Unggah Dokumen Pendukung (PDF/JPG/PNG, maks 2MB per file) — KTP/KK/Surat Pengantar RT, dll</label>
-                            <input type="file" class="form-control" name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                            <label>Unggah Dokumen Pendukung (PDF/JPG/PNG, maks 2MB per file)</label>
+                            <input type="file" class="form-control"
+                                name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple <?= $can_full ? '' : 'disabled' ?>>
                             <small class="form-text text-muted">Dokumen baru akan <b>ditambahkan</b> ke lampiran yang sudah ada.</small>
 
                             <?php
@@ -130,18 +176,6 @@
                             </div>
 
                             <ul id="dokListAdmin" class="small mt-2 text-muted"></ul>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Dokumen Pendukung (PDF/JPG/PNG, maks 2MB per file)</label>
-                            <input type="file" class="form-control"
-                                name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple>
-                            <small class="form-text text-muted">
-                                Dokumen baru akan <b>ditambahkan</b> ke lampiran yang sudah ada.
-                            </small>
-
                         </div>
                     </div>
                 </div>

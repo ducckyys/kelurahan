@@ -1,3 +1,8 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+$can_full = isset($can_full_edit) && $can_full_edit === true;
+$ro  = $can_full ? '' : 'readonly';
+$dis = $can_full ? '' : 'disabled';
+?>
 <div class="page-inner">
     <div class="page-header">
         <h4 class="page-title">Edit Ket. Belum Bekerja</h4>
@@ -9,6 +14,13 @@
             <li class="nav-item"><a>Edit Data</a></li>
         </ul>
     </div>
+
+    <?php if (!$can_full): ?>
+        <div class="alert alert-info">
+            Anda login sebagai <b>admin</b>. Anda hanya dapat mengubah <b>Status</b> dan <b>Nomor Surat</b>. Field lainnya terkunci.
+        </div>
+    <?php endif; ?>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -23,14 +35,20 @@
                         <h5>Administrasi Surat</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group"><label>Nomor Surat</label><input type="text" name="nomor_surat" class="form-control" value="<?= html_escape($surat->nomor_surat); ?>" placeholder="Contoh: 400.12.3.1/123 - Pemerintahan"></div>
+                                <div class="form-group"><label>Nomor Surat</label>
+                                    <input type="text" name="nomor_surat" class="form-control"
+                                        value="<?= html_escape($surat->nomor_surat); ?>"
+                                        placeholder="Contoh: 400.12.3.1/123 - Pemerintahan">
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Status Pengajuan</label><select name="status" class="form-control">
+                                <div class="form-group"><label>Status Pengajuan</label>
+                                    <select name="status" class="form-control">
                                         <option value="Pending" <?= ($surat->status == 'Pending') ? 'selected' : ''; ?>>Pending</option>
                                         <option value="Disetujui" <?= ($surat->status == 'Disetujui') ? 'selected' : ''; ?>>Disetujui</option>
                                         <option value="Ditolak" <?= ($surat->status == 'Ditolak') ? 'selected' : ''; ?>>Ditolak</option>
-                                    </select></div>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -38,40 +56,62 @@
                         <h5 class="mb-3">Data Diri Pemohon</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group"><label>Nama Lengkap</label><input type="text" name="nama_pemohon" class="form-control" value="<?= html_escape($surat->nama_pemohon); ?>" required></div>
+                                <div class="form-group"><label>Nama Lengkap</label>
+                                    <input type="text" name="nama_pemohon" class="form-control" value="<?= html_escape($surat->nama_pemohon); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>NIK</label><input type="text" name="nik" class="form-control" value="<?= html_escape($surat->nik); ?>" required></div>
+                                <div class="form-group"><label>NIK</label>
+                                    <input type="text" name="nik" class="form-control" value="<?= html_escape($surat->nik); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>No. Telepon</label><input type="text" name="telepon_pemohon" class="form-control" value="<?= html_escape($surat->telepon_pemohon); ?>" required></div>
+                                <div class="form-group"><label>No. Telepon</label>
+                                    <input type="text" name="telepon_pemohon" class="form-control" value="<?= html_escape($surat->telepon_pemohon); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Tempat Lahir</label><input type="text" name="tempat_lahir" class="form-control" value="<?= html_escape($surat->tempat_lahir); ?>" required></div>
+                                <div class="form-group"><label>Tempat Lahir</label>
+                                    <input type="text" name="tempat_lahir" class="form-control" value="<?= html_escape($surat->tempat_lahir); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Tanggal Lahir</label><input type="date" name="tanggal_lahir" class="form-control" value="<?= $surat->tanggal_lahir; ?>" required></div>
+                                <div class="form-group"><label>Tanggal Lahir</label>
+                                    <input type="date" name="tanggal_lahir" class="form-control" value="<?= $surat->tanggal_lahir; ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Jenis Kelamin</label><select name="jenis_kelamin" class="form-control" required>
+                                <div class="form-group"><label>Jenis Kelamin</label>
+                                    <select name="jenis_kelamin" class="form-control" <?= $dis ?> required>
                                         <option value="Laki-laki" <?= ($surat->jenis_kelamin == 'Laki-laki') ? 'selected' : ''; ?>>Laki-laki</option>
                                         <option value="Perempuan" <?= ($surat->jenis_kelamin == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
-                                    </select></div>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Warganegara</label><input type="text" name="warganegara" class="form-control" value="<?= html_escape($surat->warganegara); ?>" required></div>
+                                <div class="form-group"><label>Warganegara</label>
+                                    <input type="text" name="warganegara" class="form-control" value="<?= html_escape($surat->warganegara); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Agama</label><input type="text" name="agama" class="form-control" value="<?= html_escape($surat->agama); ?>" required></div>
+                                <div class="form-group"><label>Agama</label>
+                                    <input type="text" name="agama" class="form-control" value="<?= html_escape($surat->agama); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Pekerjaan</label><input type="text" name="pekerjaan" class="form-control" value="<?= html_escape($surat->pekerjaan); ?>" required></div>
+                                <div class="form-group"><label>Pekerjaan</label>
+                                    <input type="text" name="pekerjaan" class="form-control" value="<?= html_escape($surat->pekerjaan); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                             <div class="col-12">
-                                <div class="form-group"><label>Alamat Lengkap</label><textarea name="alamat" class="form-control" rows="3" required><?= html_escape($surat->alamat); ?></textarea></div>
+                                <div class="form-group"><label>Alamat Lengkap</label>
+                                    <textarea name="alamat" class="form-control" rows="3" <?= $ro ?> required><?= html_escape($surat->alamat); ?></textarea>
+                                </div>
                             </div>
                             <div class="col-12">
-                                <div class="form-group"><label>Keperluan</label><input type="text" name="keperluan" class="form-control" value="<?= html_escape($surat->keperluan); ?>" required></div>
+                                <div class="form-group"><label>Keperluan</label>
+                                    <input type="text" name="keperluan" class="form-control" value="<?= html_escape($surat->keperluan); ?>" <?= $ro ?> required>
+                                </div>
                             </div>
                         </div>
 
@@ -79,24 +119,27 @@
                         <h5>Surat Pengantar RT/RW & Dokumen Pendukung</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group"><label>Nomor Surat RT/RW</label><input type="text" class="form-control" name="nomor_surat_rt" value="<?= html_escape($surat->nomor_surat_rt); ?>"></div>
+                                <div class="form-group"><label>Nomor Surat RT/RW</label>
+                                    <input type="text" class="form-control" name="nomor_surat_rt" value="<?= html_escape($surat->nomor_surat_rt); ?>" <?= $ro ?>>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group"><label>Tanggal Surat RT/RW</label><input type="date" class="form-control" name="tanggal_surat_rt" value="<?= html_escape($surat->tanggal_surat_rt); ?>"></div>
+                                <div class="form-group"><label>Tanggal Surat RT/RW</label>
+                                    <input type="date" class="form-control" name="tanggal_surat_rt" value="<?= html_escape($surat->tanggal_surat_rt); ?>" <?= $ro ?>>
+                                </div>
                             </div>
 
                             <?php
                             $files = [];
                             if (!empty($surat->dokumen_pendukung)) {
                                 $dec = json_decode($surat->dokumen_pendukung, true);
-                                if (is_array($dec)) $files = $dec;
-                                else $files = [$surat->dokumen_pendukung];
+                                $files = is_array($dec) ? $dec : [$surat->dokumen_pendukung];
                             }
                             ?>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Tambah Dokumen Pendukung (PDF/JPG/PNG, maks 2MB per file)</label>
-                                    <input type="file" class="form-control" name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                                    <input type="file" class="form-control" name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple <?= $dis ?>>
                                     <small class="form-text text-muted">File baru akan <b>ditambahkan</b> ke daftar lampiran.</small>
                                 </div>
 
@@ -109,6 +152,8 @@
                                             <?php endforeach; ?>
                                         </ul>
                                     </div>
+                                <?php else: ?>
+                                    <small class="text-muted">Belum ada dokumen terunggah.</small>
                                 <?php endif; ?>
                             </div>
                         </div>

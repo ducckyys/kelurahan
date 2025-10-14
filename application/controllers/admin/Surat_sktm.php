@@ -7,7 +7,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Form_validation $form_validation
  * @property CI_Upload $upload
  * @property M_sktm $M_sktm
- * @property PDF $pdf
+ * @property CI_DB_query_builder $db
+ * @property CI_Loader $load
+ * @property CI_PDF $pdf
  */
 
 class Surat_sktm extends CI_Controller
@@ -21,19 +23,23 @@ class Surat_sktm extends CI_Controller
             redirect(base_url("login"));
         }
         $this->load->model('M_sktm');
+        $this->load->library(['form_validation', 'upload']);
+        $this->load->helper(['url', 'form']);
 
         $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
-        if (!is_dir($this->pendukung_dir)) {
-            @mkdir($this->pendukung_dir, 0755, true);
-        }
-        $this->load->library('upload');
-        $this->load->helper(['url', 'form']);
+        if (!is_dir($this->pendukung_dir)) @mkdir($this->pendukung_dir, 0755, true);
+    }
+
+    private function is_superadmin()
+    {
+        // konsisten dengan pengecekan di delete()
+        return $this->session->userdata('id_level') === '1';
     }
 
     public function index()
     {
         $data['title'] = "Data Surat Keterangan Tidak Mampu (SKTM)";
-        $data['list'] = $this->M_sktm->get_all();
+        $data['list']  = $this->M_sktm->get_all();
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/sktm/v_list', $data);
@@ -43,9 +49,8 @@ class Surat_sktm extends CI_Controller
     public function detail($id)
     {
         $data['surat'] = $this->M_sktm->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_sktm');
-        }
+        if (!$data['surat']) return redirect('admin/surat_sktm');
+
         $data['title'] = "Detail Pengajuan SKTM";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -56,38 +61,43 @@ class Surat_sktm extends CI_Controller
     public function edit($id)
     {
         $data['surat'] = $this->M_sktm->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_sktm');
-        }
-        $data['title'] = "Edit SKTM";
+        if (!$data['surat']) return redirect('admin/surat_sktm');
+
+        $data['title']          = "Edit SKTM";
+        $data['can_full_edit']  = $this->is_superadmin(); // dipakai oleh view untuk disable input
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/sktm/v_edit', $data);
         $this->load->view('layouts/footer');
     }
 
+    /** Upload multi dokumen dari form admin (opsional). Return array|false */
     private function upload_multiple_from_admin()
     {
         if (empty($_FILES['dokumen_pendukung']['name']) || empty($_FILES['dokumen_pendukung']['name'][0])) {
             return []; // tidak wajib saat edit
         }
-        $allowed = 'pdf|jpg|jpeg|png';
-        $max_kb  = 2048;
 
+        $allowed  = 'pdf|jpg|jpeg|png';
+        $max_kb   = 2048;
         $uploaded = [];
-        $files = $_FILES['dokumen_pendukung'];
-        $count = count($files['name']);
+        $files    = $_FILES['dokumen_pendukung'];
+        $count    = count($files['name']);
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['error'][$i] !== UPLOAD_ERR_OK) {
-                $this->session->set_flashdata('error', 'Gagal unggah salah satu dokumen (error code ' . $files['error'][$i] . ').');
+                $this->session->set_flashdata('error', 'Gagal unggah salah satu dokumen (error ' . $files['error'][$i] . ').');
                 return false;
             }
-            $_FILES['single']['name']     = $files['name'][$i];
-            $_FILES['single']['type']     = $files['type'][$i];
-            $_FILES['single']['tmp_name'] = $files['tmp_name'][$i];
-            $_FILES['single']['error']    = $files['error'][$i];
-            $_FILES['single']['size']     = $files['size'][$i];
+
+            $_FILES['single'] = [
+                'name'     => $files['name'][$i],
+                'type'     => $files['type'][$i],
+                'tmp_name' => $files['tmp_name'][$i],
+                'error'    => $files['error'][$i],
+                'size'     => $files['size'][$i],
+            ];
 
             $config = [
                 'upload_path'   => $this->pendukung_dir,
@@ -96,18 +106,40 @@ class Surat_sktm extends CI_Controller
                 'encrypt_name'  => TRUE,
             ];
             $this->upload->initialize($config, true);
+
             if (!$this->upload->do_upload('single')) {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
+                $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
                 return false;
             }
-            $data = $this->upload->data();
-            $uploaded[] = $data['file_name'];
+            $data        = $this->upload->data();
+            $uploaded[]  = $data['file_name'];
         }
         return $uploaded;
     }
 
     public function update($id)
     {
+        // ===== Admin biasa: boleh ubah STATUS & NOMOR SURAT saja =====
+        if (!$this->is_superadmin()) {
+            $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
+            $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
+
+            if ($this->form_validation->run() === FALSE) {
+                $this->session->set_flashdata('error', validation_errors());
+                return redirect('admin/surat_sktm/edit/' . $id);
+            }
+
+            $data = [
+                'status'      => $this->input->post('status', true),
+                'nomor_surat' => $this->input->post('nomor_surat', true) ?: null,
+            ];
+
+            $this->M_sktm->update($id, $data);
+            $this->session->set_flashdata('success', 'Status / Nomor surat berhasil diperbarui.');
+            return redirect('admin/surat_sktm/detail/' . $id);
+        }
+
+        // ===== Superadmin: validasi & update penuh =====
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT', 'trim');
         $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT', 'trim');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
@@ -132,19 +164,18 @@ class Surat_sktm extends CI_Controller
             return redirect('admin/surat_sktm/edit/' . $id);
         }
 
-        $surat = $this->M_sktm->get_by_id($id);
+        $surat    = $this->M_sktm->get_by_id($id);
         $existing = [];
         if ($surat && !empty($surat->dokumen_pendukung)) {
             $decoded = json_decode($surat->dokumen_pendukung, true);
             if (is_array($decoded)) $existing = $decoded;
-            else if (is_string($surat->dokumen_pendukung)) $existing = [$surat->dokumen_pendukung];
+            elseif (is_string($surat->dokumen_pendukung)) $existing = [$surat->dokumen_pendukung];
         }
 
         $newFiles = $this->upload_multiple_from_admin();
         if ($newFiles === false) {
             return redirect('admin/surat_sktm/edit/' . $id);
         }
-        // strategi: append file baru ke list lama
         $allFiles = array_values(array_filter(array_merge($existing, $newFiles)));
 
         $data = [
@@ -171,30 +202,27 @@ class Surat_sktm extends CI_Controller
         ];
 
         $this->M_sktm->update($id, $data);
-
         $this->session->set_flashdata('success', 'Data SKTM berhasil diperbarui.');
-        redirect('admin/surat_sktm/detail/' . $id);
+        return redirect('admin/surat_sktm/detail/' . $id);
     }
 
     public function cetak($id)
     {
         $data['surat'] = $this->M_sktm->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_sktm');
-        }
+        if (!$data['surat']) return redirect('admin/surat_sktm');
+
         if (empty($data['surat']->nomor_surat)) {
             $this->session->set_flashdata('error', 'Gagal cetak! Nomor surat belum diisi.');
-            redirect('admin/surat_sktm/edit/' . $id);
-            return;
+            return redirect('admin/surat_sktm/edit/' . $id);
         }
-        if ($data['surat']->status != 'Disetujui') {
+        if ($data['surat']->status !== 'Disetujui') {
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
-            redirect('admin/surat_sktm/edit/' . $id);
-            return;
+            return redirect('admin/surat_sktm/edit/' . $id);
         }
 
         $data['title'] = "Cetak SKTM - " . $data['surat']->nama_pemohon;
         $html = $this->load->view('admin/sktm/v_cetak', $data, true);
+
         $this->load->library('pdf');
         $filename = 'SKTM-' . preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama_pemohon);
         $this->pdf->generate($html, $filename, 'F4', 'portrait');
@@ -202,10 +230,9 @@ class Surat_sktm extends CI_Controller
 
     public function delete($id)
     {
-        if ($this->session->userdata('role') !== 'superadmin') {
+        if (!$this->is_superadmin()) {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
-            redirect('admin/surat_sktm');
-            return;
+            return redirect('admin/surat_sktm');
         }
 
         $row = $this->M_sktm->get_by_id($id);
@@ -213,8 +240,8 @@ class Surat_sktm extends CI_Controller
             $files = json_decode($row->dokumen_pendukung, true);
             if (is_string($row->dokumen_pendukung) && !is_array($files)) $files = [$row->dokumen_pendukung];
             if (is_array($files)) {
-                foreach ($files as $file) {
-                    $path = FCPATH . 'uploads/pendukung/' . $file;
+                foreach ($files as $fn) {
+                    $path = FCPATH . 'uploads/pendukung/' . $fn;
                     if (file_exists($path)) @unlink($path);
                 }
             }
@@ -222,6 +249,6 @@ class Surat_sktm extends CI_Controller
 
         $this->M_sktm->delete($id);
         $this->session->set_flashdata('success', 'Data berhasil dihapus.');
-        redirect('admin/surat_sktm');
+        return redirect('admin/surat_sktm');
     }
 }

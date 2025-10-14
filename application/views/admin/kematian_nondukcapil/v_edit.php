@@ -1,3 +1,8 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php $can_full = isset($can_full_edit) && $can_full_edit === true; ?>
+<?php $ro = $can_full ? '' : 'readonly';
+$dis = $can_full ? '' : 'disabled'; ?>
+
 <div class="page-inner">
     <div class="page-header">
         <h4 class="page-title">Edit Kematian Non Dukcapil</h4>
@@ -9,6 +14,12 @@
             <li class="nav-item"><a>Edit Data</a></li>
         </ul>
     </div>
+
+    <?php if (!$can_full): ?>
+        <div class="alert alert-info">
+            Anda login sebagai <b>admin</b>. Anda hanya dapat mengubah <b>Status</b> dan <b>Nomor Surat</b>.
+        </div>
+    <?php endif; ?>
 
     <div class="row">
         <div class="col-md-12">
@@ -52,19 +63,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group"><label>Nama</label>
-                                    <input type="text" name="nama_ahli_waris" class="form-control"
-                                        value="<?= html_escape($surat->nama_ahli_waris); ?>" placeholder="Nama ahli waris" required>
+                                    <input type="text" name="nama_ahli_waris" class="form-control" value="<?= html_escape($surat->nama_ahli_waris); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>NIK</label>
-                                    <input type="text" name="nik_ahli_waris" class="form-control"
-                                        value="<?= html_escape($surat->nik_ahli_waris); ?>" placeholder="16 digit NIK" required>
+                                    <input type="text" name="nik_ahli_waris" class="form-control" value="<?= html_escape($surat->nik_ahli_waris); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>Jenis Kelamin</label>
-                                    <select name="jenis_kelamin" class="form-control" required>
+                                    <select name="jenis_kelamin" class="form-control" <?= $dis ?> required>
                                         <option value="Laki-laki" <?= ($surat->jenis_kelamin == 'Laki-laki') ? 'selected' : ''; ?>>Laki-laki</option>
                                         <option value="Perempuan" <?= ($surat->jenis_kelamin == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
                                     </select>
@@ -72,19 +81,17 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>No. Telepon (WhatsApp)</label>
-                                    <input type="text" name="telepon_pemohon" class="form-control"
-                                        value="<?= html_escape($surat->telepon_pemohon ?? ''); ?>" placeholder="Contoh: 081234567890">
+                                    <input type="text" name="telepon_pemohon" class="form-control" value="<?= html_escape($surat->telepon_pemohon ?? ''); ?>" <?= $ro ?>>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>Hubungan</label>
-                                    <input type="text" name="hubungan_ahli_waris" class="form-control"
-                                        value="<?= html_escape($surat->hubungan_ahli_waris); ?>" placeholder="Contoh: Anak Kandung" required>
+                                    <input type="text" name="hubungan_ahli_waris" class="form-control" value="<?= html_escape($surat->hubungan_ahli_waris); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group"><label>Alamat</label>
-                                    <textarea name="alamat_ahli_waris" class="form-control" placeholder="Alamat lengkap ahli waris" required><?= html_escape($surat->alamat_ahli_waris); ?></textarea>
+                                    <textarea name="alamat_ahli_waris" class="form-control" <?= $ro ?> required><?= html_escape($surat->alamat_ahli_waris); ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -94,37 +101,32 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group"><label>Nama</label>
-                                    <input type="text" name="nama_almarhum" class="form-control"
-                                        value="<?= html_escape($surat->nama_almarhum); ?>" placeholder="Nama almarhum/ah" required>
+                                    <input type="text" name="nama_almarhum" class="form-control" value="<?= html_escape($surat->nama_almarhum); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>NIK</label>
-                                    <input type="text" name="nik_almarhum" class="form-control"
-                                        value="<?= html_escape($surat->nik_almarhum); ?>" placeholder="16 digit NIK (jika ada)" required>
+                                    <input type="text" name="nik_almarhum" class="form-control" value="<?= html_escape($surat->nik_almarhum); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group"><label>Keterangan (Hubungan)</label>
-                                    <input type="text" name="keterangan_almarhum" class="form-control"
-                                        value="<?= html_escape($surat->keterangan_almarhum); ?>" placeholder="Contoh: Ibu Kandung" required>
+                                    <input type="text" name="keterangan_almarhum" class="form-control" value="<?= html_escape($surat->keterangan_almarhum); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>Tempat Meninggal</label>
-                                    <input type="text" name="tempat_meninggal" class="form-control"
-                                        value="<?= html_escape($surat->tempat_meninggal); ?>" placeholder="Contoh: Rumah / RSUD dr. Suyoto" required>
+                                    <input type="text" name="tempat_meninggal" class="form-control" value="<?= html_escape($surat->tempat_meninggal); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"><label>Tanggal Meninggal</label>
-                                    <input type="date" name="tanggal_meninggal" class="form-control"
-                                        value="<?= html_escape($surat->tanggal_meninggal); ?>" required>
+                                    <input type="date" name="tanggal_meninggal" class="form-control" value="<?= html_escape($surat->tanggal_meninggal); ?>" <?= $ro ?> required>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group"><label>Alamat Almarhum/ah</label>
-                                    <textarea name="alamat_almarhum" class="form-control" placeholder="Alamat lengkap almarhum/ah" required><?= html_escape($surat->alamat_almarhum); ?></textarea>
+                                    <textarea name="alamat_almarhum" class="form-control" <?= $ro ?> required><?= html_escape($surat->alamat_almarhum); ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -133,8 +135,7 @@
                         <h5 class="mb-3">Keperluan Surat</h5>
                         <div class="form-group">
                             <label>Keperluan</label>
-                            <input type="text" name="keperluan" class="form-control"
-                                value="<?= html_escape($surat->keperluan ?? ''); ?>" placeholder="Contoh: Administrasi Perbankan / Klaim Asuransi" required>
+                            <input type="text" name="keperluan" class="form-control" value="<?= html_escape($surat->keperluan ?? ''); ?>" <?= $ro ?> required>
                         </div>
 
                         <hr>
@@ -143,23 +144,20 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Nomor Surat RT/RW</label>
-                                    <input type="text" class="form-control" name="nomor_surat_rt"
-                                        value="<?= html_escape($surat->nomor_surat_rt); ?>" placeholder="Nomor surat pengantar RT/RW">
+                                    <input type="text" class="form-control" name="nomor_surat_rt" value="<?= html_escape($surat->nomor_surat_rt); ?>" <?= $ro ?>>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tanggal Surat RT/RW</label>
-                                    <input type="date" class="form-control" name="tanggal_surat_rt"
-                                        value="<?= html_escape($surat->tanggal_surat_rt); ?>" placeholder="Pilih tanggal surat RT/RW">
+                                    <input type="date" class="form-control" name="tanggal_surat_rt" value="<?= html_escape($surat->tanggal_surat_rt); ?>" <?= $ro ?>>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Unggah Dokumen Pendukung (PDF/JPG/PNG, maks 2MB per file)</label>
-                                    <input type="file" class="form-control"
-                                        name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                                    <input type="file" class="form-control" name="dokumen_pendukung[]" accept=".pdf,.jpg,.jpeg,.png" multiple <?= $dis ?>>
                                     <small class="form-text text-muted">Dokumen baru akan <b>ditambahkan</b> ke lampiran yang sudah ada.</small>
 
                                     <?php

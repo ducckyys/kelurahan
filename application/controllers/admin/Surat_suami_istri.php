@@ -2,18 +2,15 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Controller: Surat_suami_istri
- *
  * @property M_suami_istri $M_suami_istri
  * @property CI_Session $session
  * @property CI_Upload $upload
  * @property CI_Form_validation $form_validation
  * @property CI_Loader $load
  * @property CI_DB_query_builder $db
- * @property CI_PDF $pdf
  * @property CI_Input $input
+ * @property CI_PDF $pdf
  */
-
 class Surat_suami_istri extends CI_Controller
 {
     private $pendukung_dir;
@@ -25,13 +22,17 @@ class Surat_suami_istri extends CI_Controller
             redirect(base_url("login"));
         }
         $this->load->model('M_suami_istri');
+        $this->load->library(['upload', 'form_validation']);
+        $this->load->helper(['url', 'form']);
 
         $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
-        if (!is_dir($this->pendukung_dir)) {
-            @mkdir($this->pendukung_dir, 0755, true);
-        }
-        $this->load->library('upload');
-        $this->load->helper(['url', 'form']);
+        if (!is_dir($this->pendukung_dir)) @mkdir($this->pendukung_dir, 0755, true);
+    }
+
+    private function is_superadmin()
+    {
+        // konsisten dengan modul lain (superadmin = id_level '1')
+        return $this->session->userdata('id_level') === '1';
     }
 
     public function index()
@@ -47,7 +48,7 @@ class Surat_suami_istri extends CI_Controller
     public function detail($id)
     {
         $data['surat'] = $this->M_suami_istri->get_by_id($id);
-        if (!$data['surat']) redirect('admin/surat_suami_istri');
+        if (!$data['surat']) return redirect('admin/surat_suami_istri');
 
         $data['title'] = "Detail Pengajuan Suami Istri";
         $this->load->view('layouts/header', $data);
@@ -59,25 +60,23 @@ class Surat_suami_istri extends CI_Controller
     public function edit($id)
     {
         $data['surat'] = $this->M_suami_istri->get_by_id($id);
-        if (!$data['surat']) redirect('admin/surat_suami_istri');
+        if (!$data['surat']) return redirect('admin/surat_suami_istri');
 
-        $data['title'] = "Edit Surat Keterangan Suami Istri";
+        $data['title']          = "Edit Surat Keterangan Suami Istri";
+        $data['can_full_edit']  = $this->is_superadmin(); // dipakai di view
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/suami_istri/v_edit', $data);
         $this->load->view('layouts/footer');
     }
 
-    /** === Upload multi dokumen pendukung (seperti SKTM) === */
+    /** Upload multi dokumen pendukung (opsional) */
     private function upload_multiple_from_admin()
     {
-        if (
-            empty($_FILES['dokumen_pendukung']['name']) ||
-            empty($_FILES['dokumen_pendukung']['name'][0])
-        ) {
-            return []; // tidak wajib saat edit
+        if (empty($_FILES['dokumen_pendukung']['name']) || empty($_FILES['dokumen_pendukung']['name'][0])) {
+            return [];
         }
-
         $allowed  = 'pdf|jpg|jpeg|png';
         $max_kb   = 2048;
         $files    = $_FILES['dokumen_pendukung'];
@@ -86,10 +85,7 @@ class Surat_suami_istri extends CI_Controller
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['error'][$i] !== UPLOAD_ERR_OK) {
-                $this->session->set_flashdata(
-                    'error',
-                    'Gagal unggah salah satu dokumen (error code ' . $files['error'][$i] . ').'
-                );
+                $this->session->set_flashdata('error', 'Gagal unggah salah satu dokumen (error ' . $files['error'][$i] . ').');
                 return false;
             }
 
@@ -108,20 +104,36 @@ class Surat_suami_istri extends CI_Controller
                 'encrypt_name'  => TRUE,
             ];
             $this->upload->initialize($config, true);
-
             if (!$this->upload->do_upload('single')) {
                 $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
                 return false;
             }
-            $data       = $this->upload->data();
-            $uploaded[] = $data['file_name'];
+            $data        = $this->upload->data();
+            $uploaded[]  = $data['file_name'];
         }
         return $uploaded;
     }
 
     public function update($id)
     {
-        // validasi singkat (sesuaikan dengan view)
+        // ===== Admin biasa: hanya Status & Nomor Surat =====
+        if (!$this->is_superadmin()) {
+            $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
+            $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
+            if ($this->form_validation->run() === FALSE) {
+                $this->session->set_flashdata('error', validation_errors());
+                return redirect('admin/surat_suami_istri/edit/' . $id);
+            }
+            $data = [
+                'status'      => $this->input->post('status', true),
+                'nomor_surat' => $this->input->post('nomor_surat', true) ?: null,
+            ];
+            $this->M_suami_istri->update($id, $data);
+            $this->session->set_flashdata('success', 'Status / Nomor surat berhasil diperbarui.');
+            return redirect('admin/surat_suami_istri/detail/' . $id);
+        }
+
+        // ===== Superadmin: validasi & update penuh =====
         $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
 
@@ -135,7 +147,6 @@ class Surat_suami_istri extends CI_Controller
 
         $this->form_validation->set_rules('keperluan', 'Keperluan', 'required|trim');
 
-        // nomor/tanggal surat RT bisa tetap dipakai (hanya metadata, bukan file)
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT/RW', 'trim');
         $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT/RW', 'trim');
 
@@ -150,48 +161,45 @@ class Surat_suami_istri extends CI_Controller
             return redirect('admin/surat_suami_istri');
         }
 
-        // gabung lampiran lama + baru
+        // lampiran lama + baru
         $existing = [];
         if (!empty($row->dokumen_pendukung)) {
             $dec = json_decode($row->dokumen_pendukung, true);
             if (is_array($dec)) $existing = $dec;
             elseif (is_string($row->dokumen_pendukung)) $existing = [$row->dokumen_pendukung];
         }
-
         $newFiles = $this->upload_multiple_from_admin();
         if ($newFiles === false) {
             return redirect('admin/surat_suami_istri/edit/' . $id);
         }
         $allFiles = array_values(array_filter(array_merge($existing, $newFiles)));
 
-        $post = $this->input->post(NULL, TRUE);
+        $p = $this->input->post(NULL, TRUE);
         $data = [
-            'status'                    => $post['status'],
-            'nomor_surat'               => $post['nomor_surat'] ?: NULL,
+            'status'                   => $p['status'],
+            'nomor_surat'              => $p['nomor_surat'] ?: NULL,
 
-            'nama_pihak_satu'           => $post['nama_pihak_satu'],
-            'nik_pihak_satu'            => $post['nik_pihak_satu'],
-            'telepon_pemohon'           => $post['telepon_pemohon'] ?? null,
-            'tempat_lahir_pihak_satu'   => $post['tempat_lahir_pihak_satu'] ?? null,
-            'tanggal_lahir_pihak_satu'  => $post['tanggal_lahir_pihak_satu'] ?? null,
-            'jenis_kelamin_pihak_satu'  => $post['jenis_kelamin_pihak_satu'] ?? null,
-            'agama_pihak_satu'          => $post['agama_pihak_satu'] ?? null,
-            'pekerjaan_pihak_satu'      => $post['pekerjaan_pihak_satu'] ?? null,
-            'warganegara_pihak_satu'    => $post['warganegara_pihak_satu'] ?? null,
-            'alamat_pihak_satu'         => $post['alamat_pihak_satu'],
+            'nama_pihak_satu'          => $p['nama_pihak_satu'],
+            'nik_pihak_satu'           => $p['nik_pihak_satu'],
+            'telepon_pemohon'          => $p['telepon_pemohon'] ?? null,
+            'tempat_lahir_pihak_satu'  => $p['tempat_lahir_pihak_satu'] ?? null,
+            'tanggal_lahir_pihak_satu' => $p['tanggal_lahir_pihak_satu'] ?? null,
+            'jenis_kelamin_pihak_satu' => $p['jenis_kelamin_pihak_satu'] ?? null,
+            'agama_pihak_satu'         => $p['agama_pihak_satu'] ?? null,
+            'pekerjaan_pihak_satu'     => $p['pekerjaan_pihak_satu'] ?? null,
+            'warganegara_pihak_satu'   => $p['warganegara_pihak_satu'] ?? null,
+            'alamat_pihak_satu'        => $p['alamat_pihak_satu'],
 
-            'nama_pihak_dua'            => $post['nama_pihak_dua'],
-            'nik_pihak_dua'             => $post['nik_pihak_dua'],
-            'alamat_pihak_dua'          => $post['alamat_pihak_dua'],
+            'nama_pihak_dua'           => $p['nama_pihak_dua'],
+            'nik_pihak_dua'            => $p['nik_pihak_dua'],
+            'alamat_pihak_dua'         => $p['alamat_pihak_dua'],
 
-            'keperluan'                 => $post['keperluan'],
+            'keperluan'                => $p['keperluan'],
 
-            // metadata RT (bukan file)
-            'nomor_surat_rt'            => $post['nomor_surat_rt'] ?? null,
-            'tanggal_surat_rt'          => $post['tanggal_surat_rt'] ?? null,
+            'nomor_surat_rt'           => $p['nomor_surat_rt'] ?? null,
+            'tanggal_surat_rt'         => $p['tanggal_surat_rt'] ?? null,
 
-            // lampiran multi
-            'dokumen_pendukung'         => !empty($allFiles) ? json_encode($allFiles) : null,
+            'dokumen_pendukung'        => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
 
         $this->M_suami_istri->update($id, $data);
@@ -225,14 +233,12 @@ class Surat_suami_istri extends CI_Controller
 
     public function delete($id)
     {
-        if ($this->session->userdata('role') !== 'superadmin') {
+        if (!$this->is_superadmin()) {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
             return redirect('admin/surat_suami_istri');
         }
 
         $row = $this->M_suami_istri->get_by_id($id);
-
-        // hapus dokumen pendukung (JSON) di uploads/pendukung
         if ($row && !empty($row->dokumen_pendukung)) {
             $files = json_decode($row->dokumen_pendukung, true);
             if (is_string($row->dokumen_pendukung) && !is_array($files)) $files = [$row->dokumen_pendukung];

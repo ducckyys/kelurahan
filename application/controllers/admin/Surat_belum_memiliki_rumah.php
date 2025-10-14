@@ -31,6 +31,11 @@ class Surat_belum_memiliki_rumah extends CI_Controller
         }
     }
 
+    private function is_superadmin()
+    {
+        return $this->session->userdata('id_level') === '1';
+    }
+
     public function index()
     {
         $data['title'] = "Data Surat Belum Memiliki Rumah";
@@ -58,7 +63,9 @@ class Surat_belum_memiliki_rumah extends CI_Controller
         $data['surat'] = $this->M_belum_memiliki_rumah->get_by_id($id);
         if (!$data['surat']) return redirect('admin/surat_belum_memiliki_rumah');
 
-        $data['title'] = "Edit Surat Belum Memiliki Rumah";
+        $data['title']         = "Edit Surat Belum Memiliki Rumah";
+        $data['can_full_edit'] = $this->is_superadmin();
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/belum_memiliki_rumah/v_edit', $data);
@@ -72,11 +79,11 @@ class Surat_belum_memiliki_rumah extends CI_Controller
             return []; // tidak wajib saat edit
         }
 
-        $allowed = 'pdf|jpg|jpeg|png';
-        $max_kb  = 2048;
+        $allowed  = 'pdf|jpg|jpeg|png';
+        $max_kb   = 2048;
         $uploaded = [];
-        $files = $_FILES['dokumen_pendukung'];
-        $count = count($files['name']);
+        $files    = $_FILES['dokumen_pendukung'];
+        $count    = count($files['name']);
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['error'][$i] !== UPLOAD_ERR_OK) {
@@ -104,7 +111,7 @@ class Surat_belum_memiliki_rumah extends CI_Controller
                 $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
                 return false;
             }
-            $data = $this->upload->data();
+            $data       = $this->upload->data();
             $uploaded[] = $data['file_name'];
         }
         return $uploaded;
@@ -112,6 +119,27 @@ class Surat_belum_memiliki_rumah extends CI_Controller
 
     public function update($id)
     {
+        // ===== Admin biasa: hanya boleh ubah nomor_surat & status =====
+        if (!$this->is_superadmin()) {
+            $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
+            $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
+
+            if ($this->form_validation->run() === FALSE) {
+                $this->session->set_flashdata('error', validation_errors());
+                return redirect('admin/surat_belum_memiliki_rumah/edit/' . $id);
+            }
+
+            $data = [
+                'nomor_surat' => $this->input->post('nomor_surat', true) ?: null,
+                'status'      => $this->input->post('status', true),
+            ];
+
+            $this->db->where('id', $id)->update('surat_belum_memiliki_rumah', $data);
+            $this->session->set_flashdata('success', 'Status / Nomor surat berhasil diperbarui.');
+            return redirect('admin/surat_belum_memiliki_rumah/detail/' . $id);
+        }
+
+        // ===== Superadmin: validasi lengkap + upload lampiran =====
         $this->form_validation->set_rules('nama_pemohon', 'Nama Pemohon', 'required|trim');
         $this->form_validation->set_rules('nik', 'NIK', 'required|trim|min_length[16]|max_length[16]|numeric');
         $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required|trim');
@@ -138,8 +166,7 @@ class Surat_belum_memiliki_rumah extends CI_Controller
         $existing = [];
         if ($row && !empty($row->dokumen_pendukung)) {
             $dec = json_decode($row->dokumen_pendukung, true);
-            if (is_array($dec)) $existing = $dec;
-            elseif (is_string($row->dokumen_pendukung)) $existing = [$row->dokumen_pendukung];
+            $existing = is_array($dec) ? $dec : [$row->dokumen_pendukung];
         }
 
         // Upload file baru (opsional)
@@ -165,7 +192,7 @@ class Surat_belum_memiliki_rumah extends CI_Controller
             'nomor_surat_rt'    => $this->input->post('nomor_surat_rt', true),
             'tanggal_surat_rt'  => $this->input->post('tanggal_surat_rt', true),
             'nomor_surat'       => $this->input->post('nomor_surat', true) ?: null,
-            'id'           => $this->session->userdata('id') ?: null,
+            // HAPUS field 'id' yang dulu salah set. Jangan ubah PK!
             'dokumen_pendukung' => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
 
@@ -204,7 +231,7 @@ class Surat_belum_memiliki_rumah extends CI_Controller
 
     public function delete($id)
     {
-        if ($this->session->userdata('role') !== 'superadmin') {
+        if ($this->session->userdata('id_level') !== '1') {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
             redirect('admin/surat_belum_memiliki_rumah');
             return;

@@ -8,7 +8,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Upload $upload
  * @property CI_DB_query_builder $db
  * @property CI_Form_validation $form_validation
- * @property CI_pdf $pdf
+ * @property CI_Loader $load
+ * @property CI_Email $email
+ * @property CI_PDF $pdf
  */
 class Surat_belum_bekerja extends CI_Controller
 {
@@ -28,6 +30,11 @@ class Surat_belum_bekerja extends CI_Controller
         if (!is_dir($this->pendukung_dir)) {
             @mkdir($this->pendukung_dir, 0755, true);
         }
+    }
+
+    private function is_superadmin()
+    {
+        return $this->session->userdata('id_level') === '1';
     }
 
     public function index()
@@ -57,7 +64,9 @@ class Surat_belum_bekerja extends CI_Controller
         $data['surat'] = $this->M_belum_bekerja->get_by_id($id);
         if (!$data['surat']) return redirect('admin/surat_belum_bekerja');
 
-        $data['title'] = "Edit Surat Ket. Belum Bekerja";
+        $data['title']         = "Edit Surat Ket. Belum Bekerja";
+        $data['can_full_edit'] = $this->is_superadmin();
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/surat_belum_bekerja/v_edit', $data);
@@ -70,11 +79,11 @@ class Surat_belum_bekerja extends CI_Controller
             return []; // opsional saat edit
         }
 
-        $allowed = 'pdf|jpg|jpeg|png';
-        $max_kb  = 2048;
+        $allowed  = 'pdf|jpg|jpeg|png';
+        $max_kb   = 2048;
         $uploaded = [];
-        $files = $_FILES['dokumen_pendukung'];
-        $count = count($files['name']);
+        $files    = $_FILES['dokumen_pendukung'];
+        $count    = count($files['name']);
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['error'][$i] !== UPLOAD_ERR_OK) {
@@ -102,7 +111,7 @@ class Surat_belum_bekerja extends CI_Controller
                 $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
                 return false;
             }
-            $data = $this->upload->data();
+            $data       = $this->upload->data();
             $uploaded[] = $data['file_name'];
         }
         return $uploaded;
@@ -110,7 +119,26 @@ class Surat_belum_bekerja extends CI_Controller
 
     public function update($id)
     {
-        // Validasi
+        // === Admin biasa: hanya boleh ubah nomor_surat & status ===
+        if (!$this->is_superadmin()) {
+            $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
+            $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
+
+            if ($this->form_validation->run() === FALSE) {
+                $this->session->set_flashdata('error', validation_errors());
+                return redirect('admin/surat_belum_bekerja/edit/' . $id);
+            }
+
+            $data = [
+                'nomor_surat' => $this->input->post('nomor_surat', true) ?: null,
+                'status'      => $this->input->post('status', true),
+            ];
+            $this->db->where('id', $id)->update('surat_belum_bekerja', $data);
+            $this->session->set_flashdata('success', 'Status / Nomor surat berhasil diperbarui.');
+            return redirect('admin/surat_belum_bekerja/detail/' . $id);
+        }
+
+        // === Superadmin: validasi lengkap + upload lampiran ===
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT', 'required|trim');
         $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT', 'required|trim');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
@@ -139,8 +167,7 @@ class Surat_belum_bekerja extends CI_Controller
         $existing = [];
         if ($row && !empty($row->dokumen_pendukung)) {
             $dec = json_decode($row->dokumen_pendukung, true);
-            if (is_array($dec)) $existing = $dec;
-            else $existing = [$row->dokumen_pendukung];
+            $existing = is_array($dec) ? $dec : [$row->dokumen_pendukung];
         }
 
         // Upload baru (opsional)
@@ -168,7 +195,6 @@ class Surat_belum_bekerja extends CI_Controller
             'pekerjaan'        => $this->input->post('pekerjaan', true),
             'alamat'           => $this->input->post('alamat', true),
             'keperluan'        => $this->input->post('keperluan', true),
-            'id_user'          => $this->session->userdata('id_user') ?: null,
 
             'dokumen_pendukung' => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
@@ -180,7 +206,7 @@ class Surat_belum_bekerja extends CI_Controller
 
     public function delete($id)
     {
-        if ($this->session->userdata('role') !== 'superadmin') {
+        if ($this->session->userdata('id_level') !== '1') {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
             redirect('admin/surat_belum_bekerja');
             return;

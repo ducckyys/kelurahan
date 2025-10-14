@@ -2,14 +2,16 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * @property CI_Session session
- * @property CI_DB_query_builder db
- * @property M_domisili_yayasan M_domisili_yayasan
- * @property CI_Input input
- * @property CI_Loader load
- * @property CI_Form_validation form_validation
- * @property CI_Upload upload
- * @property CI_PDF pdf
+ * @property CI_Session $session
+ * @property CI_DB_query_builder $db
+ * @property M_domisili_yayasan $M_domisili_yayasan
+ * @property CI_Input $input
+ * @property CI_Loader $load
+ * @property CI_Form_validation $form_validation
+ * @property CI_Upload $upload
+ * @property CI_Email $email
+ * @property CI_URI $uri
+ * @property CI_PDF $pdf
  */
 class Surat_domisili_yayasan extends CI_Controller
 {
@@ -29,6 +31,12 @@ class Surat_domisili_yayasan extends CI_Controller
         if (!is_dir($this->pendukung_dir)) {
             @mkdir($this->pendukung_dir, 0755, true);
         }
+    }
+
+    private function is_superadmin()
+    {
+        // konsisten dengan modul lain: superadmin = id_level '1'
+        return $this->session->userdata('id_level') === '1';
     }
 
     public function index()
@@ -58,7 +66,9 @@ class Surat_domisili_yayasan extends CI_Controller
         $data['surat'] = $this->M_domisili_yayasan->get_by_id($id);
         if (!$data['surat']) return redirect('admin/surat_domisili_yayasan');
 
-        $data['title'] = "Edit Surat Domisili Yayasan";
+        $data['title']         = "Edit Surat Domisili Yayasan";
+        $data['can_full_edit'] = $this->is_superadmin(); // untuk locking field di view
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/surat_domisili_yayasan/v_edit', $data);
@@ -71,11 +81,11 @@ class Surat_domisili_yayasan extends CI_Controller
             return []; // optional pada edit
         }
 
-        $allowed = 'pdf|jpg|jpeg|png';
-        $max_kb  = 2048;
+        $allowed  = 'pdf|jpg|jpeg|png';
+        $max_kb   = 2048;
         $uploaded = [];
-        $files = $_FILES['dokumen_pendukung'];
-        $count = count($files['name']);
+        $files    = $_FILES['dokumen_pendukung'];
+        $count    = count($files['name']);
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['error'][$i] !== UPLOAD_ERR_OK) {
@@ -103,7 +113,7 @@ class Surat_domisili_yayasan extends CI_Controller
                 $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
                 return false;
             }
-            $data = $this->upload->data();
+            $data       = $this->upload->data();
             $uploaded[] = $data['file_name'];
         }
         return $uploaded;
@@ -111,28 +121,48 @@ class Surat_domisili_yayasan extends CI_Controller
 
     public function update($id)
     {
+        // ===== Admin biasa: hanya boleh ubah nomor_surat & status =====
+        if (!$this->is_superadmin()) {
+            $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
+            $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
+
+            if ($this->form_validation->run() === FALSE) {
+                $this->session->set_flashdata('error', validation_errors());
+                return redirect('admin/surat_domisili_yayasan/edit/' . $id);
+            }
+
+            $data = [
+                'nomor_surat' => $this->input->post('nomor_surat', true) ?: null,
+                'status'      => $this->input->post('status', true),
+            ];
+            $this->db->where('id', $id)->update('surat_domisili_yayasan', $data);
+            $this->session->set_flashdata('success', 'Status / Nomor surat berhasil diperbarui.');
+            return redirect('admin/surat_domisili_yayasan/detail/' . $id);
+        }
+
+        // ===== Superadmin: validasi lengkap + upload lampiran =====
         $rules = [
-            ['field' => 'nama_penanggung_jawab', 'label' => 'Nama Penanggung Jawab', 'rules' => 'required|trim'],
-            ['field' => 'tempat_lahir', 'label' => 'Tempat Lahir', 'rules' => 'required|trim'],
-            ['field' => 'tanggal_lahir', 'label' => 'Tanggal Lahir', 'rules' => 'required|trim'],
-            ['field' => 'nik', 'label' => 'NIK', 'rules' => 'required|trim|min_length[16]|max_length[20]|numeric'],
-            ['field' => 'jenis_kelamin', 'label' => 'Jenis Kelamin', 'rules' => 'required|in_list[Laki-laki,Perempuan]'],
-            ['field' => 'kewarganegaraan', 'label' => 'Kewarganegaraan', 'rules' => 'required|trim'],
-            ['field' => 'agama', 'label' => 'Agama', 'rules' => 'required|trim'],
-            ['field' => 'alamat_pemohon', 'label' => 'Alamat Pemohon', 'rules' => 'required|trim'],
-            ['field' => 'nama_organisasi', 'label' => 'Nama Organisasi', 'rules' => 'required|trim'],
-            ['field' => 'jenis_kegiatan', 'label' => 'Jenis Kegiatan', 'rules' => 'required|trim'],
-            ['field' => 'alamat_kantor', 'label' => 'Alamat Kantor', 'rules' => 'required|trim'],
-            ['field' => 'jumlah_pengurus', 'label' => 'Jumlah Pengurus', 'rules' => 'required|integer'],
-            ['field' => 'nama_notaris_pendirian', 'label' => 'Nama Notaris Pendirian', 'rules' => 'required|trim'],
-            ['field' => 'nomor_akta_pendirian', 'label' => 'Nomor Akta Pendirian', 'rules' => 'required|trim'],
-            ['field' => 'tanggal_akta_pendirian', 'label' => 'Tanggal Akta Pendirian', 'rules' => 'required|trim'],
-            ['field' => 'npwp', 'label' => 'NPWP', 'rules' => 'required|trim'],
-            ['field' => 'nomor_surat_rt', 'label' => 'Nomor Surat RT', 'rules' => 'required|trim'],
-            ['field' => 'tanggal_surat_rt', 'label' => 'Tanggal Surat RT', 'rules' => 'required|trim'],
-            ['field' => 'nomor_surat', 'label' => 'Nomor Surat', 'rules' => 'trim'],
-            ['field' => 'status', 'label' => 'Status Pengajuan', 'rules' => 'required|in_list[Pending,Disetujui,Ditolak]'],
-            ['field' => 'telepon_pemohon', 'label' => 'No. Telepon', 'rules' => 'trim'],
+            ['field' => 'nama_penanggung_jawab',   'label' => 'Nama Penanggung Jawab',   'rules' => 'required|trim'],
+            ['field' => 'tempat_lahir',            'label' => 'Tempat Lahir',            'rules' => 'required|trim'],
+            ['field' => 'tanggal_lahir',           'label' => 'Tanggal Lahir',           'rules' => 'required|trim'],
+            ['field' => 'nik',                     'label' => 'NIK',                     'rules' => 'required|trim|min_length[16]|max_length[20]|numeric'],
+            ['field' => 'jenis_kelamin',           'label' => 'Jenis Kelamin',           'rules' => 'required|in_list[Laki-laki,Perempuan]'],
+            ['field' => 'kewarganegaraan',         'label' => 'Kewarganegaraan',         'rules' => 'required|trim'],
+            ['field' => 'agama',                   'label' => 'Agama',                   'rules' => 'required|trim'],
+            ['field' => 'alamat_pemohon',          'label' => 'Alamat Pemohon',          'rules' => 'required|trim'],
+            ['field' => 'nama_organisasi',         'label' => 'Nama Organisasi',         'rules' => 'required|trim'],
+            ['field' => 'jenis_kegiatan',          'label' => 'Jenis Kegiatan',          'rules' => 'required|trim'],
+            ['field' => 'alamat_kantor',           'label' => 'Alamat Kantor',           'rules' => 'required|trim'],
+            ['field' => 'jumlah_pengurus',         'label' => 'Jumlah Pengurus',         'rules' => 'required|integer'],
+            ['field' => 'nama_notaris_pendirian',  'label' => 'Nama Notaris Pendirian',  'rules' => 'required|trim'],
+            ['field' => 'nomor_akta_pendirian',    'label' => 'Nomor Akta Pendirian',    'rules' => 'required|trim'],
+            ['field' => 'tanggal_akta_pendirian',  'label' => 'Tanggal Akta Pendirian',  'rules' => 'required|trim'],
+            ['field' => 'npwp',                    'label' => 'NPWP',                    'rules' => 'required|trim'],
+            ['field' => 'nomor_surat_rt',          'label' => 'Nomor Surat RT',          'rules' => 'required|trim'],
+            ['field' => 'tanggal_surat_rt',        'label' => 'Tanggal Surat RT',        'rules' => 'required|trim'],
+            ['field' => 'nomor_surat',             'label' => 'Nomor Surat',             'rules' => 'trim'],
+            ['field' => 'status',                  'label' => 'Status Pengajuan',        'rules' => 'required|in_list[Pending,Disetujui,Ditolak]'],
+            ['field' => 'telepon_pemohon',         'label' => 'No. Telepon',             'rules' => 'trim'],
         ];
         $this->form_validation->set_rules($rules);
 
@@ -142,11 +172,12 @@ class Surat_domisili_yayasan extends CI_Controller
         }
 
         $row = $this->M_domisili_yayasan->get_by_id($id);
+
+        // gabung lampiran lama + baru
         $existing = [];
         if ($row && !empty($row->dokumen_pendukung)) {
             $dec = json_decode($row->dokumen_pendukung, true);
-            if (is_array($dec)) $existing = $dec;
-            else $existing = [$row->dokumen_pendukung];
+            $existing = is_array($dec) ? $dec : [$row->dokumen_pendukung];
         }
 
         $newFiles = $this->upload_multiple_from_admin();
@@ -191,7 +222,7 @@ class Surat_domisili_yayasan extends CI_Controller
 
     public function delete($id)
     {
-        if ($this->session->userdata('role') !== 'superadmin') {
+        if ($this->session->userdata('id_level') !== '1') {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
             redirect('admin/surat_domisili_yayasan');
             return;
@@ -234,7 +265,7 @@ class Surat_domisili_yayasan extends CI_Controller
 
         $data['title'] = "Cetak Surat Domisili - " . $data['surat']->nama_organisasi;
         $clean_name = preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama_organisasi);
-        $filename = 'Domisili-Yayasan-' . $clean_name;
+        $filename   = 'Domisili-Yayasan-' . $clean_name;
 
         $html = $this->load->view('admin/surat_domisili_yayasan/v_cetak', $data, true);
         $this->load->library('pdf');

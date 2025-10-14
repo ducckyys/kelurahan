@@ -7,8 +7,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Form_validation $form_validation
  * @property CI_Upload $upload
  * @property M_kematian_nondukcapil $M_kematian_nondukcapil
- * @property PDF $pdf
  * @property CI_DB_query_builder $db
+ * @property CI_Loader $load
+ * @property CI_URI $uri
+ * @property CI_PDF $pdf
  */
 class Surat_kematian_nondukcapil extends CI_Controller
 {
@@ -22,19 +24,24 @@ class Surat_kematian_nondukcapil extends CI_Controller
         }
         $this->load->model('M_kematian_nondukcapil');
 
-        // direktori lampiran
         $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
         if (!is_dir($this->pendukung_dir)) {
             @mkdir($this->pendukung_dir, 0755, true);
         }
-        $this->load->library('upload');
+        $this->load->library(['upload', 'form_validation']);
         $this->load->helper(['url', 'form']);
+    }
+
+    private function is_superadmin()
+    {
+        // konsisten dengan modul lain: superadmin = id_level '1'
+        return $this->session->userdata('id_level') === '1';
     }
 
     public function index()
     {
         $data['title'] = 'Data Surat Kematian (Non Dukcapil)';
-        $data['list']  = $this->M_kematian_nondukcapil->get_all(); // samakan pola
+        $data['list']  = $this->M_kematian_nondukcapil->get_all();
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/kematian_nondukcapil/v_list', $data);
@@ -44,9 +51,8 @@ class Surat_kematian_nondukcapil extends CI_Controller
     public function detail($id)
     {
         $data['surat'] = $this->M_kematian_nondukcapil->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_kematian_nondukcapil');
-        }
+        if (!$data['surat']) return redirect('admin/surat_kematian_nondukcapil');
+
         $data['title'] = "Detail Surat Kematian (Non Dukcapil)";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -57,21 +63,22 @@ class Surat_kematian_nondukcapil extends CI_Controller
     public function edit($id)
     {
         $data['surat'] = $this->M_kematian_nondukcapil->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_kematian_nondukcapil');
-        }
-        $data['title'] = "Edit Surat Kematian (Non Dukcapil)";
+        if (!$data['surat']) return redirect('admin/surat_kematian_nondukcapil');
+
+        $data['title']         = "Edit Surat Kematian (Non Dukcapil)";
+        $data['can_full_edit'] = $this->is_superadmin();
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/kematian_nondukcapil/v_edit', $data);
         $this->load->view('layouts/footer');
     }
 
-    /** upload multi dokumen pendukung (admin) -> return array filenames, false kalau error */
+    /** upload multi dokumen pendukung -> return array filename; false jika error */
     private function upload_multiple_from_admin()
     {
         if (empty($_FILES['dokumen_pendukung']['name']) || empty($_FILES['dokumen_pendukung']['name'][0])) {
-            return []; // tidak wajib saat edit
+            return [];
         }
         $allowed = 'pdf|jpg|jpeg|png';
         $max_kb  = 2048;
@@ -85,11 +92,13 @@ class Surat_kematian_nondukcapil extends CI_Controller
                 $this->session->set_flashdata('error', 'Gagal unggah salah satu dokumen (error code ' . $files['error'][$i] . ').');
                 return false;
             }
-            $_FILES['single']['name']     = $files['name'][$i];
-            $_FILES['single']['type']     = $files['type'][$i];
-            $_FILES['single']['tmp_name'] = $files['tmp_name'][$i];
-            $_FILES['single']['error']    = $files['error'][$i];
-            $_FILES['single']['size']     = $files['size'][$i];
+            $_FILES['single'] = [
+                'name'     => $files['name'][$i],
+                'type'     => $files['type'][$i],
+                'tmp_name' => $files['tmp_name'][$i],
+                'error'    => $files['error'][$i],
+                'size'     => $files['size'][$i],
+            ];
 
             $config = [
                 'upload_path'   => $this->pendukung_dir,
@@ -103,14 +112,33 @@ class Surat_kematian_nondukcapil extends CI_Controller
                 return false;
             }
             $data = $this->upload->data();
-            $uploaded[] = $data['file_name']; // simpan NAMA FILE saja (pola SKTM)
+            $uploaded[] = $data['file_name'];
         }
         return $uploaded;
     }
 
     public function update($id)
     {
-        // === rules: pola SKTM (tanpa fallback) ===
+        // ===== Admin biasa: hanya boleh Status & Nomor Surat =====
+        if (!$this->is_superadmin()) {
+            $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
+            $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
+
+            if ($this->form_validation->run() === FALSE) {
+                $this->session->set_flashdata('error', validation_errors());
+                return redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
+            }
+
+            $data = [
+                'nomor_surat' => $this->input->post('nomor_surat', true) ?: null,
+                'status'      => $this->input->post('status', true),
+            ];
+            $this->M_kematian_nondukcapil->update($id, $data);
+            $this->session->set_flashdata('success', 'Status / Nomor surat berhasil diperbarui.');
+            return redirect('admin/surat_kematian_nondukcapil/detail/' . $id);
+        }
+
+        // ===== Superadmin: validasi lengkap =====
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT', 'trim');
         $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT', 'trim');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
@@ -138,13 +166,13 @@ class Surat_kematian_nondukcapil extends CI_Controller
         }
 
         $surat    = $this->M_kematian_nondukcapil->get_by_id($id);
+
+        // gabung lampiran lama + baru
         $existing = [];
         if ($surat && !empty($surat->dokumen_pendukung)) {
             $decoded = json_decode($surat->dokumen_pendukung, true);
-            if (is_array($decoded)) $existing = $decoded;
-            else if (is_string($surat->dokumen_pendukung)) $existing = [$surat->dokumen_pendukung];
+            $existing = is_array($decoded) ? $decoded : [$surat->dokumen_pendukung];
         }
-
         $newFiles = $this->upload_multiple_from_admin();
         if ($newFiles === false) {
             return redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
@@ -173,31 +201,26 @@ class Surat_kematian_nondukcapil extends CI_Controller
 
             'keperluan'           => $this->input->post('keperluan', true),
 
-            'id'             => $this->session->userdata('id') ?: null,
             'dokumen_pendukung'   => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
 
         $this->M_kematian_nondukcapil->update($id, $data);
-
         $this->session->set_flashdata('success', 'Data Kematian Non Dukcapil berhasil diperbarui.');
-        redirect('admin/surat_kematian_nondukcapil/detail/' . $id);
+        return redirect('admin/surat_kematian_nondukcapil/detail/' . $id);
     }
 
     public function cetak($id)
     {
         $data['surat'] = $this->M_kematian_nondukcapil->get_by_id($id);
-        if (!$data['surat']) {
-            redirect('admin/surat_kematian_nondukcapil');
-        }
+        if (!$data['surat']) return redirect('admin/surat_kematian_nondukcapil');
+
         if (empty($data['surat']->nomor_surat)) {
             $this->session->set_flashdata('error', 'Gagal cetak! Nomor surat belum diisi.');
-            redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
-            return;
+            return redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
         }
         if ($data['surat']->status != 'Disetujui') {
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
-            redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
-            return;
+            return redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
         }
 
         $data['title'] = "Cetak Surat Kematian (Non Dukcapil) - " . $data['surat']->nama_almarhum;
@@ -209,10 +232,9 @@ class Surat_kematian_nondukcapil extends CI_Controller
 
     public function delete($id)
     {
-        if ($this->session->userdata('role') !== 'superadmin') {
+        if (!$this->is_superadmin()) {
             $this->session->set_flashdata('error', 'Akses ditolak! Hanya superadmin yang dapat menghapus data.');
-            redirect('admin/surat_kematian_nondukcapil');
-            return;
+            return redirect('admin/surat_kematian_nondukcapil');
         }
 
         $row = $this->M_kematian_nondukcapil->get_by_id($id);
@@ -229,6 +251,6 @@ class Surat_kematian_nondukcapil extends CI_Controller
 
         $this->M_kematian_nondukcapil->delete($id);
         $this->session->set_flashdata('success', 'Data berhasil dihapus.');
-        redirect('admin/surat_kematian_nondukcapil');
+        return redirect('admin/surat_kematian_nondukcapil');
     }
 }
