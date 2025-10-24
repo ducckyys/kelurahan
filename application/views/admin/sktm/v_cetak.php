@@ -205,17 +205,26 @@
             clear: both;
         }
 
+        :root {
+            --ttd-width: 100mm;
+            /* boleh naikkan 105–120mm kalau masih kependekan */
+        }
+
         .ttd {
-            width: 60mm;
-            /* agak sempit agar hemat ruang */
+            width: var(--ttd-width);
             float: right;
             text-align: center;
             line-height: 1.1;
             margin-top: 4mm;
         }
 
-        .ttd p {
-            margin: 2px 0;
+        .ttd .nama-ttd {
+            font-weight: bold;
+            text-decoration: underline;
+            white-space: nowrap;
+            /* <-- KUNCI: jangan terbungkus */
+            word-break: keep-all;
+            /* jaga kata/gelar tidak dipecah */
         }
 
         /* ==== Cetak bersih ==== */
@@ -336,15 +345,24 @@
         </p>
 
         <div class="closing-section">
+            <?php
+            $isLurah = isset($ttd->jabatan_nama) && stripos($ttd->jabatan_nama, 'Lurah') === 0;
+            $jabatanLabel = $ttd->jabatan_nama ?? 'Sekretaris Kelurahan';
+            $namaTtd = $ttd->nama ?? '.....................';
+            $nipTtd  = $ttd->nip  ?? '.....................';
+            $tanggalCetak = $tanggal_ttd ?? date('d F Y');
+            ?>
             <div class="ttd">
                 <p>
-                    Kademangan, <?= date('d F Y'); ?><br>
-                    a.n. Lurah Kademangan<br>
-                    Sekretaris Kelurahan
+                    Kademangan, <?= html_escape($tanggalCetak); ?><br>
+                    <?= $isLurah ? '' : '' ?>
+                    <?= html_escape($jabatanLabel); ?>
                 </p>
+
                 <br><br><br>
-                <p style="text-decoration: underline; font-weight: bold;">NAMA SEKRETARIS LURAH</p>
-                <p>NIP. NIP SEKRETARIS LURAH</p>
+
+                <p class="nama-ttd"><?= html_escape(strtoupper($namaTtd)); ?></p>
+                <p>NIP. <?= html_escape($nipTtd); ?></p>
             </div>
         </div>
     </div>

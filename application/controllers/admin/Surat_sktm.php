@@ -10,6 +10,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_DB_query_builder $db
  * @property CI_Loader $load
  * @property CI_PDF $pdf
+ * @property M_pejabat $M_pejabat
  */
 
 class Surat_sktm extends CI_Controller
@@ -23,6 +24,7 @@ class Surat_sktm extends CI_Controller
             redirect(base_url("login"));
         }
         $this->load->model('M_sktm');
+        $this->load->model('M_pejabat');
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['url', 'form']);
 
@@ -50,6 +52,40 @@ class Surat_sktm extends CI_Controller
     {
         $data['surat'] = $this->M_sktm->get_by_id($id);
         if (!$data['surat']) return redirect('admin/surat_sktm');
+
+        // ======== Logika siap cetak: nomor & status ========
+        $data['bisaCetak'] = true;
+        $data['pesanError'] = [];
+        if (empty($data['surat']->nomor_surat)) {
+            $data['bisaCetak'] = false;
+            $data['pesanError'][] = '<strong>Nomor Surat</strong> belum diisi.';
+        }
+        if ($data['surat']->status !== 'Disetujui') {
+            $data['bisaCetak'] = false;
+            $data['pesanError'][] = '<strong>Status Surat</strong> masih "' . html_escape($data['surat']->status) . '", belum "Disetujui".';
+        }
+
+        // ======== Penandatangan: daftar & default ========
+        $signers = $this->M_pejabat->get_all_signers();
+        $default = null;
+        // cari Sekretaris → Lurah
+        foreach ($signers as $s) {
+            if ($s->jabatan_nama === 'Sekretaris Kelurahan') {
+                $default = $s->id;
+                break;
+            }
+        }
+        if (!$default) {
+            foreach ($signers as $s) {
+                if (stripos($s->jabatan_nama, 'Lurah') === 0) {
+                    $default = $s->id;
+                    break;
+                }
+            }
+        }
+
+        $data['signers'] = $signers;
+        $data['default_signer_id'] = $default;
 
         $data['title'] = "Detail Pengajuan SKTM";
         $this->load->view('layouts/header', $data);
@@ -219,6 +255,18 @@ class Surat_sktm extends CI_Controller
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
             return redirect('admin/surat_sktm/edit/' . $id);
         }
+
+        // ======== Ambil penandatangan dari query ?ttd=ID ========
+        $ttd_id = (int)$this->input->get('ttd');
+        $ttd = null;
+        if ($ttd_id > 0) {
+            $ttd = $this->M_pejabat->get_by_id_join($ttd_id);
+        }
+        if (!$ttd) {
+            $ttd = $this->M_pejabat->get_default_signer();
+        }
+        $data['ttd'] = $ttd;
+        $data['tanggal_ttd'] = date('d F Y'); // atau pakai field tanggal lain
 
         $data['title'] = "Cetak SKTM - " . $data['surat']->nama_pemohon;
         $html = $this->load->view('admin/sktm/v_cetak', $data, true);

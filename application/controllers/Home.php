@@ -9,6 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property M_runningtext $M_runningtext
  * @property M_layanan $M_layanan
  * @property M_coverage $M_coverage
+ * @property M_settings $M_settings
  */
 
 class Home extends CI_Controller
@@ -22,6 +23,7 @@ class Home extends CI_Controller
         $this->load->model('M_runningtext');
         $this->load->model('M_uploadvideo');
         $this->load->model('M_layanan');
+        $this->load->model('M_settings');
         $this->load->helper('text');
         $this->load->model('M_coverage');
     }
@@ -35,6 +37,7 @@ class Home extends CI_Controller
         $data['youtube_link'] = $this->M_uploadvideo->get_setting('youtube_link');
         $data['layanan_list'] = $this->M_layanan->get_all_active();
         $data['coverage'] = $this->M_coverage->get_single();
+        $data['footer_settings'] = $this->M_settings->get_footer();
 
         // === Tambahan: ambil metadata YouTube (judul & channel)
         $video_meta = [

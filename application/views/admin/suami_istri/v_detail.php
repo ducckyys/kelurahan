@@ -19,7 +19,7 @@
     };
     $fmt = fn($t) => (isset($t) && $t !== '') ? html_escape($t) : '<span class="text-muted">-</span>';
 
-    $bisaCetak = !empty($surat->nomor_surat) && $surat->status === 'Disetujui';
+    $bisaCetak = $bisaCetak ?? (!empty($surat->nomor_surat) && $surat->status === 'Disetujui');
     $badge = $surat->status === 'Pending' ? 'badge-warning' : ($surat->status === 'Disetujui' ? 'badge-success' : 'badge-danger');
 
     $files = [];
@@ -132,10 +132,37 @@
                     </div>
                 </div>
 
-                <div class="card-footer d-flex gap-2">
-                    <a href="<?= base_url('admin/surat_suami_istri/edit/' . $surat->id); ?>" class="btn btn-warning"><i class="fa fa-edit"></i> Edit Data Ini</a>
-                    <?php if ($bisaCetak): ?>
-                        <a href="<?= base_url('admin/surat_suami_istri/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success"><i class="fa fa-print"></i> Cetak Surat</a>
+                <div class="card-footer d-flex align-items-center flex-wrap">
+                    <a href="<?= base_url('admin/surat_suami_istri/edit/' . $surat->id); ?>" class="btn btn-warning mr-2">
+                        <i class="fa fa-edit"></i> Edit Data Ini
+                    </a>
+
+                    <?php if (!empty($bisaCetak) && $bisaCetak): ?>
+                        <?php if (!empty($signers)): ?>
+                            <form class="form-inline d-inline-flex align-items-center"
+                                action="<?= base_url('admin/surat_suami_istri/cetak/' . $surat->id); ?>"
+                                method="get" target="_blank">
+                                <!-- tombol cetak -->
+                                <button type="submit" class="btn btn-success mr-2">
+                                    <i class="fa fa-print"></i> Cetak Surat (PDF)
+                                </button>
+
+                                <!-- dropdown penandatangan -->
+                                <label for="ttd" class="mb-0 mr-2">Penandatangan:</label>
+                                <select name="ttd" id="ttd" class="form-control" style="min-width:320px" required>
+                                    <?php foreach ($signers as $s): ?>
+                                        <option value="<?= (int)$s->id; ?>"
+                                            <?= (isset($default_signer_id) && (int)$default_signer_id === (int)$s->id) ? 'selected' : '' ?>>
+                                            <?= html_escape($s->jabatan_nama . ' - ' . $s->nama); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </form>
+                        <?php else: ?>
+                            <button class="btn btn-success" disabled title="Data penandatangan belum diisi di Pengaturan → Pejabat">
+                                <i class="fa fa-print"></i> Cetak Surat (PDF)
+                            </button>
+                        <?php endif; ?>
                     <?php else: ?>
                         <button class="btn btn-success" disabled><i class="fa fa-print"></i> Cetak Surat</button>
                     <?php endif; ?>

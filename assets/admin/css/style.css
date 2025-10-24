@@ -1,0 +1,361 @@
+/* ===================================================================
+   Admin Global Skin — Blue · Yellow · White (Atlantis + Bootstrap)
+   Letakkan file ini SETELAH atlantis.min.css
+   =================================================================== */
+
+/* -------- Brand tokens -------- */
+:root{
+  /* Blues */
+  --blue-900:#0a2a66;
+  --blue-700:#0f3a8a;
+  --blue-600:#1147a7;
+  --blue-500:#1666cc;
+  --blue-100:#eaf2ff;
+
+  /* Accent */
+  --yellow-500:#ffc107;
+  --red-500:#dc3545;
+
+  /* Neutrals */
+  --paper:#ffffff;
+  --ink:#0b1220;
+  --muted:#6b7a90;
+  --line:#e9eef5;
+}
+
+/* =========================================================
+   HEADER (logo-header & navbar) — ganti biru + garis kuning
+   ========================================================= */
+.main-header .logo-header[data-background-color],
+.main-header .navbar[data-background-color]{ background-image:none !important; }
+
+.main-header .logo-header[data-background-color="blue"]{
+  background: var(--blue-700) !important;
+  position: relative;
+}
+.main-header .logo-header[data-background-color="blue"]::after{
+  content:""; position:absolute; left:0; right:0; bottom:0;
+  height:3px; background:var(--yellow-500); pointer-events:none;
+}
+
+.main-header .navbar.navbar-header[data-background-color="blue2"]{
+  background: var(--blue-600) !important;
+  position: relative;
+}
+.main-header .navbar.navbar-header[data-background-color="blue2"]::after{
+  content:""; position:absolute; left:0; right:0; bottom:0;
+  height:3px; background:var(--yellow-500); pointer-events:none;
+}
+
+/* Pastikan teks header tetap kontras */
+.main-header .navbar .nav-link,
+.main-header .navbar .dropdown-toggle,
+.main-header .logo-header .topbar-toggler,
+.main-header .logo-header .btn.btn-toggle i,
+.main-header .navbar .navbar-toggler .icon-menu{ color:#fff !important; }
+
+/* =========================================================
+   SIDEBAR — latar putih bersih + aksen biru/kuning
+   ========================================================= */
+.sidebar.sidebar-style-2,
+.sidebar.sidebar-style-2 .sidebar-wrapper,
+.sidebar.sidebar-style-2 .sidebar-content{
+  background: var(--paper) !important;
+  color: var(--ink);
+}
+.sidebar.sidebar-style-2 .user{
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+.sidebar.sidebar-style-2 .user .user-level{ color: var(--blue-700); }
+
+.sidebar.sidebar-style-2 .nav .nav-item > a{ color: var(--ink); }
+.sidebar.sidebar-style-2 .nav .nav-item > a i{ color: var(--blue-600); }
+
+.sidebar.sidebar-style-2 .nav .nav-item > a:hover{
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.sidebar.sidebar-style-2 .nav .nav-item > a:hover i{ color: var(--blue-700); }
+
+.sidebar.sidebar-style-2 .nav .nav-item.active > a,
+.sidebar.sidebar-style-2 .nav .nav-collapse li.active > a{
+  background: var(--blue-100);
+  color: var(--blue-900);
+  /* aksen kuning kiri tanpa ubah layout */
+  box-shadow: inset 4px 0 0 0 var(--yellow-500);
+}
+
+.sidebar.sidebar-style-2 .nav .nav-collapse{ background:#f8fbff; }
+.sidebar.sidebar-style-2 .nav .nav-collapse .sub-item{ color: var(--ink); }
+.sidebar.sidebar-style-2 .nav .nav-collapse li.active > a .sub-item{
+  color: var(--blue-900); font-weight:600;
+}
+
+.sidebar.sidebar-style-2 .nav-section .text-section{ color: var(--blue-700); }
+.sidebar.sidebar-style-2 .nav-section .sidebar-mini-icon{ color: var(--yellow-500); }
+.sidebar.sidebar-style-2 .caret{ border-top-color: var(--blue-600); }
+[data-background-color] .sidebar.sidebar-style-2{ background: var(--paper) !important; }
+
+/* =========================================================
+   PAGE HEADER (judul + breadcrumbs) — underline kuning rapi
+   ========================================================= */
+.page-header{
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  border: 0;
+}
+.page-header .page-title{ color: var(--blue-700); font-weight: 700; }
+.page-header::after{
+  content:""; display:block; height:3px;
+  background: var(--yellow-500); border-radius: 2px;
+}
+.page-header .breadcrumbs{ margin-top: 8px; }
+.page-header .breadcrumbs .nav-item a{ color:#5b6579; }
+.page-header .breadcrumbs .nav-item a:hover{ color:var(--blue-700); text-decoration:none; }
+.page-header .breadcrumbs .nav-home a i{ color:var(--blue-600); }
+.page-header .breadcrumbs .separator i{ color:var(--yellow-500); }
+
+/* =========================================================
+   CARD — radius lembut + header beraksen kuning
+   ========================================================= */
+.card{
+  border: 0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(17,71,167,.08);
+}
+.card-header{
+  border: 0;
+  padding: 16px 20px;
+  background: linear-gradient(180deg,#fff,#f9fbff);
+  border-radius: 16px 16px 0 0;
+  box-shadow: inset 0 -3px 0 0 var(--yellow-500);
+}
+.card-title{ margin:0; font-weight:700; color:var(--blue-700); }
+.card-body{ padding: 20px; }
+.card-footer,
+.card-action{
+  border-top: 1px solid var(--line);
+  background: #fafcff;
+  border-radius: 0 0 16px 16px;
+  padding: 14px 20px;
+}
+
+/* =========================================================
+   STAT CARD (opsional untuk dashboard)
+   ========================================================= */
+.stat-link{ text-decoration:none; display:block; color:inherit; }
+.stat-link:hover{ text-decoration:none; }
+.stat-card{
+  border:0; border-radius:14px;
+  background: linear-gradient(180deg,#fff 0%, #f7f8fc 100%);
+  box-shadow: 0 4px 14px rgba(24,28,33,.06);
+  transition: transform .18s ease, box-shadow .18s ease;
+  height:100%;
+}
+.stat-card:hover{ transform: translateY(-2px); box-shadow: 0 8px 26px rgba(24,28,33,.08); }
+.stat-icon{
+  width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+  border-radius:12px; background: var(--blue-100); font-size:18px;
+}
+.stat-icon i{ color: var(--blue-600); }
+.stat-title{ margin:0; font-size:.8rem; color:#6c7a91; letter-spacing:.2px; }
+.stat-value{ margin:2px 0 0; font-weight:700; font-size:1.35rem; color:var(--blue-900); }
+
+/* =========================================================
+   TABLE + DATATABLES
+   ========================================================= */
+.table thead tr{ box-shadow: inset 0 -3px 0 0 var(--yellow-500); }
+.table thead th{
+  border:0; background:#fff;
+  color: var(--blue-700); font-weight:700;
+}
+.table-striped tbody tr:nth-of-type(odd){ background:#fbfdff; }
+.table-hover tbody tr:hover{ background: var(--blue-100); }
+
+.dataTables_wrapper .dataTables_filter input{
+  border:1px solid #e6e8ef; border-radius:10px; padding:.45rem .7rem; outline:0;
+}
+.dataTables_wrapper .dataTables_length select{
+  border:1px solid #e6e8ef; border-radius:10px; padding:.3rem .5rem; outline:0;
+}
+.dataTables_wrapper .dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_length select:focus{
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(17,71,167,.12);
+}
+
+/* tombol tindakan di tabel */
+.form-button-action .btn-link{
+  text-decoration:none !important;
+  padding:.38rem .55rem; line-height:1;
+  border-radius:10px; border:1px solid #e6e8ef;
+  background:#f7f9ff; transition:all .15s ease;
+  box-shadow: 0 2px 8px rgba(24,28,33,.06);
+}
+.form-button-action .btn-link i{ font-size:14px; vertical-align:middle; }
+.form-button-action .btn-link:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(24,28,33,.10);
+}
+.form-button-action .btn-link.btn-info{
+  background:#eef5ff; color:var(--blue-700); border-color:#d8e6ff;
+}
+.form-button-action .btn-link.btn-primary{
+  background:var(--blue-600); color:#fff !important; border-color:var(--blue-600);
+}
+.form-button-action .btn-link.btn-danger{
+  background:#fff4f4; color:#b42318 !important; border-color:#ffdede;
+}
+
+/* link di tabel & lampiran */
+.table a{ color: var(--blue-600); text-decoration:none; }
+.table a:hover{ color: var(--blue-700); text-decoration:underline; }
+
+/* =========================================================
+   FORM — fokus biru elegan (+ file input)
+   ========================================================= */
+.form-group label{ font-weight:600; color:#45526b; }
+.form-control{
+  border:1px solid #e6e8ef; border-radius:12px; padding:.6rem .8rem;
+  background:#fff; box-shadow:none; transition:all .15s ease;
+}
+.form-control:focus{
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 4px rgba(17,71,167,.12);
+}
+.form-group:focus-within label{ color: var(--blue-600); }
+textarea.form-control{ resize:vertical; }
+
+input[type="file"].form-control{ padding:.45rem .8rem; }
+input[type="file"].form-control::file-selector-button{
+  margin-right:.8rem; padding:.45rem .8rem; border:0; border-radius:10px;
+  background: var(--blue-600); color:#fff; cursor:pointer; transition:filter .15s;
+}
+input[type="file"].form-control::file-selector-button:hover{ filter:brightness(.95); }
+
+/* =========================================================
+   BADGE + ALERT + BUTTONS
+   ========================================================= */
+.badge{ border-radius:999px; padding:.35rem .6rem; font-weight:600; }
+.badge-warning{ background:#fff4ce; color:#8b6a00; }
+.badge-success{ background:#d1fadf; color:#067647; }
+.badge-danger { background:#fee4e2; color:#b42318; }
+
+.alert{ border-radius:12px; }
+.alert-success{ border-left:4px solid #16a34a; }
+.alert-warning{ border-left:4px solid var(--yellow-500); }
+.alert-info   { border-left:4px solid var(--blue-600); }
+
+.btn-primary{
+  background: var(--blue-600); border-color: var(--blue-600);
+  border-radius:12px; padding:.55rem 1.1rem;
+  box-shadow: 0 8px 20px rgba(17,71,167,.18);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s;
+}
+.btn-primary:hover{ background:var(--blue-700); border-color:var(--blue-700);
+  transform:translateY(-1px); box-shadow:0 12px 26px rgba(17,71,167,.24); }
+.btn-primary:focus{ box-shadow:0 0 0 4px rgba(17,71,167,.20); }
+
+.btn-success{
+  background:#0e9f6e; border-color:#0e9f6e; border-radius:12px;
+  box-shadow:0 8px 20px rgba(14,159,110,.18);
+}
+.btn-success:hover{ background:#0b815a; border-color:#0b815a; }
+
+.btn-warning{
+  background:var(--yellow-500); border-color:var(--yellow-500);
+  color:#1e293b; border-radius:12px;
+}
+
+.btn-secondary{
+  background:var(--red-500); border-color:var(--blue-100); border-radius:12px;
+}
+
+/* =========================================================
+   FILTER CHIPS (opsional)
+   ========================================================= */
+.filter-group{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.filter-chip{
+  appearance:none; border:1px solid #e5e7eb; background:#fff; color:#334155;
+  border-radius:999px; padding:.38rem .7rem; font-size:.875rem; line-height:1;
+  display:inline-flex; align-items:center; gap:.35rem; transition:all .15s;
+  cursor:pointer;
+}
+.filter-chip:hover{ background:#f8fafc; border-color:var(--yellow-500); }
+.filter-chip:focus{ outline:0; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+.filter-chip.active{ background:var(--blue-600); border-color:var(--blue-600); color:#fff; }
+.filter-chip.active i{ color:#fff !important; }
+
+/* =========================================================
+   AVATAR (opsional) — ring halus
+   ========================================================= */
+.avatar-img.rounded-circle{
+  box-shadow:
+    0 0 0 4px var(--paper),
+    0 0 0 6px var(--blue-100),
+    0 8px 20px rgba(17,71,167,.15);
+}
+
+/* =========================================================
+   RESPONSIVE SMALL
+   ========================================================= */
+@media (max-width: 575.98px){
+  .page-inner .card-body .row > [class*="col-"]{ margin-bottom:.75rem; }
+}
+
+/* Tipiskan ring avatar (global) */
+.avatar-img.rounded-circle{
+  /* putih 1.5px + biru muda 2.5px + bayangan ringan */
+  box-shadow:
+    0 0 0 1.5px var(--paper),
+    0 0 0 2.5px var(--blue-100),
+    0 2px 10px rgba(17,71,167,.12) !important;
+}
+
+/* (Opsional) pastikan di header & sidebar ikut tipis */
+.main-header .avatar-img.rounded-circle,
+.sidebar .avatar-img.rounded-circle{
+  box-shadow:
+    0 0 0 1.5px var(--paper),
+    0 0 0 2.5px var(--blue-100),
+    0 2px 10px rgba(17,71,167,.12) !important;
+}
+
+/* Fallback agar .form-select (BS5) terlihat rapi di tema BS4 */
+.form-select {
+  display:block; width:100%;
+  padding:.375rem 2.25rem .375rem .75rem;
+  font-size:1rem; line-height:1.5; color:#495057;
+  background:#fff;
+  border:1px solid #ced4da; border-radius:.25rem;
+  transition:border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  appearance:none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%236c757d' d='M3.2 5.5l4.8 4.8 4.8-4.8.8.8-5.6 5.6L2.4 6.3z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .75rem center; background-size:16px 12px;
+}
+.form-select:focus { border-color:#80bdff; outline:0; box-shadow:0 0 0 .2rem rgba(0,123,255,.25); }
+
+/* Ikon aksi pakai SVG (tanpa FA) */
+.form-button-action .btn-link .action-icon{
+  width:18px; height:18px; display:block;
+  fill: currentColor; /* ikut warna teks tombol */
+}
+
+/* Warna tombol by variant */
+.form-button-action .btn-link.btn-info{
+  background:#eef5ff; color:var(--blue-700); border-color:#d8e6ff;
+}
+.form-button-action .btn-link.btn-warning{
+  background:#fff8e1; color:#8b6a00; border-color:#ffe8a3;
+}
+.form-button-action .btn-link.btn-danger{
+  background:#fff4f4; color:#b42318; border-color:#ffdede;
+}
+
+/* Hover kecil */
+.form-button-action .btn-link:hover{
+  transform: translateY(-1px);
+}

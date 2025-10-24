@@ -1,23 +1,30 @@
 <?php
 
 /**
+ * ============================================================================
  * View: Pelayanan — Surat Belum Memiliki Rumah
- * Helper: url, form
- * Flashdata opsional: 'upload_error'
+ * ----------------------------------------------------------------------------
+ * Prasyarat
+ * - CodeIgniter helpers: url, form (base_url(), form_error(), set_value(), set_radio()).
+ * - Controller boleh mengirim $title dan $subtitle (opsional).
+ * - Flashdata 'upload_error' (opsional) untuk menampilkan kegagalan upload file.
+ *
+ * Catatan Teknis
+ * - Menggunakan form_open_multipart() untuk unggah multi-file pendukung.
+ * - Atribut HTML (required, autocomplete, inputmode) membantu UX; validasi akhir tetap di server.
+ * ============================================================================
  */
 ?>
 <section class="py-5">
     <div class="container">
         <?php
-        $title    = 'Surat Belum Memiliki Rumah';
-        $subtitle = 'Lengkapi data berikut dengan benar.';
-        $backHref = base_url('#pelayanan');
+        $title    = $title    ?? 'Surat Belum Memiliki Rumah';
+        $subtitle = $subtitle ?? 'Lengkapi data berikut dengan benar.';
+        $backHref = base_url() . '#pelayanan';
         ?>
 
         <div class="page-head d-flex align-items-center flex-wrap gap-2 mb-4">
-            <a href="<?= $backHref ?>"
-                class="back-icon ms-auto"
-                aria-label="Kembali"
+            <a href="<?= $backHref ?>" class="back-icon ms-auto" aria-label="Kembali"
                 onclick="if (history.length > 1) { history.back(); return false; }">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                     fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
@@ -29,26 +36,25 @@
         </div>
 
         <div class="mb-4">
-            <h1 class="h4 mb-1 section-title"><?= $title; ?></h1>
-            <p class="text-muted mb-0"><?= $subtitle; ?></p>
+            <h1 class="h4 mb-1 section-title"><?= htmlentities($title, ENT_QUOTES, 'UTF-8'); ?></h1>
+            <p class="text-muted mb-0"><?= htmlentities($subtitle, ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
 
         <div class="card shadow-sm brand-card">
             <div class="card-body p-4 p-md-5">
                 <?= form_open_multipart('pelayanan/submit_belum_memiliki_rumah'); ?>
 
-                <!-- Dokumen Pendukung -->
                 <h5 class="mb-4 text-primary">Dokumen Pendukung</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Nomor Surat RT/RW</label>
                         <input type="text" name="nomor_surat_rt"
                             value="<?= set_value('nomor_surat_rt'); ?>"
-                            placeholder="Contoh: 014/RT.02/05/25"
+                            placeholder="Contoh: 012/RT01/RW02/2025"
+                            autocomplete="off"
                             class="form-control <?= form_error('nomor_surat_rt') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('nomor_surat_rt'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Tanggal Surat RT/RW</label>
                         <input type="date" name="tanggal_surat_rt"
@@ -56,17 +62,16 @@
                             class="form-control <?= form_error('tanggal_surat_rt') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('tanggal_surat_rt'); ?></div>
                     </div>
-
                     <div class="col-12">
                         <label class="form-label">Unggah Dokumen Pendukung</label>
-                        <input type="file" name="dokumen_pendukung[]" multiple
-                            accept=".pdf,.jpg,.jpeg,.png"
+                        <input type="file" name="dokumen_pendukung[]"
+                            multiple accept=".pdf,.jpg,.jpeg,.png"
                             class="form-control <?= $this->session->flashdata('upload_error') ? 'is-invalid' : ''; ?>" required>
                         <?php if ($this->session->flashdata('upload_error')): ?>
                             <div class="invalid-feedback d-block"><?= $this->session->flashdata('upload_error'); ?></div>
                         <?php else: ?>
                             <div class="form-text">
-                                Unggah minimal 1 dokumen: KTP, KK, dan/atau Surat Pengantar RT/RW (maks. 2 MB per file, JPG/PNG/PDF).
+                                Unggah minimal 1 dokumen (KTP, KK, dan/atau Surat Pengantar RT/RW). Maksimal 2&nbsp;MB per file (JPG/PNG/PDF).
                             </div>
                         <?php endif; ?>
                         <ul id="dokList" class="small mt-2 text-muted"></ul>
@@ -75,108 +80,109 @@
 
                 <hr class="my-4">
 
-                <!-- Data Diri Pemohon -->
                 <h5 class="mb-4 text-primary">Data Diri Pemohon</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Nama Pemohon</label>
                         <input type="text" name="nama_pemohon"
                             value="<?= set_value('nama_pemohon'); ?>"
-                            placeholder="Nama pemohon sesuai KTP"
+                            placeholder="Nama lengkap sesuai KTP"
+                            autocomplete="name"
                             class="form-control <?= form_error('nama_pemohon') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('nama_pemohon'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">NIK Pemohon</label>
                         <input type="text" name="nik"
                             value="<?= set_value('nik'); ?>"
-                            placeholder="16 digit NIK"
+                            placeholder="16 digit NIK (tanpa spasi)"
+                            inputmode="numeric" autocomplete="off"
                             class="form-control <?= form_error('nik') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('nik'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Nomor Telepon (WhatsApp)</label>
                         <input type="text" name="telepon_pemohon"
                             value="<?= set_value('telepon_pemohon'); ?>"
-                            placeholder="Contoh: 081234567890"
+                            placeholder="Nomor WhatsApp aktif (08xxxxxxxxxx)"
+                            inputmode="tel" autocomplete="tel"
                             class="form-control <?= form_error('telepon_pemohon') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('telepon_pemohon'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Tempat Lahir</label>
                         <input type="text" name="tempat_lahir"
                             value="<?= set_value('tempat_lahir'); ?>"
-                            placeholder="Contoh: Tangerang"
+                            placeholder="Kota/Kabupaten lahir"
+                            autocomplete="address-level2"
                             class="form-control <?= form_error('tempat_lahir') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('tempat_lahir'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Tanggal Lahir</label>
                         <input type="date" name="tanggal_lahir"
                             value="<?= set_value('tanggal_lahir'); ?>"
+                            autocomplete="bday"
                             class="form-control <?= form_error('tanggal_lahir') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('tanggal_lahir'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label d-block">Jenis Kelamin</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="jenis_kelamin" id="lk1"
-                                value="Laki-laki" <?= set_radio('jenis_kelamin', 'Laki-laki', TRUE); ?> required>
+                            <input class="form-check-input" type="radio"
+                                name="jenis_kelamin" id="lk1" value="Laki-laki"
+                                <?= set_radio('jenis_kelamin', 'Laki-laki', TRUE); ?> required>
                             <label class="form-check-label" for="lk1">Laki-laki</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="jenis_kelamin" id="pr1"
-                                value="Perempuan" <?= set_radio('jenis_kelamin', 'Perempuan'); ?>>
+                            <input class="form-check-input" type="radio"
+                                name="jenis_kelamin" id="pr1" value="Perempuan"
+                                <?= set_radio('jenis_kelamin', 'Perempuan'); ?>>
                             <label class="form-check-label" for="pr1">Perempuan</label>
                         </div>
                         <div class="invalid-feedback d-block"><?= form_error('jenis_kelamin'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Kewarganegaraan</label>
                         <input type="text" name="kewarganegaraan"
-                            value="<?= set_value('kewarganegaraan', 'Indonesia'); ?>"
-                            placeholder="Contoh: Indonesia"
+                            value="<?= set_value('kewarganegaraan'); ?>"
+                            placeholder="Misal: Indonesia"
+                            autocomplete="country-name"
                             class="form-control <?= form_error('kewarganegaraan') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('kewarganegaraan'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Agama</label>
                         <input type="text" name="agama"
                             value="<?= set_value('agama'); ?>"
-                            placeholder="Contoh: Islam"
+                            placeholder="Misal: Islam"
+                            autocomplete="off"
                             class="form-control <?= form_error('agama') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('agama'); ?></div>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Pekerjaan</label>
                         <input type="text" name="pekerjaan"
                             value="<?= set_value('pekerjaan'); ?>"
-                            placeholder="Contoh: Karyawan Swasta"
+                            placeholder="Misal: Karyawan Swasta"
+                            autocomplete="organization-title"
                             class="form-control <?= form_error('pekerjaan') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('pekerjaan'); ?></div>
                     </div>
-
                     <div class="col-12">
                         <label class="form-label">Alamat Lengkap</label>
                         <textarea name="alamat" rows="3"
-                            placeholder="Contoh: Jl. Melati No. 45 RT 02 RW 05, Kademangan, Setu"
+                            placeholder="Sesuai KTP: Jalan..., RT/RW..., Kelurahan..., Kecamatan..., Kota/Kab..., Kode Pos..."
+                            autocomplete="street-address"
                             class="form-control <?= form_error('alamat') ? 'is-invalid' : ''; ?>" required><?= set_value('alamat'); ?></textarea>
                         <div class="invalid-feedback"><?= form_error('alamat'); ?></div>
                     </div>
-
                     <div class="col-12">
                         <label class="form-label">Keperluan</label>
                         <input type="text" name="keperluan"
                             value="<?= set_value('keperluan'); ?>"
-                            placeholder="Contoh: Pengajuan bantuan perumahan"
+                            placeholder="Tuliskan keperluan singkat, misal: Pengajuan bantuan perumahan"
+                            autocomplete="off"
                             class="form-control <?= form_error('keperluan') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('keperluan'); ?></div>
                     </div>
@@ -185,9 +191,7 @@
                 <div class="form-check mt-4">
                     <input class="form-check-input <?= form_error('agree') ? 'is-invalid' : ''; ?>"
                         type="checkbox" name="agree" value="1" id="agree_bmr" required>
-                    <label class="form-check-label" for="agree_bmr">
-                        Saya menyatakan data yang diisi adalah benar.
-                    </label>
+                    <label class="form-check-label" for="agree_bmr">Saya menyatakan data yang diisi adalah benar.</label>
                     <div class="invalid-feedback"><?= form_error('agree'); ?></div>
                 </div>
 

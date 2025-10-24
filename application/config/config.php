@@ -23,11 +23,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host   = $_SERVER['HTTP_HOST']; // berisi :8080 jika ada
-$script = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/'); // -> /kelurahan
-$config['base_url'] = $scheme . '://' . $host . $script . '/';
-$config['index_page'] = '';
+$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+$host     = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+$config['base_url'] = $protocol . '://' . $host . '/';
 
 /*
 |--------------------------------------------------------------------------

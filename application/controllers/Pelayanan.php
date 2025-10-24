@@ -13,6 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property M_kematian $M_kematian
  * @property M_kematian_nondukcapil $M_kematian_nondukcapil
  * @property M_suami_istri $M_suami_istri
+ * @property M_pengantar_nikah $M_pengantar_nikah
  */
 class Pelayanan extends CI_Controller
 {
@@ -31,7 +32,8 @@ class Pelayanan extends CI_Controller
             'M_belum_memiliki_rumah',
             'M_kematian',
             'M_kematian_nondukcapil',
-            'M_suami_istri'
+            'M_suami_istri',
+            'M_pengantar_nikah',
         ]);
 
         $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
@@ -102,7 +104,8 @@ class Pelayanan extends CI_Controller
             ['icon' => 'bi-house', 'title' => 'Surat Belum Memiliki Rumah', 'desc' => 'Ajukan surat keterangan bahwa pemohon belum memiliki rumah.', 'slug' => 'belum-memiliki-rumah'],
             ['icon' => 'bi-person-x', 'title' => 'Surat Keterangan Kematian Dukcapil', 'desc' => 'Ajukan surat keterangan resmi tentang kematian seseorang.', 'slug' => 'kematian'],
             ['icon' => 'bi-person-x-fill', 'title' => 'Surat Kematian (Non Dukcapil)', 'desc' => 'Untuk kebutuhan non-dukcapil (bank, asuransi, dll).', 'slug' => 'kematian-nondukcapil'],
-            ['icon' => 'bi-people-fill', 'title' => 'Surat Keterangan Suami Istri', 'desc' => 'Ajukan surat untuk menyatakan status hubungan pernikahan.', 'slug' => 'suami-istri']
+            ['icon' => 'bi-people-fill', 'title' => 'Surat Keterangan Suami Istri', 'desc' => 'Ajukan surat untuk menyatakan status hubungan pernikahan.', 'slug' => 'suami-istri'],
+            ['icon' => 'bi-suit-heart',        'title' => 'Surat Pengantar Nikah',          'desc' => 'Ajukan pengantar nikah (N1): data pria, orang tua, calon istri.', 'slug' => 'pengantar-nikah'],
         ];
         $this->load->view('layouts_frontend/header', $data);
         $this->load->view('pages/v_pelayanan_list', $data);
@@ -595,6 +598,131 @@ class Pelayanan extends CI_Controller
 
         $this->M_suami_istri->save($data_to_save);
         $this->session->set_flashdata('success', 'Pengajuan Surat Keterangan Suami Istri telah berhasil dikirim.');
+        redirect('pelayanan/sukses');
+    }
+
+    public function pengantar_nikah()
+    {
+        $data['title'] = "Formulir Surat Pengantar Nikah";
+        $this->load->view('layouts_frontend/header', $data);
+        $this->load->view('pages/v_form_pengantar_nikah', $data);
+        $this->load->view('layouts_frontend/footer');
+    }
+
+    public function submit_pengantar_nikah()
+    {
+        $this->form_validation->set_error_delimiters('', '');
+
+        $rules = [
+            // Surat pengantar RT/RW
+            ['field' => 'nomor_surat_rt',   'label' => 'Nomor Surat RT/RW', 'rules' => 'required|trim'],
+            ['field' => 'tanggal_surat_rt', 'label' => 'Tanggal Surat RT/RW', 'rules' => 'required'],
+
+            // PRIA (pemohon)
+            ['field' => 'pria_nama',            'label' => 'Nama Pria',            'rules' => 'required|trim'],
+            ['field' => 'pria_nik',             'label' => 'NIK Pria',             'rules' => 'required|trim|numeric|exact_length[16]'],
+            ['field' => 'pria_tempat_lahir',    'label' => 'Tempat Lahir Pria',    'rules' => 'required|trim'],
+            ['field' => 'pria_tanggal_lahir',   'label' => 'Tanggal Lahir Pria',   'rules' => 'required'],
+            ['field' => 'pria_kewarganegaraan', 'label' => 'Kewarganegaraan Pria', 'rules' => 'required|trim'],
+            ['field' => 'pria_agama',           'label' => 'Agama Pria',           'rules' => 'required|trim'],
+            ['field' => 'pria_pekerjaan',       'label' => 'Pekerjaan Pria',       'rules' => 'required|trim'],
+            ['field' => 'pria_alamat',          'label' => 'Alamat Pria',          'rules' => 'required|trim'],
+            ['field' => 'pria_status',          'label' => 'Status Pernikahan Pria', 'rules' => 'required|in_list[Jejaka,Duda,Beristri]'],
+            ['field' => 'pria_istri_ke',        'label' => 'Istri ke-',            'rules' => 'trim|integer'],
+
+            // ORANG TUA (gabung)
+            ['field' => 'ortu_nama',          'label' => 'Nama Orang Tua',  'rules' => 'required|trim'],
+            ['field' => 'ortu_nik',           'label' => 'NIK Orang Tua',   'rules' => 'trim|min_length[0]|max_length[16]'],
+            ['field' => 'ortu_tempat_lahir',  'label' => 'Tempat Lahir Ortu', 'rules' => 'trim'],
+            ['field' => 'ortu_tanggal_lahir', 'label' => 'Tanggal Lahir Ortu', 'rules' => 'trim'],
+            ['field' => 'ortu_kewarganegaraan', 'label' => 'Kewarganegaraan Ortu', 'rules' => 'trim'],
+            ['field' => 'ortu_agama',         'label' => 'Agama Ortu',      'rules' => 'trim'],
+            ['field' => 'ortu_pekerjaan',     'label' => 'Pekerjaan Ortu',  'rules' => 'trim'],
+            ['field' => 'ortu_alamat',        'label' => 'Alamat Ortu',     'rules' => 'trim'],
+
+            // WANITA (calon istri)
+            ['field' => 'wanita_nama',            'label' => 'Nama Wanita',            'rules' => 'required|trim'],
+            ['field' => 'wanita_nik',             'label' => 'NIK Wanita',             'rules' => 'required|trim|numeric|exact_length[16]'],
+            ['field' => 'wanita_tempat_lahir',    'label' => 'Tempat Lahir Wanita',    'rules' => 'required|trim'],
+            ['field' => 'wanita_tanggal_lahir',   'label' => 'Tanggal Lahir Wanita',   'rules' => 'required'],
+            ['field' => 'wanita_kewarganegaraan', 'label' => 'Kewarganegaraan Wanita', 'rules' => 'required|trim'],
+            ['field' => 'wanita_agama',           'label' => 'Agama Wanita',           'rules' => 'required|trim'],
+            ['field' => 'wanita_pekerjaan',       'label' => 'Pekerjaan Wanita',       'rules' => 'required|trim'],
+            ['field' => 'wanita_alamat',          'label' => 'Alamat Wanita',          'rules' => 'required|trim'],
+            ['field' => 'wanita_status',          'label' => 'Status Wanita',          'rules' => 'required|in_list[Perawan,Janda]'],
+
+            ['field' => 'agree', 'label' => 'Persetujuan', 'rules' => 'required']
+        ];
+        $this->form_validation->set_rules($rules);
+
+        if ($this->form_validation->run() === FALSE) {
+            return $this->pengantar_nikah(); // kembali ke form
+        }
+
+        // Jika status = Beristri maka "istri ke-" wajib >=1
+        $status_pria = $this->input->post('pria_status', true);
+        $istri_ke    = (int)$this->input->post('pria_istri_ke', true);
+        if ($status_pria === 'Beristri' && $istri_ke < 1) {
+            $this->session->set_flashdata('upload_error', 'Field "Istri ke-" wajib diisi jika status pria = Beristri.');
+            $this->session->set_flashdata('error', 'Field "Istri ke-" wajib diisi jika status pria = Beristri.');
+            return $this->pengantar_nikah();
+        }
+
+        // Multi-upload (WAJIB)
+        $files = $this->_upload_multiple_pendukung(true);
+        if ($files === false) return $this->pengantar_nikah();
+
+        $p = $this->input->post(NULL, TRUE);
+
+        $data_to_save = [
+            // RT/RW
+            'nomor_surat_rt'       => $p['nomor_surat_rt'],
+            'tanggal_surat_rt'     => $p['tanggal_surat_rt'],
+
+            // file JSON (TEXT)
+            'dokumen_pendukung'    => json_encode($files),
+
+            // PRIA
+            'pria_nama'            => $p['pria_nama'],
+            'pria_nik'             => $p['pria_nik'],
+            'pria_jenis_kelamin'   => 'Laki-laki',
+            'pria_tempat_lahir'    => $p['pria_tempat_lahir'],
+            'pria_tanggal_lahir'   => $p['pria_tanggal_lahir'],
+            'pria_kewarganegaraan' => $p['pria_kewarganegaraan'],
+            'pria_agama'           => $p['pria_agama'],
+            'pria_pekerjaan'       => $p['pria_pekerjaan'],
+            'pria_alamat'          => $p['pria_alamat'],
+            'pria_status'          => $p['pria_status'],
+            'pria_istri_ke'        => ($p['pria_status'] === 'Beristri') ? $p['pria_istri_ke'] : NULL,
+
+            // ORANG TUA (gabung)
+            'ortu_nama'            => $p['ortu_nama'],
+            'ortu_nik'             => $p['ortu_nik'] ?: NULL,
+            'ortu_tempat_lahir'    => $p['ortu_tempat_lahir'] ?: NULL,
+            'ortu_tanggal_lahir'   => $p['ortu_tanggal_lahir'] ?: NULL,
+            'ortu_kewarganegaraan' => $p['ortu_kewarganegaraan'] ?: 'Indonesia',
+            'ortu_agama'           => $p['ortu_agama'] ?: NULL,
+            'ortu_pekerjaan'       => $p['ortu_pekerjaan'] ?: NULL,
+            'ortu_alamat'          => $p['ortu_alamat'] ?: NULL,
+
+            // WANITA
+            'wanita_nama'            => $p['wanita_nama'],
+            'wanita_nik'             => $p['wanita_nik'],
+            'wanita_tempat_lahir'    => $p['wanita_tempat_lahir'],
+            'wanita_tanggal_lahir'   => $p['wanita_tanggal_lahir'],
+            'wanita_kewarganegaraan' => $p['wanita_kewarganegaraan'],
+            'wanita_agama'           => $p['wanita_agama'],
+            'wanita_pekerjaan'       => $p['wanita_pekerjaan'],
+            'wanita_alamat'          => $p['wanita_alamat'],
+            'wanita_status'          => $p['wanita_status'],
+
+            // meta
+            'id_user' => $this->session->userdata('id_user') ?: NULL,
+        ];
+
+        $this->M_pengantar_nikah->insert($data_to_save);
+
+        $this->session->set_flashdata('success', 'Pengajuan Surat Pengantar Nikah berhasil dikirim.');
         redirect('pelayanan/sukses');
     }
 

@@ -1,18 +1,27 @@
 <?php
 
 /**
- * View: Pelayanan - SKTM
- * Prasyarat helper: url, form (untuk base_url(), form_error(), set_value(), set_radio(), set_select())
- * Flashdata 'upload_error' dipakai untuk pesan error upload.
+ * ============================================================================
+ * View: Pelayanan - SKTM (Surat Keterangan Tidak Mampu)
+ * ----------------------------------------------------------------------------
+ * Prasyarat:
+ * - Helper CodeIgniter: url, form (base_url(), form_error(), set_value(), set_radio(), set_select()).
+ * - Controller mengirimkan optional $title dan $subtitle.
+ * - Flashdata 'upload_error' untuk error upload file.
+ *
+ * Catatan:
+ * - Form menggunakan form_open_multipart() untuk upload multi-file.
+ * - Validasi sisi server tetap melalui CI Form Validation; atribut HTML 'required'
+ *   membantu validasi awal di browser.
+ * ============================================================================
  */
 ?>
 <section class="py-5">
     <div class="container">
 
         <?php
-        // Konfigurasi ringkas (boleh diisi dari controller juga)
-        $title    = $title    ?? 'Judul Layanan';
-        $subtitle = $subtitle ?? 'Lengkapi data berikut dengan benar.';
+        $title    = $title    ?? 'Surat Keterangan Tidak Mampu (SKTM)';
+        $subtitle = $subtitle ?? 'Lengkapi data berikut secara lengkap dan benar.';
         $backHref = base_url() . '#pelayanan';
         ?>
 
@@ -28,27 +37,24 @@
             </a>
         </div>
 
-        <!-- Header Halaman -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h4 mb-1 section-title">Surat Keterangan Tidak Mampu (SKTM)</h1>
-                <p class="text-muted mb-0">Lengkapi data berikut dengan benar.</p>
+                <h1 class="h4 mb-1 section-title"><?= htmlentities($title, ENT_QUOTES, 'UTF-8'); ?></h1>
+                <p class="text-muted mb-0"><?= htmlentities($subtitle, ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
         </div>
 
-        <!-- Kartu Form (brand-card = strip kuning, hover halus) -->
         <div class="card shadow-sm brand-card">
             <div class="card-body p-4 p-md-5">
-
                 <?= form_open_multipart('pelayanan/submit_sktm'); ?>
 
-                <!-- Dokumen Pendukung -->
                 <h5 class="mb-4 text-primary">Dokumen Pendukung</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Nomor Surat Pengantar RT/RW</label>
                         <input type="text" name="nomor_surat_rt"
-                            placeholder="Contoh: 123/RT01/RW02/KDM/2025"
+                            placeholder="Contoh: 012/RT01/RW02/2025"
+                            autocomplete="off"
                             value="<?= set_value('nomor_surat_rt'); ?>"
                             class="form-control <?= form_error('nomor_surat_rt') ? 'is-invalid' : ''; ?>">
                         <div class="invalid-feedback"><?= form_error('nomor_surat_rt'); ?></div>
@@ -67,23 +73,19 @@
                         <input type="file" name="dokumen_pendukung[]"
                             class="form-control <?= $this->session->flashdata('upload_error') ? 'is-invalid' : ''; ?>"
                             accept=".jpg,.jpeg,.png,.pdf" multiple required>
-
                         <?php if ($this->session->flashdata('upload_error')): ?>
                             <div class="invalid-feedback d-block"><?= $this->session->flashdata('upload_error'); ?></div>
                         <?php else: ?>
                             <div class="form-text">
-                                Unggah minimal 1 dokumen: KTP, KK, dan/atau Surat Pengantar RT/RW (maks. 2 MB per file, JPG/PNG/PDF).
+                                Unggah minimal 1 dokumen (KTP, KK, dan/atau Surat Pengantar RT/RW). Maksimal 2&nbsp;MB per file (JPG/PNG/PDF).
                             </div>
                         <?php endif; ?>
-
-                        <!-- Preview ringan: daftar nama file -->
                         <ul id="dokList" class="small mt-2 text-muted"></ul>
                     </div>
                 </div>
 
                 <hr class="my-4">
 
-                <!-- Data Diri Pemohon -->
                 <h5 class="mb-4 text-primary">Data Diri Pemohon</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -91,6 +93,7 @@
                         <input type="text" name="nama_pemohon"
                             value="<?= set_value('nama_pemohon'); ?>"
                             placeholder="Nama lengkap sesuai KTP"
+                            autocomplete="name"
                             class="form-control <?= form_error('nama_pemohon') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('nama_pemohon'); ?></div>
                     </div>
@@ -99,7 +102,8 @@
                         <label class="form-label">NIK Pemohon</label>
                         <input type="text" name="nik"
                             value="<?= set_value('nik'); ?>"
-                            placeholder="16 digit NIK"
+                            placeholder="16 digit NIK (tanpa spasi)"
+                            autocomplete="off" inputmode="numeric"
                             class="form-control <?= form_error('nik') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('nik'); ?></div>
                     </div>
@@ -108,7 +112,8 @@
                         <label class="form-label">Nomor Telepon (WhatsApp)</label>
                         <input type="text" name="telepon_pemohon"
                             value="<?= set_value('telepon_pemohon'); ?>"
-                            placeholder="Contoh: 081234567890"
+                            placeholder="Nomor WhatsApp aktif (08xxxxxxxxxx)"
+                            autocomplete="tel" inputmode="tel"
                             class="form-control <?= form_error('telepon_pemohon') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('telepon_pemohon'); ?></div>
                     </div>
@@ -134,7 +139,8 @@
                         <label class="form-label">Tempat Lahir</label>
                         <input type="text" name="tempat_lahir"
                             value="<?= set_value('tempat_lahir'); ?>"
-                            placeholder="Contoh: Tangerang"
+                            placeholder="Kota/Kabupaten lahir"
+                            autocomplete="address-level2"
                             class="form-control <?= form_error('tempat_lahir') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('tempat_lahir'); ?></div>
                     </div>
@@ -143,6 +149,7 @@
                         <label class="form-label">Tanggal Lahir</label>
                         <input type="date" name="tanggal_lahir"
                             value="<?= set_value('tanggal_lahir'); ?>"
+                            autocomplete="bday"
                             class="form-control <?= form_error('tanggal_lahir') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('tanggal_lahir'); ?></div>
                     </div>
@@ -151,7 +158,8 @@
                         <label class="form-label">Agama</label>
                         <input type="text" name="agama"
                             value="<?= set_value('agama'); ?>"
-                            placeholder="Contoh: Islam"
+                            placeholder="Misal: Islam"
+                            autocomplete="off"
                             class="form-control <?= form_error('agama') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('agama'); ?></div>
                     </div>
@@ -160,7 +168,8 @@
                         <label class="form-label">Pekerjaan</label>
                         <input type="text" name="pekerjaan"
                             value="<?= set_value('pekerjaan'); ?>"
-                            placeholder="Contoh: Karyawan Swasta"
+                            placeholder="Misal: Karyawan Swasta"
+                            autocomplete="organization-title"
                             class="form-control <?= form_error('pekerjaan') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('pekerjaan'); ?></div>
                     </div>
@@ -169,7 +178,8 @@
                         <label class="form-label">Kewarganegaraan</label>
                         <input type="text" name="warganegara"
                             value="<?= set_value('warganegara'); ?>"
-                            placeholder="Contoh: Indonesia"
+                            placeholder="Misal: Indonesia"
+                            autocomplete="country-name"
                             class="form-control <?= form_error('warganegara') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('warganegara'); ?></div>
                     </div>
@@ -178,10 +188,10 @@
                         <label class="form-label">Penghasilan Bulanan</label>
                         <select name="penghasilan_bulanan"
                             class="form-select <?= form_error('penghasilan_bulanan') ? 'is-invalid' : ''; ?>" required>
-                            <option value="">-- Pilih Rentang Penghasilan --</option>
+                            <option value="">— Pilih rentang penghasilan —</option>
                             <option value="Kurang dari Rp 1.000.000" <?= set_select('penghasilan_bulanan', 'Kurang dari Rp 1.000.000'); ?>>Kurang dari Rp 1.000.000</option>
                             <option value="Rp 1.000.000 - Rp 2.500.000" <?= set_select('penghasilan_bulanan', 'Rp 1.000.000 - Rp 2.500.000'); ?>>Rp 1.000.000 - Rp 2.500.000</option>
-                            <option value="Rp 2.500.00 - Rp 4.000.000" <?= set_select('penghasilan_bulanan', 'Rp 2.500.001 - Rp 4.000.000'); ?>>Rp 2.500.001 - Rp 4.000.000</option>
+                            <option value="Rp 2.500.001 - Rp 4.000.000" <?= set_select('penghasilan_bulanan', 'Rp 2.500.001 - Rp 4.000.000'); ?>>Rp 2.500.001 - Rp 4.000.000</option>
                             <option value="Lebih dari Rp 4.000.000" <?= set_select('penghasilan_bulanan', 'Lebih dari Rp 4.000.000'); ?>>Lebih dari Rp 4.000.000</option>
                         </select>
                         <div class="invalid-feedback"><?= form_error('penghasilan_bulanan'); ?></div>
@@ -190,7 +200,8 @@
                     <div class="col-12">
                         <label class="form-label">Alamat</label>
                         <textarea name="alamat" rows="3"
-                            placeholder="Alamat lengkap sesuai KTP"
+                            placeholder="Sesuai KTP: Jalan..., RT/RW..., Kelurahan..., Kecamatan..., Kota/Kab..., Kode Pos..."
+                            autocomplete="street-address"
                             class="form-control <?= form_error('alamat') ? 'is-invalid' : ''; ?>" required><?= set_value('alamat'); ?></textarea>
                         <div class="invalid-feedback"><?= form_error('alamat'); ?></div>
                     </div>
@@ -198,14 +209,14 @@
 
                 <hr class="my-4">
 
-                <!-- Data Keterangan -->
                 <h5 class="mb-4 text-primary">Data Keterangan</h5>
                 <div class="row g-4">
                     <div class="col-md-6">
                         <label class="form-label">Nama Orang Tua</label>
                         <input type="text" name="nama_orang_tua"
                             value="<?= set_value('nama_orang_tua'); ?>"
-                            placeholder="Nama orang tua/wali"
+                            placeholder="Nama lengkap orang tua/wali"
+                            autocomplete="off"
                             class="form-control <?= form_error('nama_orang_tua') ? 'is-invalid' : ''; ?>" required>
                         <div class="invalid-feedback"><?= form_error('nama_orang_tua'); ?></div>
                     </div>
@@ -214,7 +225,8 @@
                         <label class="form-label">ID DTKS (Opsional)</label>
                         <input type="text" name="id_dtks"
                             value="<?= set_value('id_dtks'); ?>"
-                            placeholder="Boleh dikosongkan jika tidak ada"
+                            placeholder="Jika ada, masukkan ID DTKS"
+                            autocomplete="off"
                             class="form-control <?= form_error('id_dtks') ? 'is-invalid' : ''; ?>">
                         <div class="invalid-feedback"><?= form_error('id_dtks'); ?></div>
                     </div>
@@ -224,7 +236,7 @@
                         <input type="text" name="keperluan"
                             value="<?= set_value('keperluan'); ?>"
                             class="form-control <?= form_error('keperluan') ? 'is-invalid' : ''; ?>"
-                            placeholder="Contoh: Pengajuan Beasiswa Pendidikan" required>
+                            placeholder="Tuliskan keperluan singkat, misal: Pengajuan Beasiswa Pendidikan" required>
                         <div class="invalid-feedback"><?= form_error('keperluan'); ?></div>
                     </div>
 
@@ -246,7 +258,6 @@
                 </div>
 
                 <?= form_close(); ?>
-
             </div>
         </div>
     </div>

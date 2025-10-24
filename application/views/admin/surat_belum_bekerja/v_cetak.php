@@ -6,23 +6,18 @@
     <title><?= html_escape($title); ?></title>
     <link rel="stylesheet" href="<?= base_url('assets/admin/css/fonts.min.css'); ?>">
     <style>
-        /* ===== Kertas F4 & margin cetak ===== */
         @page {
             size: 210mm 330mm;
-            /* F4/Folio Indonesia */
             margin: 10mm;
-            /* margin tipis agar muat 1 halaman */
         }
 
         :root {
-            /* Perkiraan tinggi kop (logo + teks + garis) */
             --header-height: 45mm;
-            /* silakan koreksi 2–4mm jika perlu */
             --gap-after-header: 6mm;
-            /* jarak ekstra antara kop & konten */
+            --ttd-width: 100mm;
+            /* lebarkan jika nama panjang: 105–120mm */
         }
 
-        /* ===== Reset & font ===== */
         * {
             box-sizing: border-box;
         }
@@ -34,27 +29,22 @@
             font-size: 12pt;
         }
 
-        /* ===== Header (kop) fixed ===== */
         #header {
             position: fixed;
             top: 10mm;
-            /* sinkron dengan @page margin */
             left: 10mm;
             right: 10mm;
         }
 
         .kop-surat-wrapper {
             border-bottom: 3px solid #000;
-            /* garis tebal bawah */
             padding-bottom: 2px;
-            /* jarak antar garis */
         }
 
         .kop-table {
             width: 100%;
             border-collapse: collapse;
             border-bottom: 1px solid #000;
-            /* garis tipis atas */
         }
 
         .kop-table td {
@@ -67,7 +57,6 @@
 
         .kop-logo img {
             width: 36mm;
-            /* kira-kira setara 140–150px */
             height: auto;
             margin-left: 4mm;
         }
@@ -80,7 +69,6 @@
             margin: 1.5px 0;
         }
 
-        /* Padatkan heading kop agar hemat ruang */
         .kop-text .line1 {
             font-size: 16pt;
             font-weight: bold;
@@ -112,7 +100,6 @@
             margin: 0 6px;
         }
 
-        /* ===== Konten mulai setelah header fixed ===== */
         #content {
             padding-top: calc(var(--header-height) + var(--gap-after-header));
             padding-left: 0.8in;
@@ -120,7 +107,6 @@
             padding-bottom: 6mm;
         }
 
-        /* ===== Judul & Nomor (beri jarak cukup) ===== */
         .judul-surat {
             text-align: center;
             font-weight: bold;
@@ -131,16 +117,12 @@
 
         .nomor-surat {
             text-align: center;
-            margin: 0;
-            margin-bottom: 8px;
-            /* <-- supaya tidak dempet dengan pembuka */
+            margin: 0 0 8px 0;
         }
 
-        /* ===== Isi ===== */
         .isi-surat {
             text-align: justify;
             line-height: 1.35;
-            /* dipadatkan agar muat 1 halaman */
             margin: 0;
         }
 
@@ -150,13 +132,11 @@
             margin: 10px 0 10px 0;
         }
 
-        /* ===== Tabel data pemohon ===== */
         .data-pemohon {
             width: 100%;
             border-collapse: collapse;
             margin: 6px 0 10px 0;
             font-size: 12pt;
-            /* jika mepet, bisa 11.5pt */
         }
 
         .data-pemohon td {
@@ -168,20 +148,11 @@
             width: 52mm;
         }
 
-        /* label */
         .data-pemohon td:nth-child(2) {
             width: 6mm;
             text-align: center;
         }
 
-        /* ":" */
-        .data-pemohon td:nth-child(3) {
-            width: auto;
-        }
-
-        /* nilai */
-
-        /* ===== Penutup/TTD ===== */
         .closing-section {
             page-break-inside: avoid;
             margin-top: 6mm;
@@ -189,8 +160,7 @@
         }
 
         .ttd {
-            width: 60mm;
-            /* agak sempit agar hemat ruang */
+            width: var(--ttd-width);
             float: right;
             text-align: center;
             line-height: 1.15;
@@ -201,7 +171,13 @@
             margin: 2px 0;
         }
 
-        /* ===== Cetak bersih ===== */
+        .ttd .nama-ttd {
+            font-weight: bold;
+            text-decoration: underline;
+            white-space: nowrap;
+            word-break: keep-all;
+        }
+
         @media print {
 
             html,
@@ -299,16 +275,26 @@
             Demikian surat keterangan ini dibuat agar yang berkepentingan mengetahui dan dapat digunakan sebagaimana mestinya.
         </p>
 
+        <!-- ======= TTD DINAMIS ======= -->
         <div class="closing-section">
+            <?php
+            $isLurah = isset($ttd->jabatan_nama) && stripos($ttd->jabatan_nama, 'Lurah') === 0;
+            $jabatanLabel = $ttd->jabatan_nama ?? 'Sekretaris Kelurahan';
+            $namaTtd = $ttd->nama ?? '.....................';
+            $nipTtd  = $ttd->nip  ?? '.....................';
+            $tanggalCetak = $tanggal_ttd ?? date('d F Y');
+            ?>
             <div class="ttd">
                 <p>
-                    Kademangan, <?= date('d F Y'); ?><br>
-                    a.n. Lurah Kademangan<br>
-                    Sekretaris Kelurahan
+                    Kademangan, <?= html_escape($tanggalCetak); ?><br>
+                    <?= $isLurah ? '' : '' ?>
+                    <?= html_escape($jabatanLabel); ?>
                 </p>
+
                 <br><br><br><br>
-                <p style="text-decoration: underline; font-weight: bold;">NAMA SEKRETARIS LURAH</p>
-                <p>NIP. NIP SEKRETARIS LURAH</p>
+
+                <p class="nama-ttd"><?= html_escape(strtoupper($namaTtd)); ?></p>
+                <p>NIP. <?= html_escape($nipTtd); ?></p>
             </div>
         </div>
     </div>

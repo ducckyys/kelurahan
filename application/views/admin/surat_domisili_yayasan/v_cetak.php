@@ -5,25 +5,19 @@
     <meta charset="UTF-8" />
     <title><?= html_escape($title); ?></title>
     <link rel="stylesheet" href="<?= base_url('assets/admin/css/fonts.min.css'); ?>">
-
     <style>
-        /* ===== Ukuran kertas & margin cetak (F4/Folio) ===== */
         @page {
             size: 210mm 330mm;
-            /* F4 Indonesia */
             margin: 10mm;
-            /* margin tipis agar muat 1 halaman */
         }
 
         :root {
-            /* Perkirakan tinggi kop (logo + teks + garis) */
             --header-height: 45mm;
-            /* sesuaikan jika kopmu lebih pendek/panjang */
             --gap-after-header: 6mm;
-            /* jarak ekstra antara header & konten */
+            --ttd-width: 100mm;
+            /* besarkan jika nama panjang (mis. 110–120mm) */
         }
 
-        /* ===== Reset & font ===== */
         * {
             box-sizing: border-box;
         }
@@ -35,27 +29,22 @@
             font-size: 12pt;
         }
 
-        /* ===== Header (kop surat) fixed ===== */
         #header {
             position: fixed;
             top: 10mm;
-            /* sinkron dengan @page margin */
             left: 10mm;
             right: 10mm;
         }
 
         .kop-surat-wrapper {
             border-bottom: 3px solid #000;
-            /* Garis tebal di bawah */
             padding-bottom: 2px;
-            /* jarak antar garis */
         }
 
         .kop-table {
             width: 100%;
             border-collapse: collapse;
             border-bottom: 1px solid #000;
-            /* Garis tipis di atas */
         }
 
         .kop-table td {
@@ -80,7 +69,6 @@
             margin: 1.5px 0;
         }
 
-        /* Ukuran heading kop sedikit dipadatkan */
         .kop-text .line1 {
             font-size: 16pt;
             font-weight: bold;
@@ -112,7 +100,6 @@
             margin: 0 6px;
         }
 
-        /* ===== Konten mulai setelah header fixed ===== */
         #content {
             padding-top: calc(var(--header-height) + var(--gap-after-header));
             padding-left: 0.8in;
@@ -120,7 +107,6 @@
             padding-bottom: 6mm;
         }
 
-        /* ===== Judul & Nomor: beri jarak agar tak dempet ===== */
         .judul-surat {
             text-align: center;
             font-weight: bold;
@@ -131,16 +117,12 @@
 
         .nomor-surat {
             text-align: center;
-            margin: 0;
-            margin-bottom: 8px;
-            /* jarak ke paragraf pembuka */
+            margin: 0 0 8px 0;
         }
 
-        /* ===== Isi Surat ===== */
         .isi-surat {
             text-align: justify;
             line-height: 1.35;
-            /* dipadatkan agar muat 1 halaman */
             margin: 0;
         }
 
@@ -150,13 +132,11 @@
             margin: 10px 0 10px 0;
         }
 
-        /* ===== Tabel data pemohon/organisasi ===== */
         .data-blok {
             width: 100%;
             border-collapse: collapse;
             margin: 6px 0 10px 0;
             font-size: 12pt;
-            /* kalau mepet, bisa jadi 11.5pt */
         }
 
         .data-blok td {
@@ -168,20 +148,11 @@
             width: 52mm;
         }
 
-        /* label */
         .data-blok td:nth-child(2) {
             width: 6mm;
             text-align: center;
         }
 
-        /* ":" */
-        .data-blok td:nth-child(3) {
-            width: auto;
-        }
-
-        /* nilai */
-
-        /* ===== Penutup/TTD: hindari pecah halaman ===== */
         .closing-section {
             page-break-inside: avoid;
             margin-top: 6mm;
@@ -189,18 +160,23 @@
         }
 
         .ttd {
-            width: 60mm;
-            /* agak sempit agar hemat ruang */
+            width: var(--ttd-width);
             float: right;
             text-align: center;
-            line-height: 1.1;
+            line-height: 1.15;
         }
 
         .ttd p {
             margin: 2px 0;
         }
 
-        /* ===== Cetak bersih ===== */
+        .ttd .nama-ttd {
+            font-weight: bold;
+            text-decoration: underline;
+            white-space: nowrap;
+            word-break: keep-all;
+        }
+
         @media print {
 
             html,
@@ -284,7 +260,7 @@
         </table>
 
         <p class="isi-surat pembuka">
-            Telah datang menghadap, melapor dan memohon surat keterangan, berdasarkan pernyataan dan dokumen pemohon, yang bersangkutan memiliki Yayasan dengan data Sebagai berikut:
+            Telah datang menghadap, melapor dan memohon surat keterangan, berdasarkan pernyataan dan dokumen pemohon, yang bersangkutan memiliki Yayasan dengan data sebagai berikut:
         </p>
 
         <table class="data-blok">
@@ -348,16 +324,27 @@
             Demikian surat keterangan ini dibuat, sesuai dengan data pemohon, apabila di kemudian hari keterangan atau pengakuan pemohon tidak benar, atau melanggar ketentuan yang berlaku sepenuhnya menjadi tanggung jawab pemohon tidak melibatkan pihak RT/RW dan Pejabat yang menandatangani surat keterangan ini.
         </p>
 
+        <!-- ====== TTD Dinamis ====== -->
         <div class="closing-section">
+            <?php
+            $isLurah = isset($ttd->jabatan_nama) && stripos($ttd->jabatan_nama, 'Lurah') === 0;
+            $jabatanLabel = $ttd->jabatan_nama ?? 'Sekretaris Kelurahan';
+            $namaTtd = $ttd->nama ?? '.....................';
+            $nipTtd  = $ttd->nip  ?? '.....................';
+            $tanggalCetak = $tanggal_ttd ?? date('d F Y');
+            ?>
             <div class="ttd">
                 <p>
-                    Tangerang Selatan, <?= date('d F Y'); ?><br>
+                    Tangerang Selatan, <?= html_escape($tanggalCetak); ?><br>
                     Sesuai Permohonan Pemohon<br>
-                    Lurah
+                    <?= $isLurah ? '' : '' ?>
+                    <?= html_escape($jabatanLabel); ?>
                 </p>
+
                 <br><br><br><br>
-                <p style="text-decoration: underline; font-weight: bold;">NAMA LURAH</p>
-                <p>NIP. NIP LURAH</p>
+
+                <p class="nama-ttd"><?= html_escape(strtoupper($namaTtd)); ?></p>
+                <p>NIP. <?= html_escape($nipTtd); ?></p>
             </div>
         </div>
     </div>

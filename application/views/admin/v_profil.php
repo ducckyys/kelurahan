@@ -1,3 +1,170 @@
+<style>
+    /* ===== Palet (fallback) ===== */
+    :root {
+        --blue-900: #0a2a66;
+        --blue-700: #0f3a8a;
+        --blue-600: #1147a7;
+        --blue-500: #1666cc;
+        --blue-100: #eaf2ff;
+        --yellow-500: #ffc107;
+        --paper: #ffffff;
+        --ink: #0b1220;
+        --line: #e9eef5;
+    }
+
+    /* ===== Judul halaman: garis kuning rapi di bawah ===== */
+    .page-header {
+        position: relative;
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+        border: 0;
+    }
+
+    .page-header .page-title {
+        color: var(--blue-700);
+        font-weight: 700;
+    }
+
+    .page-header::after {
+        content: "";
+        display: block;
+        height: 3px;
+        background: var(--yellow-500);
+        border-radius: 2px;
+    }
+
+    /* ===== Kartu utama ===== */
+    .card {
+        border: 0;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 10px 28px rgba(17, 71, 167, .08);
+    }
+
+    .card-header {
+        border: 0;
+        padding: 16px 20px;
+        background: linear-gradient(180deg, #fff, #f9fbff);
+        border-radius: 16px 16px 0 0;
+        box-shadow: inset 0 -3px 0 0 var(--yellow-500);
+        /* aksen kuning */
+    }
+
+    .card-title {
+        margin: 0;
+        font-weight: 700;
+        color: var(--blue-700);
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-action {
+        border-top: 1px solid var(--line);
+        background: #fafcff;
+        border-radius: 0 0 16px 16px;
+        padding: 14px 20px;
+    }
+
+    /* ===== Form ===== */
+    .form-group label {
+        font-weight: 600;
+        color: #45526b;
+    }
+
+    .form-text {
+        color: #6c7a91;
+    }
+
+    .form-control {
+        border: 1px solid #e6e8ef;
+        border-radius: 12px;
+        padding: .6rem .8rem;
+        background: #fff;
+        box-shadow: none;
+        transition: all .15s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--blue-600);
+        box-shadow: 0 0 0 4px rgba(17, 71, 167, .12);
+    }
+
+    .form-group:focus-within label {
+        color: var(--blue-600);
+    }
+
+    /* File input — tombol pilih file lebih rapi */
+    input[type="file"].form-control {
+        padding: .4rem .8rem;
+    }
+
+    input[type="file"].form-control::file-selector-button {
+        margin-right: .8rem;
+        padding: .45rem .8rem;
+        border: 0;
+        border-radius: 10px;
+        background: var(--blue-600);
+        color: #fff;
+        cursor: pointer;
+        transition: filter .15s;
+    }
+
+    input[type="file"].form-control::file-selector-button:hover {
+        filter: brightness(.95);
+    }
+
+    /* Avatar ring elegan (tanpa ubah ukuran) */
+    .avatar-img.rounded-circle {
+        box-shadow:
+            0 0 0 4px var(--paper),
+            0 0 0 6px var(--blue-100),
+            0 8px 20px rgba(17, 71, 167, .15);
+    }
+
+    /* ===== Tombol aksi ===== */
+    .card .btn-primary {
+        background: var(--blue-600);
+        border-color: var(--blue-600);
+        border-radius: 12px;
+        padding: .55rem 1.1rem;
+        box-shadow: 0 8px 20px rgba(17, 71, 167, .18);
+        transition: transform .12s ease, box-shadow .12s ease, background .12s;
+    }
+
+    .card .btn-primary:hover {
+        background: var(--blue-700);
+        border-color: var(--blue-700);
+        transform: translateY(-1px);
+        box-shadow: 0 12px 26px rgba(17, 71, 167, .24);
+    }
+
+    .card .btn-primary:focus {
+        box-shadow: 0 0 0 4px rgba(17, 71, 167, .20);
+    }
+
+    /* ===== Alert biar serasi tapi tetap jelas ===== */
+    .alert {
+        border-radius: 12px;
+    }
+
+    .alert-success {
+        border-left: 4px solid #16a34a;
+    }
+
+    .alert-danger {
+        border-left: 4px solid #e11d48;
+    }
+
+    /* ===== Sedikit perapian di mobile ===== */
+    @media (max-width: 575.98px) {
+        .card-body .row>[class*="col-"] {
+            margin-bottom: .75rem;
+        }
+    }
+</style>
+
 <div class="page-inner">
     <div class="page-header">
         <h4 class="page-title">Profil Saya</h4>

@@ -71,6 +71,21 @@ $route['berita/detail/(:any)'] = 'berita/detail/$1';
 $route['informasi'] = 'informasi/index';
 $route['informasi/detail/(:num)'] = 'informasi/detail/$1';
 
+// ==== Pejabat (SUPERADMIN) ====
+$route['admin/pejabat']               = 'pejabat/index';
+$route['admin/pejabat/tambah']        = 'pejabat/create';
+$route['admin/pejabat/edit/(:num)']   = 'pejabat/edit/$1';
+$route['admin/pejabat/delete/(:num)'] = 'pejabat/delete/$1';
+
+// Weather
+$route['api/weather']         = 'api_weather/index';
+$route['api/weather/by-city'] = 'api_weather/by_city';
+
+// Time & Date
+$route['api/time/now']     = 'api_time/now';
+$route['api/time/by-ip']   = 'api_time/by_ip';
+$route['api/time/convert'] = 'api_time/convert';
+
 /*
 | -------------------------------------------------------------------------
 | Rute untuk Halaman Admin akan ditangani secara otomatis oleh CodeIgniter

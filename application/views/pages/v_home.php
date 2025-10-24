@@ -12,7 +12,7 @@
 </section>
 
 <?php if (!empty($rt_top) || !empty($rt_bottom)) : ?>
-    <section id="marquee-info" class="py-2"> <!-- hapus text-white -->
+    <section id="marquee-info" class="py-2">
         <div class="container-fluid px-lg-5">
 
             <?php if (!empty($rt_top)) : ?>
@@ -41,7 +41,7 @@
 <?php endif; ?>
 
 
-<section id="Layanan" class="py-5">
+<section id="Layanan" class="py-5 section-abstract">
     <div class="container-fluid px-lg-5">
         <div class="row mb-4">
             <div class="col-12 text-center">
@@ -108,7 +108,7 @@
     </div>
 </section>
 
-<section id="coverage" class="py-5">
+<section id="coverage" class="py-5 section-abstract">
     <div class="container-fluid px-lg-5">
         <div class="row mb-4">
             <div class="col-12 text-center">
@@ -210,7 +210,7 @@
     </div>
 </section>
 
-<section id="berita" class="py-5 bg-light">
+<section id="berita" class="py-5 bg-light section-abstract">
     <div class="container-fluid px-lg-5">
         <div class="row mb-4">
             <div class="col-12 text-center">
@@ -333,7 +333,3 @@
         </section>
     <?php endif; ?>
 <?php endif; ?>
-
-<section>
-    <p>Tentang Web - tautan terkait - sosial media</p>
-</section>

@@ -13,6 +13,7 @@
         :root {
             --header-height: 45mm;
             --gap-after-header: 6mm;
+            --ttd-width: 100mm;
         }
 
         * {
@@ -158,11 +159,22 @@
 
         .ttd-right {
             float: right;
+            width: var(--ttd-width);
         }
 
         .ttd-name {
             font-weight: bold;
             text-decoration: underline;
+            white-space: nowrap;
+            word-break: keep-all;
+        }
+
+        @media print {
+
+            html,
+            body {
+                height: 330mm;
+            }
         }
     </style>
 </head>
@@ -237,7 +249,9 @@
         </table>
 
         <p class="isi-surat">
-            Nama tersebut diatas telah datang menghadap memohon surat keterangan berdasarkan surat pengantar RT/RW Nomor: <b><?= html_escape($surat->nomor_surat_rt); ?></b> tanggal <b><?= date('d F Y', strtotime($surat->tanggal_surat_rt)); ?></b> dan surat pernyataan pemohon bahwa:
+            Nama tersebut diatas telah datang menghadap memohon surat keterangan berdasarkan surat pengantar RT/RW Nomor:
+            <b><?= html_escape($surat->nomor_surat_rt); ?></b> tanggal <b><?= date('d F Y', strtotime($surat->tanggal_surat_rt)); ?></b>
+            dan surat pernyataan pemohon bahwa:
         </p>
 
         <table class="data-table indented-list">
@@ -293,21 +307,29 @@
             Apabila pernyataan dan pengakuan pemohon tidak benar, melanggar peraturan dan ketentuan yang berlaku sepenuhnya menjadi tanggung jawab pemohon, dan membebaskan para saksi RT/RW dan Lurah yang turut menandatangani surat keterangan ini dari segala tuntutan hukum.
         </p>
 
+        <?php
+        // data penandatangan dari controller
+        $namaTtd = $ttd->nama ?? '.....................';
+        $nipTtd  = $ttd->nip  ?? '.....................';
+        $jabTtd  = $ttd->jabatan_nama ?? 'Sekretaris Kelurahan';
+        $isLurah = isset($ttd->jabatan_nama) && stripos($ttd->jabatan_nama, 'Lurah') === 0;
+        $tanggalCetak = $tanggal_ttd ?? date('d F Y');
+        ?>
+
         <div class="closing-section">
             <div class="ttd-box ttd-left">
                 <p>Pemohon,</p>
                 <br><br><br><br>
                 <p class="ttd-name">( <?= html_escape(strtoupper($surat->nama_pihak_satu)); ?> )</p>
             </div>
-            <div class="ttd-box ttd-right">
+            <div class="ttd-box ttd-right" style="text-align:center; line-height:1.35;">
                 <p>
-                    Kademangan, <?= date('d F Y'); ?><br>
-                    a.n. Lurah Kademangan<br>
-                    Sekretaris Kelurahan
+                    Kademangan, <?= html_escape($tanggalCetak); ?><br>
+                    <?= $isLurah ? 'Lurah Kademangan' : html_escape($jabTtd); ?>
                 </p>
                 <br><br><br>
-                <p class="ttd-name">NAMA SEKRETARIS LURAH</p>
-                <p>NIP. NIP SEKRETARIS LURAH</p>
+                <p class="ttd-name"><?= html_escape(strtoupper($namaTtd)); ?></p>
+                <p>NIP. <?= html_escape($nipTtd); ?></p>
             </div>
         </div>
 

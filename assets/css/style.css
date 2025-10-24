@@ -1,27 +1,188 @@
-/* =========================================================
-= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-                  TEMA UTAMA & RESET RINGAN
-========================================================= */
+/*!
+================================================================================
+Kelurahan Frontend Styles – with Abstract Background & Navbar-Safe Overlay
+--------------------------------------------------------------------------------
+Tujuan:
+- Tema biru–kuning–putih dengan latar abstrak yang tidak menimpa navbar.
+- Komponen: navbar 2 lapis, hero, slider layanan, berita, galeri, video,
+  jangkauan layanan, utilitas form dan kartu brand.
+
+Cara pakai:
+1) Tambahkan class pada <body>:
+   - is-home            : halaman utama
+   - has-abstract-bg    : aktifkan pola abstrak global (mulai di bawah header)
+   - Tambahkan juga .is-home bila ingin latar abstrak hanya di homepage.
+
+2) Jika tinggi header berbeda, sesuaikan variabel:
+   --topbar-h, --menubar-h (di :root dan media query mobile)
+
+Catatan kompatibilitas:
+- color-mix() memiliki fallback otomatis via @supports not.
+================================================================================
+*/
+
 :root {
   --primary: #1F6FEB;
   --accent:  #F5B301;
   --light-bg:#E5F2FF;
   --text:    #1E293B;
   --white:   #FFFFFF;
+
+  --topbar-h: 64px;
+  --menubar-h: 56px;
 }
+
+@media (max-width: 991.98px){
+  :root { --topbar-h: 56px; --menubar-h: 52px; }
+}
+
 html { scroll-behavior: smooth; }
 body {
   font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   background-color: var(--white);
   color: var(--text);
+  overflow-x: hidden;
 }
 a { text-decoration: none; }
 a:hover { text-decoration: none; }
 .card { border-radius: 1rem; }
 
-/* =========================================================
-= NAVBAR (2 LAPIS): TOPBAR + MENUBAR
-========================================================= */
+/* ===== Brand 2-baris: Kademangan + tagline ===== */
+.brand-kademangan{
+  display:flex; flex-direction:column; align-items:center;
+  line-height:1.05; color:var(--primary) !important; text-decoration:none;
+  padding:.15rem 0; white-space:nowrap;
+}
+.brand-kademangan .brand-line-1{
+  font-weight:800;
+  font-size:clamp(18px,2.1vw,24px);
+  letter-spacing:.2px;
+}
+.brand-kademangan .brand-k{
+  font-size:1.22em;       /* bikin 'K' sedikit lebih besar */
+  line-height:.9; display:inline-block; vertical-align:-.04em;
+}
+.brand-kademangan .brand-line-2{
+  margin-top:2px;
+  font-weight:600;
+  font-size:clamp(11px,1.25vw,13px);
+  color: color-mix(in srgb, var(--primary) 68%, #6b7280);
+  letter-spacing:.15px;
+}
+
+/* agar tetap rapi di layar sangat kecil: sembunyikan tagline */
+@media (max-width: 420px){
+  .brand-kademangan .brand-line-2{ display:none; }
+}
+
+/* ===== Abstract Background (global) ===== */
+/* Offset dari atas mengikuti tinggi header (aman untuk navbar) */
+.is-home.has-abstract-bg { --bg-top-offset: calc(var(--topbar-h) + var(--menubar-h)); }
+
+/* HANYA tampilkan background abstrak di halaman Home */
+body:not(.is-home).has-abstract-bg::before,
+body:not(.is-home).has-abstract-bg::after{
+  display: none !important;
+}
+
+.has-abstract-bg::before,
+.has-abstract-bg::after {
+  content: "";
+  position: fixed;
+  inset: var(--bg-top-offset, 0) 0 0 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.has-abstract-bg::before{
+  background:
+    radial-gradient(60vmax 60vmax at -10% -10%,
+      color-mix(in srgb, var(--primary) 10%, transparent) 0%,
+      transparent 60%),
+    radial-gradient(50vmax 50vmax at 110% 10%,
+      color-mix(in srgb, var(--accent) 18%, transparent) 0%,
+      transparent 65%),
+    radial-gradient(40vmax 40vmax at 20% 120%,
+      color-mix(in srgb, var(--primary) 8%, transparent) 0%,
+      transparent 70%),
+    conic-gradient(from 210deg at 70% 30%,
+      color-mix(in srgb, var(--primary) 8%, transparent) 0 25%,
+      transparent 0 60%,
+      color-mix(in srgb, var(--accent) 10%, transparent) 0 80%,
+      transparent 0 100%);
+  opacity: .8;
+  filter: saturate(110%);
+}
+
+.has-abstract-bg::after{
+  background-image:
+    radial-gradient(color-mix(in srgb, var(--text) 10%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: .07;
+}
+
+@supports not (color: color-mix(in srgb, black, white)) {
+  .has-abstract-bg::before{
+    background:
+      radial-gradient(60vmax 60vmax at -10% -10%, rgba(31,111,235,.10) 0%, transparent 60%),
+      radial-gradient(50vmax 50vmax at 110% 10%, rgba(245,179,1,.18) 0%, transparent 65%),
+      radial-gradient(40vmax 40vmax at 20% 120%, rgba(31,111,235,.08) 0%, transparent 70%),
+      conic-gradient(from 210deg at 70% 30%, rgba(31,111,235,.08) 0 25%, transparent 0 60%, rgba(245,179,1,.10) 0 80%, transparent 0 100%);
+  }
+  .has-abstract-bg::after{
+    background-image: radial-gradient(rgba(30,41,59,.08) 1px, transparent 1px);
+  }
+}
+
+/* ===== Section Abstract (opsional per section) ===== */
+.section-abstract{ position: relative; z-index: 0; }
+.section-abstract::before,
+.section-abstract::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  z-index:-1;
+  filter: blur(20px);
+}
+
+.section-abstract::before{
+  width:min(42vmax, 720px);
+  height:min(42vmax, 720px);
+  left:-18vmax; bottom:-18vmax;
+  background: radial-gradient(closest-side,
+    color-mix(in srgb, var(--primary) 12%, transparent) 0%,
+    transparent 70%);
+  opacity:.55;
+}
+
+.section-abstract::after{
+  width:min(40vmax, 680px);
+  height:min(40vmax, 680px);
+  right:-16vmax; top:-14vmax;
+  background:
+    radial-gradient(closest-side,
+      color-mix(in srgb, var(--accent) 16%, transparent) 0%,
+      transparent 70%),
+    repeating-linear-gradient(135deg,
+      color-mix(in srgb, var(--primary) 10%, transparent) 0 2px,
+      transparent 2px 10px);
+  opacity:.45;
+  mix-blend-mode: multiply;
+}
+
+/* ===== Utilitas pola (opsional) ===== */
+.pattern-dots{
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 10%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.pattern-grid{
+  background-image:
+    linear-gradient(to right, rgba(31,111,235,.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(31,111,235,.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ===== Navbar (topbar + menubar) ===== */
 .nav-topbar {
   background: var(--white);
   box-shadow: 0 1px 8px rgba(0,0,0,.05);
@@ -58,6 +219,9 @@ a:hover { text-decoration: none; }
 .navbar .nav-link:hover,
 .navbar .nav-link:focus { color: var(--accent) !important; }
 .navbar .nav-link.active { color: var(--accent) !important; }
+
+.container-menu .nav-link{ position:relative; }
+.container-menu .nav-link.active{ color:var(--primary) !important; }
 .container-menu .nav-link.active::after,
 .container-menu .nav-link:focus::after {
   content:"";
@@ -65,10 +229,11 @@ a:hover { text-decoration: none; }
   left:1rem;
   right:1rem;
   bottom:-.35rem;
-  height:2px;
-  background:#0d6efd;
+  height:3px;
   border-radius:2px;
+  background:var(--accent);
 }
+
 .navbar .btn-login,
 .navbar .btn.btn-outline-primary {
   border: 2px solid var(--primary);
@@ -85,46 +250,22 @@ a:hover { text-decoration: none; }
   color: var(--white);
 }
 
-.navbar .nav-link.active{
-  color: var(--primary) !important;
-  font-weight: 700;
+body.is-home .nav-menubar .menubar-floating{
+  border-top:6px solid var(--accent);
+  border-radius:14px;
 }
 
-    .container-menu .nav-link{ position:relative; }
-    .container-menu .nav-link.active{ color:var(--primary) !important; }
-    .container-menu .nav-link.active::after{
-      content:""; position:absolute; left:1rem; right:1rem; bottom:-.35rem;
-      height:3px; border-radius:2px; background:var(--accent);
-    }
-    /* efek hover */
-    .navbar .nav-link:hover, .navbar .nav-link:focus{ color:var(--accent) !important; }
-
-    /* khusus HALAMAN HOME: strip kuning di atas kapsul menubar */
-    body.is-home .nav-menubar .menubar-floating{
-      border-top:6px solid var(--accent);
-      border-radius:14px;
-    }
-
-/* =========================================================
-= BURGER/TOGGLER (MOBILE)
-========================================================= */
 .nav-topbar .navbar-toggler { display: inline-flex; }
 @media (min-width: 992px) {
   .nav-topbar .navbar-toggler { display: none !important; }
 }
 
-/* =========================================================
-= MENUBAR CENTER + DROPDOWN
-========================================================= */
 .container-menu .navbar-collapse { justify-content: flex-start !important; }
 .container-menu .dropdown-menu { min-width: 260px; }
 @media (min-width: 992px) {
   .navbar .nav-item.dropdown:hover > .dropdown-menu { display: block; margin-top: 0; }
 }
 
-/* =========================================================
-= MENUBAR MENGAMBANG
-========================================================= */
 .menubar-floating{
   background: rgba(255,255,255,.92);
   border: 1px solid #e9eefb;
@@ -159,9 +300,7 @@ a:hover { text-decoration: none; }
   }
 }
 
-/* =========================================================
-= BUTTON PRIMER GLOBAL
-========================================================= */
+/* ===== Buttons ===== */
 .btn-primary{
   background-color:var(--primary);
   border-color:var(--primary);
@@ -172,9 +311,7 @@ a:hover { text-decoration: none; }
   color:var(--text);
 }
 
-/* =========================================================
-= BACK ICON
-========================================================= */
+/* ===== Back Icon ===== */
 .back-icon{
   display:inline-flex;
   align-items:center;
@@ -187,22 +324,31 @@ a:hover { text-decoration: none; }
 .back-icon svg{ width:24px; height:24px; fill:currentColor; }
 .back-icon:hover{ color:#000; background-color:#f0f0f0; }
 
-/* =========================================================
-= HERO
-========================================================= */
+/* ===== Hero ===== */
 .hero{
   min-height: calc(100vh - 112px);
   padding: 96px 0 64px;
   background: linear-gradient(180deg, var(--light-bg) 0%, var(--white) 100%);
   color: var(--text);
   position: relative;
+  overflow: hidden;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(40rem 40rem at 90% -10%, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 60%),
+    radial-gradient(36rem 36rem at -10% 90%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 60%),
+    conic-gradient(from 180deg at 60% 20%, color-mix(in srgb, var(--primary) 6%, transparent), transparent 35%, color-mix(in srgb, var(--accent) 8%, transparent) 0 65%, transparent 0 100%);
+  opacity:.38;
+  mix-blend-mode: multiply;
+  pointer-events:none;
 }
 .hero .container{ position: relative; z-index: 1; }
 .hero p.lead, .hero p.text-muted{ color:#000 !important; }
 
-/* =========================================================
-= HERO-CARD (JAM LAYANAN)
-========================================================= */
+/* ===== Hero Card ===== */
 .hero-card{
   border-radius:20px;
   background:linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
@@ -216,10 +362,8 @@ a:hover { text-decoration: none; }
 .hero-card::before{
   content:"";
   position:absolute;
-  left:0;
-  top:0;
-  height:100%;
-  width:5px;
+  left:0; top:0;
+  height:100%; width:5px;
   background-color:var(--accent);
   border-top-left-radius:20px;
   border-bottom-left-radius:20px;
@@ -242,9 +386,7 @@ a:hover { text-decoration: none; }
 .hero-card ul{ margin:0; padding:0; list-style:none; }
 .hero-card li{ font-size:.95rem; color:var(--text); margin-bottom:4px; }
 
-/* =========================================================
-= SECTION TITLE & INFO CARD
-========================================================= */
+/* ===== Section Title & Info Card ===== */
 .section-title{
   color:var(--primary);
   border-bottom:3px solid var(--accent);
@@ -256,9 +398,7 @@ a:hover { text-decoration: none; }
 .info-card:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
 .info-item{ border:1px solid #eef2f7; }
 
-/* =========================================================
-= RUNNING TEXT (MARQUEE TOP & BOTTOM)
-========================================================= */
+/* ===== Running Text ===== */
 #marquee-info { background: transparent; }
 #marquee-info .container-fluid { padding-top: 0; padding-bottom: 0; }
 #marquee-info marquee{
@@ -268,27 +408,16 @@ a:hover { text-decoration: none; }
   margin: 0;
   white-space: nowrap;
 }
-#marquee-info marquee:first-of-type{
-  background: var(--primary);
-  color: #fff;
-}
-#marquee-info marquee:last-of-type{
-  background: var(--accent);
-  color: #fff;
-}
+#marquee-info marquee:first-of-type{ background: var(--primary); color: #fff; }
+#marquee-info marquee:last-of-type{ background: var(--accent); color: #fff; }
 #marquee-info marquee a,
 #marquee-info marquee b,
-#marquee-info marquee strong{
-  color:#fff;
-  text-decoration: underline;
-}
+#marquee-info marquee strong{ color:#fff; text-decoration: underline; }
 #marquee-info marquee + .my-1 { margin: .5rem 0; }
 .bg-accent { background: var(--accent) !important; color:#fff !important; }
 .rt-strip  { display:block; padding:.45rem .75rem; border-radius:8px; color:#fff; }
 
-/* =========================================================
-= BERITA & INFORMASI (BASE RULES LEGACY)
-========================================================= */
+/* ===== Berita & Informasi (base) ===== */
 #berita .card, #informasi .card{
   border-radius:16px;
   border:1px solid #e2e8f0;
@@ -300,15 +429,16 @@ a:hover { text-decoration: none; }
 #berita .card::before, #informasi .card::before{
   content:"";
   position:absolute;
-  top:0;
-  left:0;
-  height:3px;
-  width:100%;
+  top:0; left:0;
+  height:3px; width:100%;
   background-color:var(--accent);
   transition:all .25s ease;
 }
 #berita .card:hover::before, #informasi .card:hover::before{ height:5px; }
-#berita .card:hover, #informasi .card:hover{ transform: translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,.08); }
+#berita .card:hover, #informasi .card:hover{
+  transform: translateY(-4px);
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
 #berita .btn-outline-primary, #informasi .btn-link{
   display:inline-block;
   text-align:center;
@@ -320,7 +450,6 @@ a:hover { text-decoration: none; }
   font-size:.9rem;
   font-weight:600;
   transition:all .25s ease;
-  text-decoration:none;
 }
 #berita .btn-outline-primary:hover, #informasi .btn-link:hover{
   background-color:var(--accent);
@@ -328,26 +457,7 @@ a:hover { text-decoration: none; }
   color:var(--text);
 }
 
-/* =========================================================
-= ARTIKEL: BASE TYPOGRAPHY (DETAIL PAGE)
-========================================================= */
-.article-meta .author { color: var(--primary); font-weight: 600; }
-.article-content a { text-decoration: underline; word-break: break-word; overflow-wrap: anywhere; }
-.article-content img { max-width: 100%; height: auto; border-radius: 8px; }
-.article-content p { margin-bottom: 1rem; line-height: 1.8; }
-.article-content h2, .article-content h3, .article-content h4 { margin-top: 1.25rem; margin-bottom: .75rem; }
-.article-content ul, .article-content ol { padding-left: 1.25rem; margin-bottom: 1rem; }
-.article-content blockquote {
-  padding: .75rem 1rem;
-  border-left: 4px solid #e5e7eb;
-  background: #fafafa;
-  border-radius: .5rem;
-  margin: 1rem 0;
-}
-
-/* =========================================================
-= LAYANAN KAMI (SLIDER + CARD)
-========================================================= */
+/* ===== Layanan (slider + card) ===== */
 #Layanan .service-card{
   background:#fff;
   border:0;
@@ -357,7 +467,10 @@ a:hover { text-decoration: none; }
   position:relative;
   overflow:hidden;
 }
-#Layanan .service-card:hover{ box-shadow:0 .75rem 1.25rem rgba(0,0,0,.10); transform:translateY(-2px); }
+#Layanan .service-card:hover{
+  box-shadow:0 .75rem 1.25rem rgba(0,0,0,.10);
+  transform:translateY(-2px);
+}
 #Layanan .service-card .card-img-top{
   height:200px;
   object-fit:cover;
@@ -368,15 +481,13 @@ a:hover { text-decoration: none; }
 #Layanan .service-card .card-title{ color:var(--primary); font-weight:600; }
 #Layanan .service-card .title-underline{
   display:inline-block;
-  width:56px;
-  height:3px;
+  width:56px; height:3px;
   border-radius:2px;
   background:var(--accent);
   margin:.25rem 0 .75rem;
 }
 #Layanan .service-card .bg-light{ height:200px; }
 
-/* Slider */
 #Layanan #layananSlider{
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -385,26 +496,23 @@ a:hover { text-decoration: none; }
   padding-bottom: .25rem;
   -webkit-overflow-scrolling: touch;
 }
-#Layanan .slider-item{
-  scroll-snap-align: start;
-  flex: 0 0 auto;
+#Layanan .slider-item{ scroll-snap-align: start; flex: 0 0 auto; }
+#Layanan #layananSlider{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,.2) transparent;
+  position: relative;
 }
-#Layanan #layananSlider{ scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.2) transparent; }
 #Layanan #layananSlider::-webkit-scrollbar{ height: 8px; }
 #Layanan #layananSlider::-webkit-scrollbar-track{ background: transparent; }
 #Layanan #layananSlider::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.2); border-radius: 8px; }
-#Layanan #layananPrev,
-#Layanan #layananNext{
+#Layanan #layananPrev, #Layanan #layananNext{
   backdrop-filter: saturate(120%) blur(2px);
   -webkit-backdrop-filter: saturate(120%) blur(2px);
   border-radius: 999px;
 }
 #Layanan .nav-arrow{ z-index: 5; pointer-events: auto; }
-#Layanan #layananSlider{ position: relative; }
 
-/* =========================================================
-= BERITA (HOME) – NEWS CARD V2
-========================================================= */
+/* ===== Berita (home) – News Card v2 + spacing tight ===== */
 #berita .news-card{
   background: var(--white);
   border: 0;
@@ -432,9 +540,7 @@ a:hover { text-decoration: none; }
 #berita .news-card .card-title::after{
   content:"";
   display:block;
-  width:56px;
-  height:3px;
-  border-radius:2px;
+  width:56px; height:3px; border-radius:2px;
   background:var(--accent);
   margin:.25rem 0 .75rem;
 }
@@ -454,56 +560,29 @@ a:hover { text-decoration: none; }
   color: var(--text);
 }
 
-/* =========================================================
-= BERITA (LIST) — EXTRA TIGHT SPACING FOR EXCERPT
-   - rapetin padding body card
-   - kecilkan margin antar elemen
-   - rapetin line-height & margin paragraf RTE
-========================================================= */
-
 #berita .news-card .card-body{
   padding-top: .75rem;
   padding-bottom: .75rem;
 }
-
 #berita .news-card .badge{ margin-bottom: .25rem; }
 #berita .news-card .text-muted{ margin-bottom: .2rem; display:block; }
-
-#berita .news-card .card-title{
-  margin-top: .15rem;
-  margin-bottom: .2rem;
-}
-#berita .news-card .card-title::after{
-  margin: .15rem 0 .5rem;
-}
-
-/* rapetin area konten artikel di dalam card */
-#berita .news-card .article-content{
-  margin-top: .2rem;
-  margin-bottom: .2rem;
-}
-
-/* paragraf RTE di list: benar-benar rapat */
+#berita .news-card .card-title{ margin-top: .15rem; margin-bottom: .2rem; }
+#berita .news-card .card-title::after{ margin: .15rem 0 .5rem; }
+#berita .news-card .article-content{ margin-top: .2rem; margin-bottom: .2rem; }
 #berita .news-card .article-content p,
 #berita .news-card .article-excerpt p{
   line-height: 1.45;
   margin-top: .1rem;
   margin-bottom: .1rem;
 }
-
-/* clamp tetap aktif (maks 5 baris) */
 #berita .news-card .article-excerpt{
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
   overflow: hidden;
 }
-
-/* hilangkan sisa gap di elemen pertama/terakhir */
 #berita .news-card .article-excerpt > :first-child{ margin-top: 0; }
 #berita .news-card .article-excerpt > :last-child { margin-bottom: 0; }
-
-/* sedikit lebih rapat lagi khusus layar kecil */
 @media (max-width: 576.98px){
   #berita .news-card .card-body{ padding-top: .65rem; padding-bottom: .65rem; }
   #berita .news-card .article-content p,
@@ -513,28 +592,20 @@ a:hover { text-decoration: none; }
     margin-bottom: .08rem;
   }
 }
-
-/* =========================================================
-= BERITA (LIST) — HARD OVERRIDE LINE-HEIGHT EXCERPT
-========================================================= */
 #berita .news-card .article-content,
 #berita .news-card .article-content p{
-  line-height: 1.42 !important;   /* rapat */
+  line-height: 1.42 !important;
 }
-
 #berita .news-card .article-content p{
   margin-top: .08rem !important;
   margin-bottom: .08rem !important;
 }
-
 #berita .news-card .card-text,
 #berita .news-card .card-text * {
   font-weight: 400 !important;
 }
 
-/* =========================================================
-= INFORMASI (HOME) – INFO CARD V2
-========================================================= */
+/* ===== Informasi (home) – Info Card v2 ===== */
 #informasi .info-card-v2{
   background: var(--white);
   border: 0;
@@ -578,22 +649,16 @@ a:hover { text-decoration: none; }
   color: var(--text);
 }
 
-/* =========================================================
-= GALERI (CAROUSEL)
-========================================================= */
+/* ===== Galeri (carousel) ===== */
 #galeri .carousel-item { height: 420px; }
 #galeri .carousel-item img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
   border-radius:.75rem;
 }
 .carousel-item .carousel-caption{
   background:linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,0));
-  bottom:0;
-  left:0;
-  right:0;
+  bottom:0; left:0; right:0;
   padding:40px 20px 20px;
   opacity:0;
   transition:opacity .4s ease-in-out;
@@ -605,14 +670,10 @@ a:hover { text-decoration: none; }
   text-shadow:1px 1px 3px rgba(0,0,0,.5);
 }
 
-/* =========================================================
-= VIDEO SECTION
-========================================================= */
+/* ===== Video Section + Brand Card ===== */
 #video iframe{
   aspect-ratio:16 / 9;
-  width:100%;
-  height:auto;
-  min-height:420px;
+  width:100%; height:auto; min-height:420px;
   border-radius:16px;
   box-shadow:0 6px 24px rgba(0,0,0,.08);
   transition:transform .3s ease;
@@ -620,14 +681,9 @@ a:hover { text-decoration: none; }
 #video iframe:hover{ transform: scale(1.01); }
 #video .ratio{
   --bs-aspect-ratio:60%;
-  border-radius:16px;
-  overflow:hidden;
+  border-radius:16px; overflow:hidden;
   box-shadow:0 6px 24px rgba(0,0,0,.08);
 }
-
-/* =========================================================
-   VIDEO (brand style biru-kuning-putih)
-========================================================= */
 
 #video .brand-card{
   background: #fff;
@@ -642,8 +698,6 @@ a:hover { text-decoration: none; }
   transform: translateY(-3px);
   box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10);
 }
-
-/* strip kuning atas (konsisten dengan card lain) */
 #video .brand-card .brand-strip{
   content:"";
   position:absolute; left:0; right:0; top:0;
@@ -651,25 +705,16 @@ a:hover { text-decoration: none; }
   background: var(--accent);
   z-index: 2;
 }
-
-/* area media */
-#video .video-thumbnail{
-  background: linear-gradient(180deg, var(--light-bg) 0%, #fff 100%);
-}
+#video .video-thumbnail{ background: linear-gradient(180deg, var(--light-bg) 0%, #fff 100%); }
 #video .video-frame{
   aspect-ratio: 16 / 9;
   width: 100%; height: auto; min-height: 420px;
-  display: block;
-  border: 0;
+  display: block; border: 0;
 }
-
-/* bar info bawah */
 #video .video-info{
   background: color-mix(in srgb, var(--primary) 8%, #ffffff 92%);
   border-top: 1px solid #eef2f7;
 }
-
-/* judul biru + underline kuning */
 #video .video-title{
   color: var(--primary);
   font-weight: 700;
@@ -682,8 +727,6 @@ a:hover { text-decoration: none; }
   background: var(--accent);
   margin-top: .25rem;
 }
-
-/* badge play kecil brand */
 #video .yt-badge{
   width: 42px; height: 42px;
   border-radius: 12px;
@@ -694,8 +737,6 @@ a:hover { text-decoration: none; }
   flex: 0 0 auto;
   font-size: 20px;
 }
-
-/* tombol brand (match global) */
 #video .btn-brand{
   background-color: var(--primary);
   border-color: var(--primary);
@@ -707,15 +748,11 @@ a:hover { text-decoration: none; }
   border-color: var(--accent);
   color: var(--text);
 }
-
-/* responsif: tinggi minimum iframe lebih rendah di mobile */
 @media (max-width: 575.98px){
   #video .video-frame{ min-height: 280px; }
 }
 
-/* =========================================================
-= MENU-RAIL (DESKTOP)
-========================================================= */
+/* ===== Menu Rail (desktop) ===== */
 .menu-rail{
   --rail-bg: var(--white);
   --rail-border: var(--light-bg);
@@ -735,8 +772,7 @@ a:hover { text-decoration: none; }
   content:"";
   position:absolute;
   top:50%;
-  width:42px;
-  height:42px;
+  width:42px; height:42px;
   background:var(--white);
   border-radius:50%;
   transform:translateY(-50%);
@@ -761,9 +797,7 @@ a:hover { text-decoration: none; }
 }
 @media (max-width: 991.98px){ .menu-rail{ display:none; } }
 
-/* =========================================================
-= JANGKAUAN LAYANAN (COVERAGE METRICS)
-========================================================= */
+/* ===== Coverage Metrics ===== */
 #coverage .metric-card{
   background: var(--white);
   border: 0;
@@ -775,10 +809,7 @@ a:hover { text-decoration: none; }
 }
 #coverage .metric-card::before{
   content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  right:0;
+  position:absolute; left:0; top:0; right:0;
   height:6px;
   background: var(--accent);
 }
@@ -787,20 +818,15 @@ a:hover { text-decoration: none; }
   box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10);
 }
 #coverage .metric-illustration{
-  width: 110px;
-  height: 110px;
-  object-fit: contain;
-  display:block;
+  width: 110px; height: 110px;
+  object-fit: contain; display:block;
 }
 #coverage .metric-illustration-wrap{
-  width: 120px;
-  height: 120px;
+  width: 120px; height: 120px;
   margin: 6px auto 10px;
   border-radius: 20px;
   background: #fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex; align-items:center; justify-content:center;
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 #coverage .metric-title{
@@ -812,17 +838,11 @@ a:hover { text-decoration: none; }
 #coverage .metric-title::after{
   content:"";
   display:block;
-  width:56px;
-  height:3px;
-  border-radius:2px;
+  width:56px; height:3px; border-radius:2px;
   background: var(--accent);
   margin:.25rem auto .75rem;
 }
-#coverage .metric-desc{
-  color:#64748b;
-  font-size:.95rem;
-  line-height:1.5;
-}
+#coverage .metric-desc{ color:#64748b; font-size:.95rem; line-height:1.5; }
 #coverage .metric-value{
   color: var(--primary);
   font-weight: 800;
@@ -830,6 +850,7 @@ a:hover { text-decoration: none; }
   font-size: clamp(28px, 4.2vw, 44px);
   margin-top: auto;
 }
+
 #coverage .coverage-card{
   background: var(--white);
   border:0;
@@ -841,10 +862,7 @@ a:hover { text-decoration: none; }
 }
 #coverage .coverage-card::before{
   content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  right:0;
+  position:absolute; left:0; top:0; right:0;
   height:6px;
   background: var(--accent);
 }
@@ -853,28 +871,23 @@ a:hover { text-decoration: none; }
   box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.10);
 }
 #coverage .coverage-icon-wrap{
-  width:60px;
-  height:60px;
+  width:60px; height:60px;
   border-radius:14px;
   background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex; align-items:center; justify-content:center;
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 #coverage .coverage-icon{
-  width:48px;
-  height:48px;
+  width:48px; height:48px;
   object-fit:contain;
   display:block;
 }
 
-/* =========================================================
-= UTILITY & LAYERING FIX
-========================================================= */
+/* ===== Utilities & Layering ===== */
 .section-muted{ color:#64748b; }
 .shadow-soft{ box-shadow:0 8px 28px rgba(0,0,0,.08); }
 .border-light{ border-color:#e2e8f0 !important; }
+
 .navbar a, .dropdown-menu .dropdown-item{ -webkit-tap-highlight-color: transparent; }
 .navbar .nav-link:focus, .navbar .nav-link:active,
 .navbar .dropdown-toggle:focus, .navbar .dropdown-toggle:active,
@@ -892,49 +905,34 @@ a:hover { text-decoration: none; }
   outline-offset:2px;
 }
 
-/* Layering */
+/* Layering fix agar dropdown/menubar aman */
 .nav-topbar,
 .nav-menubar,
 .navbar,
-.menubar-floating {
-  position: relative;
-  z-index: 2000;
-  overflow: visible;
-}
-.navbar .dropdown-menu {
-  position: absolute;
-  z-index: 2050;
-  overflow: visible;
-}
+.menubar-floating { position: relative; z-index: 2000; overflow: visible; }
+.navbar .dropdown-menu { position: absolute; z-index: 2050; overflow: visible; }
 .nav-topbar .container,
 .container-menu,
 .navbar .container,
-.navbar .navbar-collapse {
-  overflow: visible !important;
-}
+.navbar .navbar-collapse { overflow: visible !important; }
 .menubar-floating { z-index: 2100; }
+
 #Layanan .service-card,
 #berita .news-card,
 #informasi .info-card-v2,
 #berita .card,
-#informasi .card {
-  position: relative;
-  z-index: auto;
-}
+#informasi .card { position: relative; z-index: auto; }
+
 #Layanan, #berita, #informasi, .hero {
   transform: none !important;
   filter: none !important;
   will-change: auto !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
+  background: transparent !important;
 }
 
-/* =========================================================
-   FORM BRAND ACCENTS — BIRU • KUNING • PUTIH
-   Dipakai di semua form yg dibungkus .brand-card
-========================================================= */
-
-/* Judul blok (h5) diberi garis kuning tipis */
+/* ===== Form Brand Accents ===== */
 .brand-card h5{
   color:#0f172a;
   font-weight:700;
@@ -945,25 +943,19 @@ a:hover { text-decoration: none; }
   content:"";
   display:block;
   width:64px; height:3px; border-radius:2px;
-  background:var(--accent);           /* kuning */
+  background:var(--accent);
   margin-top:.35rem;
 }
-
-/* Garis pemisah yang halus */
 .brand-card hr{
   border:0;
   border-top:1px solid #eef2f7;
   margin:1.25rem 0;
 }
-
-/* Label required: bintang kuning otomatis */
 .brand-card .form-label.required::after{
   content:" *";
   color:var(--accent);
   font-weight:700;
 }
-
-/* Input/select/textarea dengan ring biru lembut saat fokus */
 .brand-card .form-control,
 .brand-card .form-select{
   border-color:#e2e8f0;
@@ -973,8 +965,6 @@ a:hover { text-decoration: none; }
   border-color: color-mix(in srgb, var(--primary) 70%, #ffffff);
   box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--primary) 20%, transparent);
 }
-
-/* Checkbox & radio: biru saat aktif */
 .brand-card .form-check-input:checked{
   background-color: var(--primary);
   border-color: var(--primary);
@@ -983,8 +973,6 @@ a:hover { text-decoration: none; }
   border-color: var(--primary);
   box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--primary) 20%, transparent);
 }
-
-/* Help text & link bernuansa brand */
 .brand-card .form-text{ color:#64748b; }
 .brand-card .form-text a{
   color: var(--primary); text-decoration: underline;
@@ -992,8 +980,6 @@ a:hover { text-decoration: none; }
 .brand-card .form-text a:hover{
   color: var(--accent);
 }
-
-/* Tombol utama biru, hover kuning (match brand) */
 .brand-card .btn-primary{
   background-color: var(--primary);
   border-color: var(--primary);
@@ -1004,15 +990,9 @@ a:hover { text-decoration: none; }
   border-color: var(--accent);
   color: var(--text);
 }
-
-/* Tombol reset tetap netral tapi rapi */
-.brand-card .btn-light{
-  border:1px solid #e2e8f0;
-}
-
-/* Kartu form: strip kuning di atas (jika belum ditambahkan) */
+.brand-card .btn-light{ border:1px solid #e2e8f0; }
 .brand-card{
-  background:#fff;                   /* putih */
+  background:#fff;
   border:1px solid #e2e8f0;
   border-radius:16px;
   box-shadow:0 .25rem .75rem rgba(0,0,0,.06);
@@ -1028,8 +1008,6 @@ a:hover { text-decoration: none; }
   transform: translateY(-2px);
   box-shadow:0 .75rem 1.25rem rgba(0,0,0,.10);
 }
-
-/* Badge kecil opsional untuk judul halaman */
 .page-badge{
   display:inline-flex; align-items:center; justify-content:center;
   width:28px; height:28px; border-radius:9px;
@@ -1037,19 +1015,12 @@ a:hover { text-decoration: none; }
   margin-right:.5rem;
 }
 
-/* =========================================================
-   NAV ACTIVE — SINGLE SOURCE OF TRUTH (OVERRIDE)
-   ========================================================= */
-
-/* warna & weight link aktif (atau yang pakai aria-current) */
+/* ===== Nav Active – single source of truth ===== */
 .nav-menubar .nav-link.active,
 .nav-menubar .nav-link[aria-current="page"] {
   color: var(--primary) !important;
   font-weight: 700;
 }
-
-/* underline/strip kuning di item aktif */
-.container-menu .nav-link { position: relative; }
 .container-menu .nav-link.active::after,
 .container-menu .nav-link[aria-current="page"]::after {
   content: "";
@@ -1059,14 +1030,116 @@ a:hover { text-decoration: none; }
   bottom: -.35rem;
   height: 3px;
   border-radius: 2px;
-  background: var(--accent); /* kuning brand */
+  background: var(--accent);
 }
-
-/* highlight item aktif di dropdown */
 .dropdown-menu .dropdown-item.active,
 .dropdown-menu .dropdown-item:active {
   background-color: var(--primary);
   color: #fff;
 }
 
-/* =========================================================
+/* ===== Footer info cards ===== */
+.footer-info {
+  background: linear-gradient(180deg, rgba(229,242,255,.18) 0%, rgba(255,255,255,0) 50%);
+}
+.footer-info .fi-card {
+  position: relative;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 8px 22px rgba(2, 6, 23, .08);
+  border: 1px solid rgba(2, 6, 23, .06);
+}
+.footer-info .fi-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent);
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+.footer-info .fi-title {
+  margin: 6px 0 12px;
+  color: var(--primary);
+  font-weight: 700;
+}
+.footer-info .fi-list { list-style: none; padding-left: 0; }
+.footer-info .fi-list li { margin-bottom: 8px; }
+.footer-info .fi-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  text-decoration: none;
+}
+.footer-info .fi-list a::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: 0 0 8px;
+}
+.footer-info .fi-list a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.footer-info .fi-social { list-style: none; padding-left: 0; }
+.footer-info .fi-social li { margin-bottom: 10px; }
+.footer-info .fi-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+.footer-info .fi-ico {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  background: var(--white);
+  border: 1px solid rgba(31,111,235,.25);
+  box-shadow: 0 2px 6px rgba(2,6,23,.06);
+}
+.footer-info .fi-ico i { font-size: 16px; color: var(--primary); }
+.footer-info .fi-social a:hover .fi-ico { background: var(--primary); border-color: var(--primary); }
+.footer-info .fi-social a:hover .fi-ico i { color: #fff; }
+.footer-info .fi-social a:hover { color: var(--primary); }
+@media (max-width: 991.98px){
+  .footer-info .fi-card { padding: 16px; }
+}
+
+/* ===== FIX GAP PUTIH DI ATAS + SECTION TRANSPARAN ===== */
+html, body { margin: 0; padding: 0; }
+
+/* Overlay abstrak isi penuh viewport (di belakang navbar juga) */
+.has-abstract-bg::before,
+.has-abstract-bg::after {
+  inset: 0 !important;  /* sebelumnya pakai var(--bg-top-offset) */
+}
+
+/* Biar hero nyatu mulus dengan overlay di belakangnya */
+.hero { background: linear-gradient(180deg, var(--light-bg) 0%, var(--white) 100%); }
+
+/* Pastikan section & container tertentu transparan (tidak menutup pola) */
+.pelayanan-section,
+.pelayanan-section .container,
+.berita-section,
+.berita-section .container {
+  background: transparent !important;
+}
+
+/* (opsional) kalau ingin tetap ada “ruang aman” kecil di bawah navbar */
+@supports (mask-image: linear-gradient(#000, #000)) {
+  .has-abstract-bg.is-home::before,
+  .has-abstract-bg.is-home::after {
+    /* mask tipis 12px agar transisi halus, tanpa bikin gap besar */
+    -webkit-mask-image: linear-gradient(
+      to bottom, transparent 0, rgba(0,0,0,.2) 8px, #000 12px
+    );
+            mask-image: linear-gradient(
+      to bottom, transparent 0, rgba(0,0,0,.2) 8px, #000 12px
+    );
+  }
+}

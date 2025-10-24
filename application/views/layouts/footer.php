@@ -23,6 +23,7 @@
 
 <!-- CDN CKEditor 5 Classic -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 
 <script src="<?= base_url('assets/admin/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js'); ?>"></script>
 <script src="<?= base_url('assets/admin/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js'); ?>"></script>

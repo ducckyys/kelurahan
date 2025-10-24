@@ -22,8 +22,11 @@
             }
         });
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="<?= base_url('assets/admin/css/bootstrap.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/admin/css/atlantis.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/admin/css/style.css?v=1'); ?>">
 </head>
 
 <body>

@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * @property M_belum_memiliki_rumah $M_belum_memiliki_rumah
+ * @property M_pejabat $M_pejabat
  * @property CI_Input $input
  * @property CI_Session $session
  * @property CI_Upload $upload
@@ -21,7 +22,7 @@ class Surat_belum_memiliki_rumah extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
-        $this->load->model('M_belum_memiliki_rumah');
+        $this->load->model(['M_belum_memiliki_rumah', 'M_pejabat']); // <= tambahkan M_pejabat
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['url', 'form']);
 
@@ -50,6 +51,29 @@ class Surat_belum_memiliki_rumah extends CI_Controller
     {
         $data['surat'] = $this->M_belum_memiliki_rumah->get_by_id($id);
         if (!$data['surat']) return redirect('admin/surat_belum_memiliki_rumah');
+
+        // Siap cetak?
+        $data['bisaCetak'] = !empty($data['surat']->nomor_surat) && $data['surat']->status === 'Disetujui';
+
+        // Dropdown penandatangan (pakai daftar pejabat ber-has_ttd = 1 bila ada)
+        $signers = $this->M_pejabat->get_all_signers();
+        $default = null;
+        foreach ($signers as $s) {
+            if ($s->jabatan_nama === 'Sekretaris Kelurahan') {
+                $default = $s->id;
+                break;
+            }
+        }
+        if (!$default) {
+            foreach ($signers as $s) {
+                if (stripos($s->jabatan_nama, 'Lurah') === 0) {
+                    $default = $s->id;
+                    break;
+                }
+            }
+        }
+        $data['signers'] = $signers;
+        $data['default_signer_id'] = $default;
 
         $data['title'] = "Detail Surat Belum Memiliki Rumah";
         $this->load->view('layouts/header', $data);
@@ -192,7 +216,6 @@ class Surat_belum_memiliki_rumah extends CI_Controller
             'nomor_surat_rt'    => $this->input->post('nomor_surat_rt', true),
             'tanggal_surat_rt'  => $this->input->post('tanggal_surat_rt', true),
             'nomor_surat'       => $this->input->post('nomor_surat', true) ?: null,
-            // HAPUS field 'id' yang dulu salah set. Jangan ubah PK!
             'dokumen_pendukung' => !empty($allFiles) ? json_encode($allFiles) : null,
         ];
 
@@ -220,6 +243,14 @@ class Surat_belum_memiliki_rumah extends CI_Controller
             redirect('admin/surat_belum_memiliki_rumah/edit/' . $id);
             return;
         }
+
+        // ==== Ambil penandatangan dari ?ttd=ID (fallback: Sekretaris -> Lurah) ====
+        $ttd_id = (int)$this->input->get('ttd');
+        $ttd = null;
+        if ($ttd_id > 0) $ttd = $this->M_pejabat->get_by_id_join($ttd_id);
+        if (!$ttd) $ttd = $this->M_pejabat->get_default_signer();
+        $data['ttd'] = $ttd;
+        $data['tanggal_ttd'] = date('d F Y');
 
         $data['title'] = "Cetak - " . $data['surat']->nama_pemohon;
         $filename = 'SURAT-BELUM-MEMILIKI-RUMAH-' . preg_replace('/[^A-Za-z0-9\-]/', '', $data['surat']->nama_pemohon);

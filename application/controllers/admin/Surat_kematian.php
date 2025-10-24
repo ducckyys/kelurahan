@@ -7,6 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Form_validation $form_validation
  * @property CI_Upload $upload
  * @property M_kematian $M_kematian
+ * @property M_pejabat $M_pejabat
  * @property CI_DB_query_builder $db
  * @property CI_Loader $load
  * @property CI_URI $uri
@@ -22,7 +23,7 @@ class Surat_kematian extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
-        $this->load->model('M_kematian');
+        $this->load->model(['M_kematian', 'M_pejabat']); // <== tambahkan M_pejabat
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['url', 'form']);
 
@@ -34,7 +35,6 @@ class Surat_kematian extends CI_Controller
 
     private function is_superadmin()
     {
-        // Konsisten: superadmin = id_level '1'
         return $this->session->userdata('id_level') === '1';
     }
 
@@ -53,6 +53,29 @@ class Surat_kematian extends CI_Controller
         $data['surat'] = $this->M_kematian->get_by_id($id);
         if (!$data['surat']) return redirect('admin/surat_kematian');
 
+        // siap cetak?
+        $data['bisaCetak'] = !empty($data['surat']->nomor_surat) && $data['surat']->status === 'Disetujui';
+
+        // dropdown penandatangan
+        $signers = $this->M_pejabat->get_all_signers(); // aktif/punya role ttd
+        $default = null;
+        foreach ($signers as $s) {
+            if ($s->jabatan_nama === 'Sekretaris Kelurahan') {
+                $default = $s->id;
+                break;
+            }
+        }
+        if (!$default) {
+            foreach ($signers as $s) {
+                if (stripos($s->jabatan_nama, 'Lurah') === 0) {
+                    $default = $s->id;
+                    break;
+                }
+            }
+        }
+        $data['signers'] = $signers;
+        $data['default_signer_id'] = $default;
+
         $data['title'] = "Detail Surat Kematian";
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -66,7 +89,7 @@ class Surat_kematian extends CI_Controller
         if (!$data['surat']) return redirect('admin/surat_kematian');
 
         $data['title']         = "Edit Surat Kematian";
-        $data['can_full_edit'] = $this->is_superadmin(); // dipakai di view
+        $data['can_full_edit'] = $this->is_superadmin();
 
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
@@ -251,6 +274,14 @@ class Surat_kematian extends CI_Controller
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
             return redirect('admin/surat_kematian/edit/' . $id);
         }
+
+        // === ambil penandatangan dari ?ttd=ID (fallback default) ===
+        $ttd_id = (int)$this->input->get('ttd');
+        $ttd = null;
+        if ($ttd_id > 0) $ttd = $this->M_pejabat->get_by_id_join($ttd_id);
+        if (!$ttd) $ttd = $this->M_pejabat->get_default_signer(); // mis. Sekretaris Kelurahan
+        $data['ttd'] = $ttd;
+        $data['tanggal_ttd'] = date('d F Y');
 
         $data['title'] = 'Cetak Surat Keterangan Kematian - ' . $data['surat']->nama;
         $html = $this->load->view('admin/kematian/v_cetak', $data, TRUE);

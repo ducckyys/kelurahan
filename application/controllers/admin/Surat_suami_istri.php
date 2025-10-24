@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  * @property M_suami_istri $M_suami_istri
+ * @property M_pejabat $M_pejabat
  * @property CI_Session $session
  * @property CI_Upload $upload
  * @property CI_Form_validation $form_validation
@@ -21,7 +22,7 @@ class Surat_suami_istri extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
-        $this->load->model('M_suami_istri');
+        $this->load->model(['M_suami_istri', 'M_pejabat']);
         $this->load->library(['upload', 'form_validation']);
         $this->load->helper(['url', 'form']);
 
@@ -51,6 +52,30 @@ class Surat_suami_istri extends CI_Controller
         if (!$data['surat']) return redirect('admin/surat_suami_istri');
 
         $data['title'] = "Detail Pengajuan Suami Istri";
+
+        // siap cetak?
+        $data['bisaCetak'] = !empty($data['surat']->nomor_surat) && $data['surat']->status === 'Disetujui';
+
+        // dropdown penandatangan
+        $signers = $this->M_pejabat->get_all_signers();
+        $default = null;
+        foreach ($signers as $s) {
+            if ($s->jabatan_nama === 'Sekretaris Kelurahan') {
+                $default = $s->id;
+                break;
+            }
+        }
+        if (!$default) {
+            foreach ($signers as $s) {
+                if (stripos($s->jabatan_nama, 'Lurah') === 0) {
+                    $default = $s->id;
+                    break;
+                }
+            }
+        }
+        $data['signers'] = $signers;
+        $data['default_signer_id'] = $default;
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/suami_istri/v_detail', $data);
@@ -222,6 +247,15 @@ class Surat_suami_istri extends CI_Controller
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
             return redirect('admin/surat_suami_istri/edit/' . $id);
         }
+
+        // Ambil penandatangan dari query ?ttd=ID (fallback default)
+        $ttd_id = (int)$this->input->get('ttd');
+        $ttd = null;
+        if ($ttd_id > 0) $ttd = $this->M_pejabat->get_by_id_join($ttd_id);
+        if (!$ttd) $ttd = $this->M_pejabat->get_default_signer();
+
+        $data['ttd'] = $ttd;
+        $data['tanggal_ttd'] = date('d F Y');
 
         $data['title'] = "Cetak Surat Suami Istri - " . $data['surat']->nama_pihak_satu;
         $html = $this->load->view('admin/suami_istri/v_cetak', $data, true);

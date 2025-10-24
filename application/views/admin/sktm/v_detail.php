@@ -166,16 +166,38 @@
                     </a>
 
                     <?php if ($bisaCetak): ?>
-                        <a href="<?= base_url('admin/surat_sktm/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success">
-                            <i class="fa fa-print"></i> Cetak Surat (PDF)
-                        </a>
+                        <?php if (!empty($signers)): ?>
+                            <form class="form-inline d-inline-flex align-items-center ml-2"
+                                action="<?= base_url('admin/surat_sktm/cetak/' . $surat->id); ?>"
+                                method="get" target="_blank">
+
+                                <!-- Tombol CETAK di kiri -->
+                                <button type="submit" class="btn btn-success mr-2">
+                                    <i class="fa fa-print"></i> Cetak Surat (PDF)
+                                </button>
+
+                                <!-- Dropdown di SEBELAH KANAN tombol cetak -->
+                                <label for="ttd" class="mb-0 mr-2">Penandatangan:</label>
+                                <select name="ttd" id="ttd" class="form-control" required>
+                                    <?php foreach ($signers as $s): ?>
+                                        <option value="<?= (int)$s->id; ?>"
+                                            <?= ($default_signer_id && (int)$default_signer_id === (int)$s->id) ? 'selected' : '' ?>>
+                                            <?= html_escape($s->jabatan_nama . ' - ' . $s->nama); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </form>
+                        <?php else: ?>
+                            <button class="btn btn-success ml-2" disabled title="Data penandatangan belum diisi di menu Pengaturan → Pejabat">
+                                <i class="fa fa-print"></i> Cetak Surat (PDF)
+                            </button>
+                        <?php endif; ?>
                     <?php else: ?>
                         <button class="btn btn-success" disabled title="Lengkapi data di halaman edit terlebih dahulu">
                             <i class="fa fa-print"></i> Cetak Surat (PDF)
                         </button>
                     <?php endif; ?>
                 </div>
-
             </div>
         </div>
     </div>

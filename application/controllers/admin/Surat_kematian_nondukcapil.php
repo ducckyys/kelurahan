@@ -7,6 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property CI_Form_validation $form_validation
  * @property CI_Upload $upload
  * @property M_kematian_nondukcapil $M_kematian_nondukcapil
+ * @property M_pejabat $M_pejabat
  * @property CI_DB_query_builder $db
  * @property CI_Loader $load
  * @property CI_URI $uri
@@ -22,8 +23,7 @@ class Surat_kematian_nondukcapil extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
-        $this->load->model('M_kematian_nondukcapil');
-
+        $this->load->model(['M_kematian_nondukcapil', 'M_pejabat']);
         $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
         if (!is_dir($this->pendukung_dir)) {
             @mkdir($this->pendukung_dir, 0755, true);
@@ -34,7 +34,6 @@ class Surat_kematian_nondukcapil extends CI_Controller
 
     private function is_superadmin()
     {
-        // konsisten dengan modul lain: superadmin = id_level '1'
         return $this->session->userdata('id_level') === '1';
     }
 
@@ -54,6 +53,30 @@ class Surat_kematian_nondukcapil extends CI_Controller
         if (!$data['surat']) return redirect('admin/surat_kematian_nondukcapil');
 
         $data['title'] = "Detail Surat Kematian (Non Dukcapil)";
+
+        // status siap cetak
+        $data['bisaCetak'] = !empty($data['surat']->nomor_surat) && $data['surat']->status === 'Disetujui';
+
+        // dropdown penandatangan
+        $signers = $this->M_pejabat->get_all_signers();
+        $default = null;
+        foreach ($signers as $s) {
+            if ($s->jabatan_nama === 'Sekretaris Kelurahan') {
+                $default = $s->id;
+                break;
+            }
+        }
+        if (!$default) {
+            foreach ($signers as $s) {
+                if (stripos($s->jabatan_nama, 'Lurah') === 0) {
+                    $default = $s->id;
+                    break;
+                }
+            }
+        }
+        $data['signers'] = $signers;
+        $data['default_signer_id'] = $default;
+
         $this->load->view('layouts/header', $data);
         $this->load->view('layouts/sidebar', $data);
         $this->load->view('admin/kematian_nondukcapil/v_detail', $data);
@@ -119,7 +142,7 @@ class Surat_kematian_nondukcapil extends CI_Controller
 
     public function update($id)
     {
-        // ===== Admin biasa: hanya boleh Status & Nomor Surat =====
+        // admin biasa: hanya status & nomor
         if (!$this->is_superadmin()) {
             $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
             $this->form_validation->set_rules('status', 'Status Pengajuan', 'required|in_list[Pending,Disetujui,Ditolak]');
@@ -138,7 +161,7 @@ class Surat_kematian_nondukcapil extends CI_Controller
             return redirect('admin/surat_kematian_nondukcapil/detail/' . $id);
         }
 
-        // ===== Superadmin: validasi lengkap =====
+        // superadmin: validasi lengkap
         $this->form_validation->set_rules('nomor_surat_rt', 'Nomor Surat RT', 'trim');
         $this->form_validation->set_rules('tanggal_surat_rt', 'Tanggal Surat RT', 'trim');
         $this->form_validation->set_rules('nomor_surat', 'Nomor Surat', 'trim');
@@ -222,6 +245,15 @@ class Surat_kematian_nondukcapil extends CI_Controller
             $this->session->set_flashdata('error', 'Gagal cetak! Status surat harus "Disetujui" terlebih dahulu.');
             return redirect('admin/surat_kematian_nondukcapil/edit/' . $id);
         }
+
+        // Ambil penandatangan dari query ?ttd=ID (fallback default)
+        $ttd_id = (int)$this->input->get('ttd');
+        $ttd = null;
+        if ($ttd_id > 0) $ttd = $this->M_pejabat->get_by_id_join($ttd_id);
+        if (!$ttd) $ttd = $this->M_pejabat->get_default_signer();
+
+        $data['ttd'] = $ttd;
+        $data['tanggal_ttd'] = date('d F Y');
 
         $data['title'] = "Cetak Surat Kematian (Non Dukcapil) - " . $data['surat']->nama_almarhum;
         $html = $this->load->view('admin/kematian_nondukcapil/v_cetak', $data, true);

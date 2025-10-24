@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <title><?= html_escape($title); ?></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/admin/css/fonts.min.css'); ?>">
 
     <style>
         /* ==== Kertas F4 & margin cetak ==== */
@@ -16,9 +16,10 @@
         :root {
             --header-height: 45mm;
             --gap-after-header: 6mm;
+            --ttd-width: 100mm;
+            /* dibuat lebih lebar agar nama tidak turun baris */
         }
 
-        /* ==== Reset & font ==== */
         * {
             box-sizing: border-box;
         }
@@ -118,13 +119,12 @@
 
         .nomor-surat {
             text-align: center;
-            margin: 0;
-            margin-bottom: 15px;
+            margin: 0 0 15px 0;
         }
 
         .isi-surat {
             text-align: justify;
-            line-height: 1.4;
+            line-height: 1.35;
             margin: 10px 0;
         }
 
@@ -154,7 +154,6 @@
             text-align: center;
         }
 
-        /* ==== Bagian Keperluan ==== */
         .keperluan-section {
             margin: 12px 0;
         }
@@ -173,7 +172,7 @@
             display: inline-block;
             width: 5mm;
             height: 5mm;
-            border: 1.5px solid black;
+            border: 1.5px solid #000;
             margin-right: 10px;
             vertical-align: middle;
         }
@@ -189,19 +188,15 @@
             clear: both;
         }
 
-        /* TTD KIRI (BARU) */
         .ttd-kiri {
             width: 80mm;
-            /* Lebar area ttd kiri */
             float: left;
             text-align: center;
             line-height: 1.2;
         }
 
-        /* TTD KANAN (LAMA) */
         .ttd-kanan {
-            width: 80mm;
-            /* Lebar area ttd kanan */
+            width: var(--ttd-width);
             float: right;
             text-align: center;
             line-height: 1.2;
@@ -214,6 +209,16 @@
         .nama-pejabat {
             text-decoration: underline;
             font-weight: bold;
+            white-space: nowrap;
+            word-break: keep-all;
+        }
+
+        @media print {
+
+            html,
+            body {
+                height: 330mm;
+            }
         }
     </style>
 </head>
@@ -224,7 +229,7 @@
         <div class="kop-surat-wrapper">
             <table class="kop-table">
                 <tr>
-                    <td class="kop-logo"><img src="<?= base_url('assets/img/logo_tangsel.png'); ?>" alt="Logo">
+                    <td class="kop-logo"><img src="<?= base_url('assets/img/logo_tangsel.png'); ?>" alt="Logo"></td>
                     <td class="kop-text">
                         <p class="line1">PEMERINTAH KOTA TANGERANG SELATAN</p>
                         <p class="line2">KECAMATAN SETU</p>
@@ -245,7 +250,7 @@
     <div id="content">
         <p class="judul-surat">SURAT KETERANGAN</p>
         <p class="nomor-surat">Nomor : <?= html_escape($surat->nomor_surat); ?></p>
-        </p>
+
         <p class="isi-surat pembuka">Yang bertanda tangan dibawah ini Lurah Kademangan Kecamatan Setu Kota Tangerang Selatan menerangkan bahwa :</p>
         <table class="data-table">
             <tr>
@@ -269,7 +274,11 @@
                 <td><?= html_escape($surat->alamat_ahli_waris); ?></td>
             </tr>
         </table>
-        <p class="isi-surat">Nama tersebut diatas adalah ahli waris (<b><?= html_escape($surat->hubungan_ahli_waris); ?></b>) dari alm <?= html_escape(strtoupper($surat->nama_almarhum)); ?> telah datang menghadap, dan memohon surat keterangan berdasarkan pernyataan pemohon dan Surat Pengantar RT/RW nomor <?= html_escape($surat->nomor_surat_rt); ?> tanggal <?= date('d-m-Y', strtotime($surat->tanggal_surat_rt)); ?>, <b><?= html_escape($surat->keterangan_almarhum); ?></b> nama tersebut diatas telah meninggal dunia bertempat tinggal di <?= html_escape($surat->alamat_ahli_waris); ?> dengan data tersebut :</p>
+
+        <p class="isi-surat">
+            Nama tersebut diatas adalah ahli waris (<b><?= html_escape($surat->hubungan_ahli_waris); ?></b>) dari alm <?= html_escape(strtoupper($surat->nama_almarhum)); ?> telah datang menghadap, dan memohon surat keterangan berdasarkan pernyataan pemohon dan Surat Pengantar RT/RW nomor <?= html_escape($surat->nomor_surat_rt); ?> tanggal <?= date('d-m-Y', strtotime($surat->tanggal_surat_rt)); ?>, <b><?= html_escape($surat->keterangan_almarhum); ?></b> nama tersebut diatas telah meninggal dunia bertempat tinggal di <?= html_escape($surat->alamat_ahli_waris); ?> dengan data tersebut :
+        </p>
+
         <table class="data-table">
             <tr>
                 <td>Nama</td>
@@ -297,6 +306,7 @@
                 <td><?= html_escape($surat->alamat_almarhum); ?></td>
             </tr>
         </table>
+
         <div class="keperluan-section">
             <p class="isi-surat" style="margin-bottom: 8px;">Surat keterangan ini diperlukan untuk :</p>
             <table class="keperluan-table">
@@ -314,27 +324,37 @@
                 </tr>
             </table>
         </div>
+
         <p class="isi-surat">Apabila pernyataan pemohon ini tidak benar, maka segala resiko hukum sepenuhnya menjadi tanggung jawab pemohon, tanpa melibatkan pihak Lurah.</p>
         <p class="isi-surat">Demikian surat keterangan ini dibuat atas dasar sebenarnya dan untuk digunakan sebagai mana mestinya.</p>
         <p class="catatan-bawah">Surat ini berlaku 14 hari sejak dikeluarkan.</p>
 
+        <?php
+        // data penandatangan dinamis dari controller
+        $namaTtd = $ttd->nama ?? '.....................';
+        $nipTtd  = $ttd->nip  ?? '.....................';
+        $jabTtd  = $ttd->jabatan_nama ?? 'Sekretaris Kelurahan';
+        $isLurah = isset($ttd->jabatan_nama) && stripos($ttd->jabatan_nama, 'Lurah') === 0;
+        $tanggalCetak = $tanggal_ttd ?? date('d F Y');
+        ?>
+
         <div class="closing-section">
+            <!-- TTD Pemohon (kiri) -->
             <div class="ttd-kiri">
-                <p class="jabatan">
-                    Ahli Waris / Pemohon,
-                </p>
+                <p class="jabatan">Ahli Waris / Pemohon,</p>
                 <br><br><br><br>
                 <p class="nama-pejabat"><?= html_escape(strtoupper($surat->nama_ahli_waris)); ?></p>
             </div>
 
+            <!-- TTD Pejabat (kanan) -->
             <div class="ttd-kanan">
                 <p class="jabatan">
-                    Kademangan, <?= date('d F Y'); ?><br>
-                    Lurah Kademangan
+                    Kademangan, <?= html_escape($tanggalCetak); ?><br>
+                    <?= $isLurah ? 'Lurah Kademangan' :  html_escape($jabTtd); ?>
                 </p>
                 <br><br><br>
-                <p class="nama-pejabat">NAMA LURAH</p>
-                <p class="jabatan">NIP. NIP LURAH</p>
+                <p class="nama-pejabat"><?= html_escape(strtoupper($namaTtd)); ?></p>
+                <p class="jabatan">NIP. <?= html_escape($nipTtd); ?></p>
             </div>
         </div>
     </div>

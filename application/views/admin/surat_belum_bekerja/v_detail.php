@@ -22,9 +22,7 @@
                 </div>
                 <div class="card-body">
                     <?php
-                    $bisaCetak = true;
-                    if (empty($surat->nomor_surat)) $bisaCetak = false;
-                    if ($surat->status != 'Disetujui') $bisaCetak = false;
+                    $bisaCetak = $bisaCetak ?? (!empty($surat->nomor_surat) && $surat->status == 'Disetujui');
                     ?>
                     <?php if (!$bisaCetak): ?>
                         <div class="alert alert-warning" role="alert">
@@ -83,8 +81,7 @@
                                     $files = [];
                                     if (!empty($surat->dokumen_pendukung)) {
                                         $dec = json_decode($surat->dokumen_pendukung, true);
-                                        if (is_array($dec)) $files = $dec;
-                                        else $files = [$surat->dokumen_pendukung];
+                                        $files = is_array($dec) ? $dec : [$surat->dokumen_pendukung];
                                     }
                                     ?>
                                     <?php if (!empty($files)): ?>
@@ -106,14 +103,46 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="card-footer">
-                    <a href="<?= base_url('admin/surat_belum_bekerja/edit/' . $surat->id); ?>" class="btn btn-warning"><i class="fa fa-edit"></i> Edit Data Ini</a>
+                    <a href="<?= base_url('admin/surat_belum_bekerja/edit/' . $surat->id); ?>" class="btn btn-warning">
+                        <i class="fa fa-edit"></i> Edit Data Ini
+                    </a>
+
                     <?php if ($bisaCetak): ?>
-                        <a href="<?= base_url('admin/surat_belum_bekerja/cetak/' . $surat->id); ?>" target="_blank" class="btn btn-success"><i class="fa fa-print"></i> Cetak Surat (PDF)</a>
+                        <?php if (!empty($signers)): ?>
+                            <form class="form-inline d-inline-flex align-items-center ml-2"
+                                action="<?= base_url('admin/surat_belum_bekerja/cetak/' . $surat->id); ?>"
+                                method="get" target="_blank">
+
+                                <!-- Tombol CETAK di kiri -->
+                                <button type="submit" class="btn btn-success mr-2">
+                                    <i class="fa fa-print"></i> Cetak Surat (PDF)
+                                </button>
+
+                                <!-- Dropdown di sebelah kanan tombol -->
+                                <label for="ttd" class="mb-0 mr-2">Penandatangan:</label>
+                                <select name="ttd" id="ttd" class="form-control" style="min-width:320px" required>
+                                    <?php foreach ($signers as $s): ?>
+                                        <option value="<?= (int)$s->id; ?>"
+                                            <?= ($default_signer_id && (int)$default_signer_id === (int)$s->id) ? 'selected' : '' ?>>
+                                            <?= html_escape($s->jabatan_nama . ' - ' . $s->nama); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </form>
+                        <?php else: ?>
+                            <button class="btn btn-success ml-2" disabled title="Data penandatangan belum diisi di menu Pengaturan → Pejabat">
+                                <i class="fa fa-print"></i> Cetak Surat (PDF)
+                            </button>
+                        <?php endif; ?>
                     <?php else: ?>
-                        <button class="btn btn-success" disabled><i class="fa fa-print"></i> Cetak Surat (PDF)</button>
+                        <button class="btn btn-success" disabled title="Lengkapi data di halaman edit terlebih dahulu">
+                            <i class="fa fa-print"></i> Cetak Surat (PDF)
+                        </button>
                     <?php endif; ?>
                 </div>
+
             </div>
         </div>
     </div>

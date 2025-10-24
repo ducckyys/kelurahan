@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 13, 2025 at 09:01 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 7.4.33
+-- Host: localhost:3306
+-- Generation Time: Oct 24, 2025 at 02:33 AM
+-- Server version: 8.4.3
+-- PHP Version: 8.1.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,24 +28,15 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `berita` (
-  `id_berita` int(10) UNSIGNED NOT NULL,
-  `judul_berita` varchar(255) NOT NULL,
-  `slug_berita` varchar(255) NOT NULL,
-  `isi_berita` text NOT NULL,
-  `kategori` enum('Kegiatan','Pengumuman','Layanan','Umum') NOT NULL DEFAULT 'Umum',
-  `gambar` varchar(100) NOT NULL,
-  `tgl_publish` datetime NOT NULL DEFAULT current_timestamp(),
-  `id_user` int(11) NOT NULL
+  `id_berita` int UNSIGNED NOT NULL,
+  `judul_berita` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `slug_berita` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `isi_berita` text COLLATE utf8mb4_general_ci NOT NULL,
+  `kategori` enum('Kegiatan','Pengumuman','Layanan','Umum') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Umum',
+  `gambar` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tgl_publish` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_user` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `berita`
---
-
-INSERT INTO `berita` (`id_berita`, `judul_berita`, `slug_berita`, `isi_berita`, `kategori`, `gambar`, `tgl_publish`, `id_user`) VALUES
-(2, 'Jangan Panik Mogok! Ini Daftar Bengkel Motor dan Mobil Terdekat di Kademangan, Setu', 'jangan-panik-mogok-ini-daftar-bengkel-motor-dan-mobil-terdekat-di-kademangan-setu', '<p><strong>TANGERANG SELATAN, 9 Oktober 2025</strong> – Kademangan, sebagai salah satu kelurahan yang terus berkembang di Kecamatan Setu, Tangerang Selatan, memiliki tingkat mobilitas warga yang tinggi. Seiring dengan itu, kebutuhan akan layanan perawatan dan perbaikan kendaraan menjadi sangat esensial. Bagi para pengendara yang mengalami masalah pada kendaraannya, baik untuk servis rutin maupun kondisi darurat, menemukan bengkel terpercaya adalah sebuah keharusan.</p><p>Tim redaksi telah merangkum beberapa bengkel motor dan mobil di sekitar Kademangan yang bisa menjadi referensi utama bagi warga. Dari bengkel umum hingga spesialis, berikut adalah daftarnya:</p><h3><strong>Rekomendasi Bengkel Mobil di Kademangan</strong></h3><p>Bagi pemilik kendaraan roda empat, perawatan seperti ganti oli, servis AC, hingga perbaikan kaki-kaki seringkali dibutuhkan. Beberapa bengkel ini dikenal memiliki reputasi yang baik di kalangan warga setempat.</p><ol><li><strong>BENGKEL MOBIL MITRA JAYA</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, ganti oli, tune-up, dan perbaikan kaki-kaki.</li><li><strong>Alamat:</strong> Jl. Raya Kademangan, Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Salah satu bengkel yang sudah cukup lama beroperasi di area ini. Dikenal karena montirnya yang berpengalaman dan penanganan yang relatif cepat untuk servis ringan.</li><li><a href=\"https://maps.app.goo.gl/tufcehqc8kMa5iRD6\">https://maps.app.goo.gl/tufcehqc8kMa5iRD6</a></li></ul></li><li><strong>KADEMANGAN AC MOBIL</strong><ul><li><strong>Spesialisasi:</strong> Perbaikan dan perawatan AC mobil.</li><li><strong>Alamat:</strong> Terletak tidak jauh dari jalan utama, mudah diakses dari perumahan sekitar.</li><li><strong>Keterangan:</strong> Menjadi rujukan utama bagi pengemudi yang mengalami masalah AC, mulai dari tidak dingin, bau, hingga isi freon. Harganya kompetitif dengan pengerjaan yang teliti.</li></ul></li><li><strong>GARASI 99 AUTO SERVICE</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, kelistrikan, dan modifikasi ringan.</li><li><strong>Alamat:</strong> Jl. Amd. Kademangan, Setu, Tangerang Selatan.</li><li><strong>Keterangan:</strong> Bengkel ini cukup populer di kalangan anak muda dan komunitas otomotif karena selain melayani servis rutin, juga menerima permintaan modifikasi ringan seperti instalasi audio dan lampu.</li></ul></li></ol><h3><strong>Rekomendasi Bengkel Motor di Kademangan</strong></h3><p>Pengguna sepeda motor yang jumlahnya mendominasi di wilayah ini juga memiliki banyak pilihan. Berikut beberapa bengkel motor yang menjadi andalan warga Kademangan.</p><ol><li><strong>AHASS KADEMANGAN JAYA MOTOR (Bengkel Resmi Honda)</strong><ul><li><strong>Spesialisasi:</strong> Servis dan suku cadang asli motor Honda.</li><li><strong>Alamat:</strong> Jl. Raya Puspiptek (mudah dijangkau dari Kademangan).</li><li><strong>Keterangan:</strong> Pilihan utama bagi pengguna motor Honda yang ingin menjaga garansi dan kualitas servis sesuai standar pabrikan. Layanan booking service biasanya tersedia untuk menghindari antrean.</li></ul></li><li><strong>BENGKEL MOTOR ABADI</strong><ul><li><strong>Spesialisasi:</strong> Servis umum semua merek, tambal ban, ganti oli.</li><li><strong>Alamat:</strong> Jl. Kademangan Raya (dekat area pertokoan).</li><li><strong>Keterangan:</strong> Bengkel rakyat yang selalu ramai. Menjadi solusi cepat untuk masalah-masalah umum seperti ban bocor, ganti busi, atau servis karburator. Harganya yang terjangkau membuatnya jadi favorit.</li></ul></li><li><strong>JAYA MANDIRI MOTOR</strong><ul><li><strong>Spesialisasi:</strong> Servis umum, turun mesin, dan menyediakan aneka suku cadang.</li><li><strong>Alamat:</strong> Berada di salah satu jalan lingkungan di Kademangan.</li><li><strong>Keterangan:</strong> Dikenal mampu menangani masalah yang lebih berat seperti turun mesin. Montirnya yang sabar dan teliti menjadi nilai tambah bagi pelanggan.</li></ul></li></ol><h3><strong>Tips Memilih Bengkel yang Tepat</strong></h3><p>Camat Setu, Bapak H. Junaedi, S.Pd., saat dihubungi terpisah, mengapresiasi para pelaku usaha UMKM seperti bengkel yang sangat membantu aktivitas warga. \"Keberadaan bengkel di setiap kelurahan, termasuk Kademangan, adalah penopang penting kelancaran mobilitas warga. Kami harap para pemilik bengkel terus menjaga kualitas dan kejujuran,\" ujarnya.</p><p>Bagi warga, disarankan untuk:</p><ul><li><strong>Cek Ulasan:</strong> Manfaatkan ulasan di Google Maps untuk melihat pengalaman pelanggan lain.</li><li><strong>Tanya Estimasi Biaya:</strong> Sebelum pengerjaan dimulai, jangan ragu untuk bertanya perkiraan biaya jasa dan suku cadang.</li><li><strong>Pilih Sesuai Kebutuhan:</strong> Sesuaikan pilihan bengkel dengan jenis masalah kendaraan Anda, apakah umum atau membutuhkan penanganan spesialis.</li></ul><p>Dengan adanya pilihan bengkel yang beragam ini, warga Kademangan dan sekitarnya kini tidak perlu lagi khawatir saat \"kuda besi\" kesayangan mereka membutuhkan perawatan.</p>', 'Umum', '457363093b0f9beac98ae0b9b8cba14f.jpg', '2025-10-09 08:50:53', 1),
-(5, 'Warga Antusias Ikuti Program Pemutihan Pajak Kendaraan Bermotor di Samsat BSD', 'warga-antusias-ikuti-program-pemutihan-pajak-kendaraan-bermotor-di-samsat-bsd', '<p>Kukira <strong>Dia</strong></p>', 'Pengumuman', 'e01ac61dfc225f428d07933b3ee3705d.jpg', '2025-10-10 10:19:24', 1),
-(6, 'Warga Kademangan Gelar Kerja Bakti Massal, Fokus pada Normalisasi Saluran Air Jelang Musim Hujan', 'warga-kademangan-gelar-kerja-bakti-massal-fokus-pada-normalisasi-saluran-air-jelang-musim-hujan', '<p>anjayyyy banjit brok</p>', 'Kegiatan', '71c5fe26389c340b221230b095b69e70.jpg', '2025-10-10 10:19:59', 1);
 
 -- --------------------------------------------------------
 
@@ -54,17 +45,17 @@ INSERT INTO `berita` (`id_berita`, `judul_berita`, `slug_berita`, `isi_berita`, 
 --
 
 CREATE TABLE `coverage_stats` (
-  `id` int(11) NOT NULL,
-  `jumlah_kk` int(11) NOT NULL DEFAULT 0,
-  `jumlah_penduduk` int(11) NOT NULL DEFAULT 0,
-  `jumlah_rw` int(11) NOT NULL DEFAULT 0,
-  `jumlah_rt` int(11) NOT NULL DEFAULT 0,
+  `id` int NOT NULL,
+  `jumlah_kk` int NOT NULL DEFAULT '0',
+  `jumlah_penduduk` int NOT NULL DEFAULT '0',
+  `jumlah_rw` int NOT NULL DEFAULT '0',
+  `jumlah_rt` int NOT NULL DEFAULT '0',
   `icon_kk` varchar(255) DEFAULT NULL,
   `icon_penduduk` varchar(255) DEFAULT NULL,
   `icon_rw` varchar(255) DEFAULT NULL,
   `icon_rt` varchar(255) DEFAULT NULL,
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `coverage_stats`
@@ -80,21 +71,12 @@ INSERT INTO `coverage_stats` (`id`, `jumlah_kk`, `jumlah_penduduk`, `jumlah_rw`,
 --
 
 CREATE TABLE `galeri` (
-  `id_galeri` int(11) NOT NULL,
-  `judul_foto` varchar(255) NOT NULL,
-  `foto` varchar(100) NOT NULL,
-  `tgl_upload` datetime NOT NULL DEFAULT current_timestamp(),
-  `id_user` int(11) NOT NULL
+  `id_galeri` int NOT NULL,
+  `judul_foto` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `foto` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tgl_upload` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_user` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `galeri`
---
-
-INSERT INTO `galeri` (`id_galeri`, `judul_foto`, `foto`, `tgl_upload`, `id_user`) VALUES
-(1, 'BATAN INDAH', 'b048a6f2e0e691777c3fa123b2f7ccdd.jpg', '2025-09-12 11:12:18', 1),
-(2, 'AMARAPURA', 'fc837a5294ceda5a4b8319e71be4e02e.jpg', '2025-09-15 21:42:47', 1),
-(3, 'PALEM SERPONG INDAH', '38d89f44014349adec8cbbc56009c1cf.jpg', '2025-09-15 21:43:09', 1);
 
 -- --------------------------------------------------------
 
@@ -103,25 +85,14 @@ INSERT INTO `galeri` (`id_galeri`, `judul_foto`, `foto`, `tgl_upload`, `id_user`
 --
 
 CREATE TABLE `layanan` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `judul` varchar(120) NOT NULL,
-  `deskripsi` text NOT NULL,
-  `gambar` varchar(255) DEFAULT NULL,
-  `urut` int(11) DEFAULT 0,
-  `aktif` tinyint(1) DEFAULT 1,
-  `created_at` datetime DEFAULT current_timestamp()
+  `id` int UNSIGNED NOT NULL,
+  `judul` varchar(120) COLLATE utf8mb4_general_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_general_ci NOT NULL,
+  `gambar` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `urut` int DEFAULT '0',
+  `aktif` tinyint(1) DEFAULT '1',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `layanan`
---
-
-INSERT INTO `layanan` (`id`, `judul`, `deskripsi`, `gambar`, `urut`, `aktif`, `created_at`) VALUES
-(1, 'Surat Keterangan Tidak Mampu', 'Layanan pembuatan Surat Keterangan Tidak Mampu (SKTM) bagi warga yang tergolong pra-sejahtera. Surat ini digunakan sebagai syarat untuk mengajukan berbagai program bantuan pemerintah, seperti keringanan biaya pendidikan dan jaminan kesehatan.', 'fa5892facd892f322351c7947aa69a2e.png', 1, 1, '2025-10-08 21:28:58'),
-(2, 'Surat Keterangan Belum Bekerja', 'Layanan ini ditujukan bagi warga yang memerlukan Surat Keterangan Belum Bekerja sebagai dokumen resmi untuk menyatakan status tidak sedang bekerja. Surat ini berfungsi sebagai bukti formal yang sah dan seringkali dibutuhkan untuk melengkapi persyaratan administrasi.', 'f2a9943fbb952d112db9b5d9781a9615.png', 2, 1, '2025-10-08 23:35:46'),
-(3, 'Surat Keterangan Domisili Yayasan', 'Layanan ini diperuntukkan bagi pengurus yayasan yang ingin mendapatkan bukti legalitas alamat resmi (domisili) yayasannya. Surat Keterangan Domisili ini berfungsi sebagai dokumen dasar yang wajib dimiliki oleh setiap yayasan untuk dapat mengurus perizinan dan keperluan legal lainnya.', '952f90dd96b493c0f60d936de08d597a.png', 3, 1, '2025-10-08 23:38:23'),
-(4, 'Surat Keterangan Belum Memiliki Rumah', 'Layanan ini ditujukan bagi warga yang membutuhkan surat keterangan resmi sebagai bukti bahwa mereka belum memiliki rumah atas nama pribadi atau pasangan. Dokumen ini sangat penting karena menjadi pintu gerbang untuk mengakses program perumahan yang disubsidi oleh pemerintah bagi Masyarakat Berpenghasilan Rendah (MBR).\r\n\r\n', '30c89e19ee5681acec8b46578430a47a.png', 4, 1, '2025-10-08 23:40:16'),
-(5, 'Penerbitan Akta Kematian', 'Layanan ini adalah proses pencatatan peristiwa kematian seorang penduduk untuk diterbitkan Akta Kematian oleh Dinas Kependudukan dan Pencatatan Sipil (Dukcapil). Akta Kematian merupakan dokumen vital yang memberikan kepastian hukum mengenai status kependudukan seseorang yang telah meninggal dunia dan merupakan dasar untuk berbagai proses administrasi bagi ahli waris.', 'cba9257285914415949c5cfc1fdcfdd8.png', 5, 1, '2025-10-08 23:49:43');
 
 -- --------------------------------------------------------
 
@@ -130,8 +101,8 @@ INSERT INTO `layanan` (`id`, `judul`, `deskripsi`, `gambar`, `urut`, `aktif`, `c
 --
 
 CREATE TABLE `level` (
-  `id_level` int(11) NOT NULL,
-  `nama_level` varchar(50) NOT NULL
+  `id_level` int NOT NULL,
+  `nama_level` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -145,18 +116,62 @@ INSERT INTO `level` (`id_level`, `nama_level`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pejabat`
+--
+
+CREATE TABLE `pejabat` (
+  `id` int UNSIGNED NOT NULL,
+  `jabatan_id` int UNSIGNED NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `nip` varchar(25) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `pejabat`
+--
+
+INSERT INTO `pejabat` (`id`, `jabatan_id`, `nama`, `nip`, `created_at`, `updated_at`) VALUES
+(2, 1, 'Madsuki, S.H.', '196911051989121002', '2025-10-21 10:39:02', '2025-10-21 10:39:02'),
+(3, 2, 'Muhammad Djupri, S.KOM., M.AK', '198507222011011012', '2025-10-21 10:44:43', '2025-10-21 10:44:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ref_jabatan`
+--
+
+CREATE TABLE `ref_jabatan` (
+  `id` int UNSIGNED NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `urut` tinyint UNSIGNED NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `ref_jabatan`
+--
+
+INSERT INTO `ref_jabatan` (`id`, `nama`, `urut`, `is_active`) VALUES
+(1, 'Lurah', 1, 1),
+(2, 'Sekretaris Kelurahan', 2, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `running_texts`
 --
 
 CREATE TABLE `running_texts` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `position` enum('top','bottom') NOT NULL,
-  `content` varchar(255) NOT NULL,
-  `direction` enum('left','right') NOT NULL DEFAULT 'left',
-  `speed` tinyint(3) UNSIGNED NOT NULL DEFAULT 5,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id` int UNSIGNED NOT NULL,
+  `position` enum('top','bottom') COLLATE utf8mb4_general_ci NOT NULL,
+  `content` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `direction` enum('left','right') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'left',
+  `speed` tinyint UNSIGNED NOT NULL DEFAULT '5',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -170,30 +185,51 @@ INSERT INTO `running_texts` (`id`, `position`, `content`, `direction`, `speed`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `site_settings`
+--
+
+CREATE TABLE `site_settings` (
+  `id` int NOT NULL,
+  `about_html` mediumtext,
+  `related_links` mediumtext,
+  `social_links` mediumtext,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `site_settings`
+--
+
+INSERT INTO `site_settings` (`id`, `about_html`, `related_links`, `social_links`, `updated_at`) VALUES
+(1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nunc nulla, tempor sit amet tortor ut, lobortis hendrerit nisi. Aliquam id finibus erat. Vivamus in finibus eros. Aenean ut pulvinar odio. Pellentesque tempor metus eget risus varius ultricies. Praesent elementum vitae nibh ut blandit. Curabitur convallis purus in nisi viverra, vel tempus dolor consectetur. Nam vitae orci et libero viverra cursus ultricies quis massa. Curabitur semper tellus magna, id venenatis leo tincidunt sit amet. Morbi at semper neque. Sed laoreet faucibus iaculis.', '[{\"title\":\"Pemerintah Kota Tangerang Selatan\",\"url\":\"https:\\/\\/www.tangerangselatankota.go.id\"},{\"title\":\"Kecamatan Setu Kota Tangerang Selatan\",\"url\":\"https:\\/\\/kecsetu.tangerangselatankota.go.id\"}]', '[{\"icon\":\"fa-youtube\",\"label\":\"@dsdabmbktangsel\",\"url\":\"https:\\/\\/www.youtube.com\\/channel\\/UCVNJNLQozN3NTdn1qZR05_A\"},{\"icon\":\"fa-x-twitter\",\"label\":\"@dsdabmbk\",\"url\":\"https:\\/\\/x.com\\/dsdabmbk\"},{\"icon\":\"fa-instagram\",\"label\":\"@kelurahan.kademangan\",\"url\":\"https:\\/\\/instagram.com\\/kelurahan.kademangan\"}]', '2025-10-15 04:41:44');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `surat_belum_bekerja`
 --
 
 CREATE TABLE `surat_belum_bekerja` (
-  `id` int(11) NOT NULL,
-  `nomor_surat_rt` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL,
-  `nama_pemohon` varchar(100) NOT NULL,
-  `tempat_lahir` varchar(100) NOT NULL,
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_pemohon` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `nik` varchar(16) NOT NULL,
-  `telepon_pemohon` varchar(20) DEFAULT NULL,
-  `warganegara` varchar(50) NOT NULL,
-  `agama` varchar(50) NOT NULL,
-  `pekerjaan` varchar(100) NOT NULL,
-  `alamat` text NOT NULL,
-  `keperluan` text NOT NULL,
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `id_user` int(11) DEFAULT NULL
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `telepon_pemohon` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `warganegara` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pekerjaan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `keperluan` text COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id_user` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -201,7 +237,7 @@ CREATE TABLE `surat_belum_bekerja` (
 --
 
 INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `nik`, `telepon_pemohon`, `warganegara`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(3, '089/SP/RT.003/IX/2025', '2025-10-14', '[\"20ea92bfdd603f53a37149780dc6cf98.pdf\",\"1004b951dc7aea53871ec6337a11de2d.pdf\",\"3650fea925564e4af1000e6f62de4f3a.pdf\"]', NULL, 'Andrian fakih', 'Tangerang Selatan', '2025-10-14', 'Laki-laki', '3171070901010006', '085174103802', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Persyaratan PIP', 'Disetujui', '2025-10-13 18:31:56', '2025-10-13 18:42:15', 1);
+(1, '089/SP/RT.003/IX/2025', '2025-10-21', '[\"623236e3b21073e8953ad2df389e2200.pdf\",\"84360d9d0cfca66efb59f625b2540a0c.pdf\",\"2ead290da9c75591ea789d6ac64f74a2.pdf\"]', NULL, 'Andrian fakih', 'Tangerang Selatan', '2025-10-21', 'Laki-laki', '3171070901010006', '089514353271', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Pengajuan Beasiswa Kuliah', 'Pending', '2025-10-21 07:22:37', '2025-10-21 07:26:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -210,25 +246,25 @@ INSERT INTO `surat_belum_bekerja` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `
 --
 
 CREATE TABLE `surat_belum_memiliki_rumah` (
-  `id` int(11) NOT NULL,
-  `nama_pemohon` varchar(255) NOT NULL,
-  `nik` varchar(16) NOT NULL,
-  `telepon_pemohon` varchar(20) DEFAULT NULL,
-  `tempat_lahir` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `nama_pemohon` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `telepon_pemohon` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `kewarganegaraan` varchar(100) NOT NULL DEFAULT 'Indonesia',
-  `agama` varchar(50) NOT NULL,
-  `pekerjaan` varchar(150) NOT NULL,
-  `alamat` text NOT NULL,
-  `keperluan` text NOT NULL,
-  `nomor_surat_rt` varchar(100) NOT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `kewarganegaraan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Indonesia',
+  `agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pekerjaan` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `keperluan` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL,
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -236,7 +272,7 @@ CREATE TABLE `surat_belum_memiliki_rumah` (
 --
 
 INSERT INTO `surat_belum_memiliki_rumah` (`id`, `nama_pemohon`, `nik`, `telepon_pemohon`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `pekerjaan`, `alamat`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
-(0, 'Andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-10-14', 'Laki-laki', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKRTA', 'Pengajuan Beasiswa Kuliah', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"024e120c366036d57948fcab625223c5.pdf\",\"caebd6de79517c040cb863f75ce0f9ad.pdf\",\"82fdd8f7970f374fdc75b7be84c88366.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:34:08', '2025-10-13 18:46:00');
+(1, 'Andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-10-21', 'Laki-laki', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Persyaratan Pengajuan KPR', '089/SP/RT.003/IX/2025', '2025-10-21', '[\"71e7e25e0e420638bda8e10403a71090.pdf\",\"795199145607fa8b1727a0b8a2804745.pdf\",\"320a3b13579538ef852c6944bfb9641f.jpg\"]', '1234.3234423/sdfdsdf', 'Disetujui', '2025-10-21 07:49:03', '2025-10-21 07:49:21');
 
 -- --------------------------------------------------------
 
@@ -245,35 +281,35 @@ INSERT INTO `surat_belum_memiliki_rumah` (`id`, `nama_pemohon`, `nik`, `telepon_
 --
 
 CREATE TABLE `surat_domisili_yayasan` (
-  `id` int(11) NOT NULL,
-  `nama_penanggung_jawab` varchar(100) NOT NULL,
-  `tempat_lahir` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `nama_penanggung_jawab` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `nik` varchar(16) NOT NULL,
-  `telepon_pemohon` varchar(20) DEFAULT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `kewarganegaraan` varchar(50) NOT NULL,
-  `agama` varchar(50) NOT NULL,
-  `alamat_pemohon` text NOT NULL,
-  `nama_organisasi` varchar(255) NOT NULL,
-  `jenis_kegiatan` varchar(100) NOT NULL,
-  `alamat_kantor` text NOT NULL,
-  `jumlah_pengurus` int(11) NOT NULL,
-  `nama_notaris_pendirian` varchar(100) NOT NULL,
-  `nomor_akta_pendirian` varchar(50) NOT NULL,
+  `nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `telepon_pemohon` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `kewarganegaraan` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat_pemohon` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nama_organisasi` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `jenis_kegiatan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat_kantor` text COLLATE utf8mb4_general_ci NOT NULL,
+  `jumlah_pengurus` int NOT NULL,
+  `nama_notaris_pendirian` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nomor_akta_pendirian` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_akta_pendirian` date NOT NULL,
-  `nama_notaris_perubahan` varchar(100) DEFAULT NULL,
-  `nomor_akta_perubahan` varchar(50) DEFAULT NULL,
+  `nama_notaris_perubahan` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nomor_akta_perubahan` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tanggal_akta_perubahan` date DEFAULT NULL,
-  `npwp` varchar(50) NOT NULL,
-  `nomor_surat_rt` varchar(100) NOT NULL,
+  `npwp` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL,
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `id_user` int(11) DEFAULT NULL
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id_user` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -281,7 +317,7 @@ CREATE TABLE `surat_domisili_yayasan` (
 --
 
 INSERT INTO `surat_domisili_yayasan` (`id`, `nama_penanggung_jawab`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `kewarganegaraan`, `agama`, `alamat_pemohon`, `nama_organisasi`, `jenis_kegiatan`, `alamat_kantor`, `jumlah_pengurus`, `nama_notaris_pendirian`, `nomor_akta_pendirian`, `tanggal_akta_pendirian`, `nama_notaris_perubahan`, `nomor_akta_perubahan`, `tanggal_akta_perubahan`, `npwp`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(3, 'HERLINA MUSTIKASARI ROTI', 'Tangerang Selatan', '2025-10-14', '3171070901010006', '085174103802', 'Laki-laki', 'Indonesia', 'Islam', 'JAKARTA', 'YAYASAN MENATA RUMAH KITA BERSAMA', 'Bidang Sosial dan Pendidikan', 'JAKARTA', 12, 'Not. Dr Udin Nasrudin', '106', '2025-10-14', 'Not. Dr Udin Nasrudin', '09', '2025-10-14', '31.190.787.7-411.000', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"44bd389746a8f7d826ac3e9657484123.pdf\",\"2fdd8bd3290ae51d8761388a352dd709.pdf\",\"c9596e5a60ef54e3435a059a4abe2633.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:33:09', '2025-10-13 18:42:23', 1);
+(1, 'HERLINA MUSTIKASARI ROTI', 'Tangerang Selatan', '2025-10-21', '3171070901010006', '089514353271', 'Laki-laki', 'Indonesia', 'Islam', 'Jakarta', 'YAYASAN MENATA RUMAH KITA BERSAMA', 'Bidang Sosial dan Pendidikan', 'Jakarta', 12, 'Not. Dr Udin Nasrudin', '106', '2025-10-21', 'Not. Dr Udin Nasrudin', '09', '2025-10-21', '31.190.787.7-411.000', '089/SP/RT.003/IX/2025', '2025-10-21', '[\"0416b296d2311e9f9802b5a3a396feab.pdf\",\"608ddcc9eb1d390b1a8cf30261aebc90.pdf\",\"5b20fb114832de81a360718252602527.pdf\"]', NULL, 'Pending', '2025-10-21 07:35:41', '2025-10-21 07:38:04', 1);
 
 -- --------------------------------------------------------
 
@@ -290,37 +326,37 @@ INSERT INTO `surat_domisili_yayasan` (`id`, `nama_penanggung_jawab`, `tempat_lah
 --
 
 CREATE TABLE `surat_kematian` (
-  `id` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `nik` varchar(16) NOT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `tempat_lahir` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `agama` varchar(50) NOT NULL,
-  `pekerjaan` varchar(150) NOT NULL,
-  `alamat` text NOT NULL,
-  `hari_meninggal` varchar(20) NOT NULL,
+  `agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pekerjaan` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `hari_meninggal` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_meninggal` date NOT NULL,
   `jam_meninggal` time NOT NULL,
-  `tempat_meninggal` varchar(150) NOT NULL,
-  `sebab_meninggal` varchar(200) NOT NULL,
-  `tempat_pemakaman` varchar(200) NOT NULL,
-  `pelapor_nama` varchar(255) NOT NULL,
-  `pelapor_tempat_lahir` varchar(100) NOT NULL,
+  `tempat_meninggal` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `sebab_meninggal` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `tempat_pemakaman` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_nama` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `pelapor_tanggal_lahir` date NOT NULL,
-  `pelapor_agama` varchar(50) NOT NULL,
-  `pelapor_pekerjaan` varchar(150) NOT NULL,
-  `pelapor_nik` varchar(16) NOT NULL,
-  `pelapor_no_telepon` varchar(30) NOT NULL,
-  `pelapor_alamat` text NOT NULL,
-  `pelapor_hubungan` varchar(50) NOT NULL,
-  `nomor_surat_rt` varchar(100) DEFAULT NULL,
+  `pelapor_agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_pekerjaan` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_no_telepon` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `pelapor_hubungan` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tanggal_surat_rt` date DEFAULT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL,
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -328,7 +364,7 @@ CREATE TABLE `surat_kematian` (
 --
 
 INSERT INTO `surat_kematian` (`id`, `nama`, `nik`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `agama`, `pekerjaan`, `alamat`, `hari_meninggal`, `tanggal_meninggal`, `jam_meninggal`, `tempat_meninggal`, `sebab_meninggal`, `tempat_pemakaman`, `pelapor_nama`, `pelapor_tempat_lahir`, `pelapor_tanggal_lahir`, `pelapor_agama`, `pelapor_pekerjaan`, `pelapor_nik`, `pelapor_no_telepon`, `pelapor_alamat`, `pelapor_hubungan`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
-(0, 'Davd', '3171070901010006', 'Laki-laki', 'Tangerang Selatan', '2025-10-14', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Jumat', '2025-10-14', '01:34:00', 'Rumah', 'Sakit', 'TPU Kademangan', 'Andrian fakih', 'Tangerang', '2025-10-14', 'Islam', 'Wirasuasta', '3674074808151001', '089514353271', 'JAKARTA', 'Kerabat', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"13bb71227ea7a5fa569023552db28498.pdf\",\"f59746ed0797d154ee28d546a83ee6c5.pdf\",\"db22ee3c5756073e700c3d5b44ed7646.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:35:35', '2025-10-13 18:46:31');
+(1, 'Andrian fakih', '3171070901010006', 'Laki-laki', 'Tangerang Selatan', '2025-10-21', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Jumat', '2025-10-21', '14:51:00', 'Rumah', 'Sakit', 'TPU Kademangan', 'Andrian fakih', 'Tangerang', '2025-10-21', 'Islam', 'Wirasuasta', '3674074808151001', '081329999444', 'JAKARTA', 'Kerabat', '089/SP/RT.003/IX/2025', '2025-10-21', '[\"605c546bfbcad3e5803ab01f79ac2b24.pdf\",\"8e2cabf7da5cd46246b414062bbd0361.pdf\",\"d4228b8fcd156d749e9e557ff26ebb97.pdf\"]', '1234.3234423/sdfdsdf', 'Disetujui', '2025-10-21 07:52:53', '2025-10-21 08:07:04');
 
 -- --------------------------------------------------------
 
@@ -337,27 +373,27 @@ INSERT INTO `surat_kematian` (`id`, `nama`, `nik`, `jenis_kelamin`, `tempat_lahi
 --
 
 CREATE TABLE `surat_kematian_nondukcapil` (
-  `id` int(11) NOT NULL,
-  `nama_ahli_waris` varchar(255) NOT NULL,
-  `nik_ahli_waris` varchar(16) NOT NULL,
-  `telepon_pemohon` varchar(20) DEFAULT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `alamat_ahli_waris` text NOT NULL,
-  `hubungan_ahli_waris` varchar(100) NOT NULL,
-  `nama_almarhum` varchar(255) NOT NULL,
-  `nik_almarhum` varchar(16) NOT NULL,
-  `tempat_meninggal` varchar(255) NOT NULL,
+  `id` int NOT NULL,
+  `nama_ahli_waris` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik_ahli_waris` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `telepon_pemohon` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat_ahli_waris` text COLLATE utf8mb4_general_ci NOT NULL,
+  `hubungan_ahli_waris` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nama_almarhum` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik_almarhum` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `tempat_meninggal` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_meninggal` date NOT NULL,
-  `alamat_almarhum` text NOT NULL,
-  `keterangan_almarhum` varchar(255) DEFAULT NULL COMMENT 'Contoh: Ibu Kandung, Ayah Kandung, dll.',
-  `nomor_surat_rt` varchar(100) NOT NULL,
+  `alamat_almarhum` text COLLATE utf8mb4_general_ci NOT NULL,
+  `keterangan_almarhum` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Contoh: Ibu Kandung, Ayah Kandung, dll.',
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL,
-  `keperluan` varchar(255) DEFAULT NULL,
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `keperluan` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -365,7 +401,7 @@ CREATE TABLE `surat_kematian_nondukcapil` (
 --
 
 INSERT INTO `surat_kematian_nondukcapil` (`id`, `nama_ahli_waris`, `nik_ahli_waris`, `telepon_pemohon`, `jenis_kelamin`, `alamat_ahli_waris`, `hubungan_ahli_waris`, `nama_almarhum`, `nik_almarhum`, `tempat_meninggal`, `tanggal_meninggal`, `alamat_almarhum`, `keterangan_almarhum`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `keperluan`, `status`, `created_at`, `updated_at`) VALUES
-(0, 'Andrian fakih', '3171090101010006', '089514353271', 'Laki-laki', 'JAKARTA', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-10-14', 'JAKARTA', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"86e75eef710e662f3eb0b7c886d5ff88.pdf\",\"5f84362ba4a68b27f38bf5642e6187c3.pdf\",\"ecbfec4d00a4d8fb1da568bca5fd005c.pdf\"]', NULL, 'Administrasi', 'Disetujui', '2025-10-13 18:38:44', '2025-10-13 18:47:00');
+(1, 'Andrian fakih', '3171090101010006', '089514353271', 'Laki-laki', 'JAKARTA', 'Anak Kandung', 'Andrian fakih', '3171090101010006', 'Rumah', '2025-10-21', 'JAKARTA', 'Ayah Kandung', '089/SP/RT.003/IX/2025', '2025-10-21', '[\"0339d4e2f95bd0dae51109b5a9fc7013.pdf\",\"cd9fb375f47bf5b22950ae9fc6e6fa4c.pdf\",\"b5eb1ef023873ec7ef7c7dc6f604a329.pdf\"]', '1234.3234423/sdfdsdf', 'Administrasi', 'Disetujui', '2025-10-21 07:54:08', '2025-10-21 08:13:08');
 
 -- --------------------------------------------------------
 
@@ -374,28 +410,28 @@ INSERT INTO `surat_kematian_nondukcapil` (`id`, `nama_ahli_waris`, `nik_ahli_war
 --
 
 CREATE TABLE `surat_keterangan_suami_istri` (
-  `id` int(11) NOT NULL,
-  `nama_pihak_satu` varchar(255) NOT NULL,
-  `nik_pihak_satu` varchar(16) NOT NULL,
-  `telepon_pemohon` varchar(20) DEFAULT NULL,
-  `tempat_lahir_pihak_satu` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `nama_pihak_satu` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik_pihak_satu` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `telepon_pemohon` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tempat_lahir_pihak_satu` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir_pihak_satu` date NOT NULL,
-  `jenis_kelamin_pihak_satu` enum('Laki-laki','Perempuan') NOT NULL,
-  `agama_pihak_satu` varchar(50) NOT NULL,
-  `pekerjaan_pihak_satu` varchar(100) NOT NULL,
-  `warganegara_pihak_satu` varchar(100) NOT NULL,
-  `alamat_pihak_satu` text NOT NULL,
-  `nama_pihak_dua` varchar(255) NOT NULL,
-  `nik_pihak_dua` varchar(16) NOT NULL,
-  `alamat_pihak_dua` text NOT NULL,
-  `keperluan` text NOT NULL,
-  `nomor_surat_rt` varchar(100) NOT NULL,
+  `jenis_kelamin_pihak_satu` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `agama_pihak_satu` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pekerjaan_pihak_satu` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `warganegara_pihak_satu` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat_pihak_satu` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nama_pihak_dua` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik_pihak_dua` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat_pihak_dua` text COLLATE utf8mb4_general_ci NOT NULL,
+  `keperluan` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL COMMENT 'Diisi oleh admin saat surat diterbitkan',
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Diisi oleh admin saat surat diterbitkan',
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -403,7 +439,60 @@ CREATE TABLE `surat_keterangan_suami_istri` (
 --
 
 INSERT INTO `surat_keterangan_suami_istri` (`id`, `nama_pihak_satu`, `nik_pihak_satu`, `telepon_pemohon`, `tempat_lahir_pihak_satu`, `tanggal_lahir_pihak_satu`, `jenis_kelamin_pihak_satu`, `agama_pihak_satu`, `pekerjaan_pihak_satu`, `warganegara_pihak_satu`, `alamat_pihak_satu`, `nama_pihak_dua`, `nik_pihak_dua`, `alamat_pihak_dua`, `keperluan`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `status`, `created_at`, `updated_at`) VALUES
-(3, 'andrian fakih', '3171070901010006', '089514353271', 'Tangerang Selatan', '2025-10-14', 'Laki-laki', 'Islam', 'Mahasiswa', 'Indonesia', 'JAKRTA', 'Nayla Rabiatul Hanifa', '3171070901010006', 'JAKARTA', 'Persyaratan Pengajuan KPR', '089/SP/RT.003/IX/2025', '2025-10-14', '[\"1aa3f759a49368d85b0c905cb446cc11.pdf\",\"25d3cd2ee892a3074b1be4986b69aca3.pdf\",\"300f85cbe539719111324459b94b8af0.pdf\"]', NULL, 'Disetujui', '2025-10-13 18:39:40', '2025-10-13 18:57:16');
+(1, 'andrian fakih', '3171070901010006', '6285174103802', 'Tangerang Selatan', '2025-10-21', 'Laki-laki', 'Islam', 'Mahasiswa', 'Indonesia', 'JAKRTA', 'Nayla Rabiatul Hanifa', '3171070901010006', 'DEPOK', 'Persyaratan PIP', '089/SP/RT.003/IX/2025', '2025-10-21', '[\"b9e3877eb1c231c9f27b913a113e5602.pdf\",\"197d0e28624bb50107da16b5fc425fcc.pdf\",\"6c76ddb9d733f08954ef1113a5b89b36.pdf\"]', '1234.3234423/sdfdsdf', 'Disetujui', '2025-10-21 07:55:21', '2025-10-21 08:27:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surat_pengantar_nikah`
+--
+
+CREATE TABLE `surat_pengantar_nikah` (
+  `id` int NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tanggal_surat_rt` date NOT NULL,
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `pria_nama` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Laki-laki',
+  `pria_tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_tanggal_lahir` date NOT NULL,
+  `pria_kewarganegaraan` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_pekerjaan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_status` enum('Jejaka','Duda','Beristri') COLLATE utf8mb4_general_ci NOT NULL,
+  `pria_istri_ke` tinyint UNSIGNED DEFAULT NULL,
+  `ortu_nama` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `ortu_nik` varchar(16) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ortu_tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ortu_tanggal_lahir` date DEFAULT NULL,
+  `ortu_kewarganegaraan` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'Indonesia',
+  `ortu_agama` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ortu_pekerjaan` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ortu_alamat` text COLLATE utf8mb4_general_ci,
+  `wanita_nama` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_tanggal_lahir` date NOT NULL,
+  `wanita_kewarganegaraan` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_pekerjaan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `wanita_status` enum('Perawan','Janda') COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id_user` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `surat_pengantar_nikah`
+--
+
+INSERT INTO `surat_pengantar_nikah` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `pria_nama`, `pria_nik`, `pria_jenis_kelamin`, `pria_tempat_lahir`, `pria_tanggal_lahir`, `pria_kewarganegaraan`, `pria_agama`, `pria_pekerjaan`, `pria_alamat`, `pria_status`, `pria_istri_ke`, `ortu_nama`, `ortu_nik`, `ortu_tempat_lahir`, `ortu_tanggal_lahir`, `ortu_kewarganegaraan`, `ortu_agama`, `ortu_pekerjaan`, `ortu_alamat`, `wanita_nama`, `wanita_nik`, `wanita_tempat_lahir`, `wanita_tanggal_lahir`, `wanita_kewarganegaraan`, `wanita_agama`, `wanita_pekerjaan`, `wanita_alamat`, `wanita_status`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
+(1, '089/SP/RT.003/IX/2025', '2025-10-21', '[\"6190d01b6498e9e39ce02586ad6d5983.pdf\",\"f5e8f0cfd7d9c6b3abe6c15eb10c5fc4.pdf\",\"6dab6c149fc28ee7a1fc6b27142a8157.pdf\"]', '1234.3234423/sdfdsdf', 'Andrian Fakih', '3171070901010006', 'Laki-laki', 'Jakarta', '2025-10-21', 'Indonesia', 'Islam', 'Karyawan Swasta', 'JAKARTA', 'Jejaka', NULL, 'Budi', '317107090101006', 'Kudus', '2025-10-21', 'Indonesia', 'Islam', 'Wiraswasta', 'JAKARTA', 'Nayla Rabiatul Hanifa', '3171070901010006', 'Depok', '2025-10-21', 'Indonesia', 'Islam', 'Karyawan Swasta', 'DEPOK', 'Perawan', 'Disetujui', '2025-10-21 07:56:48', '2025-10-21 08:35:51', 1);
 
 -- --------------------------------------------------------
 
@@ -412,29 +501,29 @@ INSERT INTO `surat_keterangan_suami_istri` (`id`, `nama_pihak_satu`, `nik_pihak_
 --
 
 CREATE TABLE `surat_sktm` (
-  `id` int(11) NOT NULL,
-  `nomor_surat_rt` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `nomor_surat_rt` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_surat_rt` date NOT NULL,
-  `dokumen_pendukung` text DEFAULT NULL,
-  `nomor_surat` varchar(100) DEFAULT NULL,
-  `nama_pemohon` varchar(100) NOT NULL,
-  `tempat_lahir` varchar(100) NOT NULL,
+  `dokumen_pendukung` text COLLATE utf8mb4_general_ci,
+  `nomor_surat` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_pemohon` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `nik` varchar(16) NOT NULL,
-  `telepon_pemohon` varchar(20) DEFAULT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `warganegara` varchar(50) NOT NULL,
-  `agama` varchar(50) NOT NULL,
-  `pekerjaan` varchar(100) NOT NULL,
-  `nama_orang_tua` varchar(100) NOT NULL,
-  `alamat` text NOT NULL,
-  `id_dtks` varchar(50) DEFAULT NULL,
-  `penghasilan_bulanan` varchar(100) NOT NULL,
-  `keperluan` text NOT NULL,
-  `status` enum('Pending','Disetujui','Ditolak') NOT NULL DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `id_user` int(11) DEFAULT NULL
+  `nik` varchar(16) COLLATE utf8mb4_general_ci NOT NULL,
+  `telepon_pemohon` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `warganegara` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `agama` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `pekerjaan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nama_orang_tua` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` text COLLATE utf8mb4_general_ci NOT NULL,
+  `id_dtks` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `penghasilan_bulanan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `keperluan` text COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('Pending','Disetujui','Ditolak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id_user` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -442,7 +531,7 @@ CREATE TABLE `surat_sktm` (
 --
 
 INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_pendukung`, `nomor_surat`, `nama_pemohon`, `tempat_lahir`, `tanggal_lahir`, `nik`, `telepon_pemohon`, `jenis_kelamin`, `warganegara`, `agama`, `pekerjaan`, `nama_orang_tua`, `alamat`, `id_dtks`, `penghasilan_bulanan`, `keperluan`, `status`, `created_at`, `updated_at`, `id_user`) VALUES
-(10, '089/SP/RT.003/IX/2025', '2025-10-14', '[\"e3ec0df1c105c0fc1e38f3d528ead5fc.pdf\",\"eb78554a1197628b4c43102b57f3fc73.pdf\",\"096242eee1a1765b86932268cd779431.pdf\"]', NULL, 'Andrian fakih', 'Tangerang Selatan', '2025-10-14', '3171070901010006', '085174103802', 'Laki-laki', 'Indonesia', 'Islam', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'JAKRTA', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Disetujui', '2025-10-13 18:31:03', '2025-10-13 18:40:30', 1);
+(1, '089/SP/RT.003/IX/2025', '2025-10-21', '[\"de3b90a7d60dd7149dae4b0b4b43a167.pdf\",\"95a0715aed69d844136348f5e209eace.pdf\",\"2db855ea3ed5249d93c392fd9cb19675.pdf\"]', '1234.3234423/sdfdsdf', 'Andrian fakih', 'Tangerang Selatan', '2025-10-21', '3171070901010006', '089514353271', 'Laki-laki', 'Indonesia', 'Islam', 'Karyawan Swasta', 'MAYANG WIDARAPURI', 'CILEDUG', 'Belum Terdaftar', 'Kurang dari Rp 1.000.000', 'Pengajuan Beasiswa Kuliah', 'Disetujui', '2025-10-21 04:15:33', '2025-10-21 07:14:05', 1);
 
 -- --------------------------------------------------------
 
@@ -451,17 +540,10 @@ INSERT INTO `surat_sktm` (`id`, `nomor_surat_rt`, `tanggal_surat_rt`, `dokumen_p
 --
 
 CREATE TABLE `uploadvideo` (
-  `id_konfigurasi` int(11) NOT NULL,
-  `nama_konfigurasi` varchar(100) NOT NULL,
-  `nilai_konfigurasi` text NOT NULL
+  `id_konfigurasi` int NOT NULL,
+  `nama_konfigurasi` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nilai_konfigurasi` text COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `uploadvideo`
---
-
-INSERT INTO `uploadvideo` (`id_konfigurasi`, `nama_konfigurasi`, `nilai_konfigurasi`) VALUES
-(1, 'youtube_link', 'https://www.youtube.com/watch?v=0-ziJXSkTI0');
 
 -- --------------------------------------------------------
 
@@ -470,12 +552,12 @@ INSERT INTO `uploadvideo` (`id_konfigurasi`, `nama_konfigurasi`, `nilai_konfigur
 --
 
 CREATE TABLE `user` (
-  `id_user` int(11) NOT NULL,
-  `nama_lengkap` varchar(100) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `foto` varchar(100) NOT NULL DEFAULT 'default.jpg',
-  `id_level` int(11) NOT NULL
+  `id_user` int NOT NULL,
+  `nama_lengkap` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `foto` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default.jpg',
+  `id_level` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -521,11 +603,33 @@ ALTER TABLE `level`
   ADD PRIMARY KEY (`id_level`);
 
 --
+-- Indexes for table `pejabat`
+--
+ALTER TABLE `pejabat`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_pejabat_nip` (`nip`),
+  ADD UNIQUE KEY `uq_pejabat_jabatan` (`jabatan_id`),
+  ADD KEY `fk_pejabat_jabatan` (`jabatan_id`);
+
+--
+-- Indexes for table `ref_jabatan`
+--
+ALTER TABLE `ref_jabatan`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_ref_jabatan_nama` (`nama`);
+
+--
 -- Indexes for table `running_texts`
 --
 ALTER TABLE `running_texts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_pos_active` (`position`,`is_active`);
+
+--
+-- Indexes for table `site_settings`
+--
+ALTER TABLE `site_settings`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `surat_belum_bekerja`
@@ -564,6 +668,15 @@ ALTER TABLE `surat_keterangan_suami_istri`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `surat_pengantar_nikah`
+--
+ALTER TABLE `surat_pengantar_nikah`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_pria_nik` (`pria_nik`),
+  ADD KEY `idx_wanita_nik` (`wanita_nik`),
+  ADD KEY `idx_status` (`status`);
+
+--
 -- Indexes for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
@@ -590,95 +703,119 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `berita`
 --
 ALTER TABLE `berita`
-  MODIFY `id_berita` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_berita` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `coverage_stats`
 --
 ALTER TABLE `coverage_stats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `galeri`
 --
 ALTER TABLE `galeri`
-  MODIFY `id_galeri` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_galeri` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `layanan`
 --
 ALTER TABLE `layanan`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `level`
 --
 ALTER TABLE `level`
-  MODIFY `id_level` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_level` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `pejabat`
+--
+ALTER TABLE `pejabat`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `ref_jabatan`
+--
+ALTER TABLE `ref_jabatan`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `running_texts`
 --
 ALTER TABLE `running_texts`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `surat_belum_bekerja`
 --
 ALTER TABLE `surat_belum_bekerja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_belum_memiliki_rumah`
 --
 ALTER TABLE `surat_belum_memiliki_rumah`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_domisili_yayasan`
 --
 ALTER TABLE `surat_domisili_yayasan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_kematian`
 --
 ALTER TABLE `surat_kematian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_kematian_nondukcapil`
 --
 ALTER TABLE `surat_kematian_nondukcapil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_keterangan_suami_istri`
 --
 ALTER TABLE `surat_keterangan_suami_istri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `surat_pengantar_nikah`
+--
+ALTER TABLE `surat_pengantar_nikah`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `surat_sktm`
 --
 ALTER TABLE `surat_sktm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `uploadvideo`
 --
 ALTER TABLE `uploadvideo`
-  MODIFY `id_konfigurasi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_konfigurasi` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `pejabat`
+--
+ALTER TABLE `pejabat`
+  ADD CONSTRAINT `fk_pejabat_jabatan` FOREIGN KEY (`jabatan_id`) REFERENCES `ref_jabatan` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user`
