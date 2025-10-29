@@ -14,6 +14,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @property M_kematian_nondukcapil $M_kematian_nondukcapil
  * @property M_suami_istri $M_suami_istri
  * @property M_pengantar_nikah $M_pengantar_nikah
+ * @property M_penghasilan $M_penghasilan
  */
 class Pelayanan extends CI_Controller
 {
@@ -34,6 +35,7 @@ class Pelayanan extends CI_Controller
             'M_kematian_nondukcapil',
             'M_suami_istri',
             'M_pengantar_nikah',
+            'M_penghasilan',
         ]);
 
         $this->pendukung_dir = FCPATH . 'uploads/pendukung/';
@@ -106,6 +108,7 @@ class Pelayanan extends CI_Controller
             ['icon' => 'bi-person-x-fill', 'title' => 'Surat Kematian (Non Dukcapil)', 'desc' => 'Untuk kebutuhan non-dukcapil (bank, asuransi, dll).', 'slug' => 'kematian-nondukcapil'],
             ['icon' => 'bi-people-fill', 'title' => 'Surat Keterangan Suami Istri', 'desc' => 'Ajukan surat untuk menyatakan status hubungan pernikahan.', 'slug' => 'suami-istri'],
             ['icon' => 'bi-suit-heart',        'title' => 'Surat Pengantar Nikah',          'desc' => 'Ajukan pengantar nikah (N1): data pria, orang tua, calon istri.', 'slug' => 'pengantar-nikah'],
+            ['icon' => 'bi-cash-coin', 'title' => 'Surat Ket. Penghasilan', 'desc' => 'Ajukan surat keterangan penghasilan.', 'slug' => 'penghasilan'],
         ];
         $this->load->view('layouts_frontend/header', $data);
         $this->load->view('pages/v_pelayanan_list', $data);
@@ -723,6 +726,70 @@ class Pelayanan extends CI_Controller
         $this->M_pengantar_nikah->insert($data_to_save);
 
         $this->session->set_flashdata('success', 'Pengajuan Surat Pengantar Nikah berhasil dikirim.');
+        redirect('pelayanan/sukses');
+    }
+
+    // =============================================
+    // PENGHASILAN (form warga + submit)
+    // =============================================
+    public function penghasilan()
+    {
+        $data['title'] = "Formulir Surat Keterangan Penghasilan";
+        $this->load->view('layouts_frontend/header', $data);
+        $this->load->view('pages/v_form_penghasilan', $data);
+        $this->load->view('layouts_frontend/footer');
+    }
+
+    public function submit_penghasilan()
+    {
+        $this->form_validation->set_error_delimiters('', '');
+        $rules = [
+            ['field' => 'nomor_surat_rt', 'label' => 'Nomor Surat RT/RW', 'rules' => 'required|trim'],
+            ['field' => 'tanggal_surat_rt', 'label' => 'Tanggal Surat RT/RW', 'rules' => 'required'],
+
+            ['field' => 'nama_pemohon', 'label' => 'Nama Pemohon', 'rules' => 'required|trim'],
+            ['field' => 'nik', 'label' => 'NIK', 'rules' => 'required|trim|numeric|exact_length[16]'],
+            ['field' => 'telepon_pemohon', 'label' => 'No. Telepon', 'rules' => 'required|trim|numeric'],
+            ['field' => 'tempat_lahir', 'label' => 'Tempat Lahir', 'rules' => 'required|trim'],
+            ['field' => 'tanggal_lahir', 'label' => 'Tanggal Lahir', 'rules' => 'required'],
+            ['field' => 'jenis_kelamin', 'label' => 'Jenis Kelamin', 'rules' => 'required'],
+            ['field' => 'warganegara', 'label' => 'Warganegara', 'rules' => 'required|trim'],
+            ['field' => 'agama', 'label' => 'Agama', 'rules' => 'required|trim'],
+            ['field' => 'pekerjaan', 'label' => 'Pekerjaan', 'rules' => 'required|trim'],
+            ['field' => 'alamat', 'label' => 'Alamat', 'rules' => 'required|trim'],
+
+            ['field' => 'keperluan', 'label' => 'Keperluan', 'rules' => 'required|trim'],
+            ['field' => 'agree', 'label' => 'Persetujuan', 'rules' => 'required']
+        ];
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run() === FALSE) return $this->penghasilan();
+
+        // lampiran wajib
+        $files = $this->_upload_multiple_pendukung(true);
+        if ($files === false) return $this->penghasilan();
+
+        $p = $this->input->post(NULL, TRUE);
+        $data_to_save = [
+            'nomor_surat_rt'    => $p['nomor_surat_rt'],
+            'tanggal_surat_rt'  => $p['tanggal_surat_rt'],
+            'dokumen_pendukung' => json_encode($files),
+
+            'nama_pemohon'      => $p['nama_pemohon'],
+            'nik'               => $p['nik'],
+            'telepon_pemohon'   => $p['telepon_pemohon'],
+            'tempat_lahir'      => $p['tempat_lahir'],
+            'tanggal_lahir'     => $p['tanggal_lahir'],
+            'jenis_kelamin'     => $p['jenis_kelamin'],
+            'warganegara'       => $p['warganegara'],
+            'agama'             => $p['agama'],
+            'pekerjaan'         => $p['pekerjaan'],
+            'alamat'            => $p['alamat'],
+
+            'keperluan'         => $p['keperluan'],
+            'id_user'           => $this->session->userdata('id_user') ?: NULL,
+        ];
+        $this->M_penghasilan->save($data_to_save);
+        $this->session->set_flashdata('success', 'Pengajuan Surat Keterangan Penghasilan telah berhasil dikirim.');
         redirect('pelayanan/sukses');
     }
 

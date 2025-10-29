@@ -23,9 +23,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
-$host     = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-$config['base_url'] = $protocol . '://' . $host . '/';
+// Auto-detect scheme (HTTP/HTTPS), host, dan subfolder
+$https  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+$scheme = $https ? 'https' : 'http';
+$host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+// contoh: "/kelurahan" di XAMPP, "" (root) di Laragon vhost
+$dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+
+$config['base_url'] = $scheme . '://' . $host . ($dir ? $dir . '/' : '/');
+
 
 /*
 |--------------------------------------------------------------------------

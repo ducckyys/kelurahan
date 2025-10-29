@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <title><?= html_escape($title); ?></title>
+    <link rel="stylesheet" href="<?= base_url('assets/admin/css/fonts.min.css'); ?>">
     <style>
         @page {
             size: 210mm 330mm;
@@ -84,6 +85,15 @@
 
         .kop-text .line4 {
             font-size: 9pt;
+        }
+
+        .contact-info {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+        }
+
+        .contact-info span {
+            margin: 0 6px;
         }
 
         #content {
@@ -193,6 +203,12 @@
                         <p class="line2">KECAMATAN SETU</p>
                         <p class="line3">KELURAHAN KADEMANGAN</p>
                         <p class="line4">Jl. Masjid Jami Al-Latif No.1 Kec. Setu - Tangerang Selatan - Banten 15313</p>
+                        <div class="contact-info">
+                            <span><i class="fab fa-whatsapp"></i> 083125243200</span>
+                            <span><i class="far fa-envelope"></i> kel.kademangan@gmail.com</span>
+                            <span><i class="fab fa-instagram"></i> kelurahan.kademangan</span><br>
+                            <i class="fas fa-globe"></i> Website: http://kademangan.tangerangselatankota.go.id
+                        </div>
                     </td>
                 </tr>
             </table>

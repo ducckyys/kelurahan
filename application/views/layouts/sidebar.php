@@ -50,6 +50,7 @@
                 $services = [
                     ['slug' => 'surat_sktm',                 'url' => 'admin/surat_sktm',                 'label' => 'Surat Keterangan Tidak Mampu (SKTM)'],
                     ['slug' => 'surat_belum_bekerja',        'url' => 'admin/surat_belum_bekerja',        'label' => 'Surat Keterangan Belum Bekerja'],
+                    ['slug' => 'surat_penghasilan',          'url' => 'admin/surat_penghasilan',          'label' => 'Surat Keterangan Penghasilan'], // <= TAMBAHAN
                     ['slug' => 'surat_domisili_yayasan',     'url' => 'admin/surat_domisili_yayasan',     'label' => 'Surat Keterangan Domisili Yayasan'],
                     ['slug' => 'surat_belum_memiliki_rumah', 'url' => 'admin/surat_belum_memiliki_rumah', 'label' => 'Surat Keterangan Belum Punya Rumah'],
                     ['slug' => 'surat_kematian',             'url' => 'admin/surat_kematian',             'label' => 'Surat Keterangan Kematian (Dukcapil)'],
